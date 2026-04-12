@@ -1,35 +1,59 @@
+from src.exceptions import (
+    RawFolderNotFoundError,
+    RawFolderDirectoryError,
+    SpreadsheetNotFoundError,
+    SpreadsheetFormatError,
+    SheetNotFoundError,
+)
+
+from src.utils import (
+    RAW_DIR,
+    RAW_DIR_LOOKUP,
+    SUPPORTED_SPREADSHEET_SUFFIXES,
+)
+
+from src.utils import join_sorted
+
 from pathlib import Path
+import pandas as pd
 
-# TODO: First before other files
+def resolve_folder_path(folder: str | Path) -> Path: # ! for both folders or path objects
+    if isinstance(folder, Path):
+        folder_path = folder
+    else:
+        folder_path = RAW_DIR_LOOKUP.get(folder, RAW_DIR / folder)
 
-"""
-- Define the path for raw files from QILT, ABS, and ACEN directories
-- Describe supported input formats such as CSV, XLSX, ODS (but not PDFS)
-- Return loaded tables with Pandas dataframes
-- Note where to add helper wrappers for reading and writing tables
-"""
+    if not folder_path.exists():
+        known_folders = join_sorted(RAW_DIR_LOOKUP)
+        raise RawFolderNotFoundError(folder_path, known_folders)
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = PROJECT_ROOT / "data"
-RAW_DIR = DATA_DIR / "raw"
-PROCESSED_DIR = DATA_DIR / "processed"
+    if not folder_path.is_dir():
+        raise RawFolderDirectoryError(folder_path)
 
-QILT_RAW_DIRS = [
-    RAW_DIR / "2024_GOS_National_Report_Tables",
-    RAW_DIR / "2024_GOS-L_National_Report_Tables",
-]
+    return folder_path
 
-ABS_RAW_DIRS = [
-    RAW_DIR / "2025_Education_and_work",
-    RAW_DIR / "SEW_2011_to_2025",
-]
+def load_excel_sheet(
+    folder: str | Path,
+    file_name: str,
+    sheet_name: str,
+) -> pd.DataFrame:
+    folder_path = resolve_folder_path(folder)
+    file_path = folder_path / file_name
 
-ACEN_RAW_DIRS = [
-    RAW_DIR / "ACEN",
-]
+    if not file_path.exists():
+        raise SpreadsheetNotFoundError(file_path)
 
-RAW_SOURCE_DIRS = {
-    "qilt": QILT_RAW_DIRS,
-    "abs": ABS_RAW_DIRS,
-    "acen": ACEN_RAW_DIRS,
-}
+    if file_path.suffix.lower() not in SUPPORTED_SPREADSHEET_SUFFIXES:
+        supported_formats = join_sorted(SUPPORTED_SPREADSHEET_SUFFIXES)
+        raise SpreadsheetFormatError(file_path.suffix, supported_formats)
+
+    excel_file = pd.ExcelFile(file_path)
+
+    if sheet_name not in excel_file.sheet_names:
+        available_sheets = join_sorted(excel_file.sheet_names)
+        raise SheetNotFoundError(sheet_name, file_path.name, available_sheets)
+
+    return pd.read_excel(file_path, sheet_name=sheet_name)
+
+# TODO: later implementation
+# get all sheet names inside of a spreadsheet (helper function)
