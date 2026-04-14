@@ -1,11 +1,14 @@
 from pathlib import Path
+from collections.abc import Iterable
+from src.utils import join_sorted
 
 class RawFolderNotFoundError(FileNotFoundError):
-    def __init__(self, folder_path: Path, known_folders: str) -> None:
+    def __init__(self, folder_path: Path, known_folders: Iterable[object]) -> None:
+        formatted_folders = join_sorted(known_folders)
         super().__init__(
             f"""
             Raw folder not found: {folder_path}
-            Known raw folders: {known_folders}
+            Known raw folders: {formatted_folders}
             """
         )
 
@@ -20,11 +23,12 @@ class SpreadsheetNotFoundError(FileNotFoundError):
 
 
 class SpreadsheetFormatError(ValueError):
-    def __init__(self, file_suffix: str, supported_formats: str) -> None:
+    def __init__(self, file_suffix: str, supported_formats: Iterable[object]) -> None:
+        formatted_formats = join_sorted(supported_formats)
         super().__init__(
             f"""
             Unsupported spreadsheet format: {file_suffix}
-            Supported formats: {supported_formats}
+            Supported formats: {formatted_formats}
             """
         )
 
@@ -33,11 +37,12 @@ class SheetNotFoundError(ValueError):
         self,
         sheet_name: str,
         file_name: str,
-        available_sheets: str,
+        available_sheets: Iterable[object],
     ) -> None:
+        formatted_sheets = join_sorted(available_sheets)
         super().__init__(
             f"""
             Sheet not found: {sheet_name!r} in {file_name}
-            Available sheets: {available_sheets}
+            Available sheets: {formatted_sheets}
             """
         )
