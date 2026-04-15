@@ -13,6 +13,8 @@ ABS_EXTRAS_RAW_DIR = ABS_RAW_DIR / "Extras"
 
 SPREADSHEET_SUFFIXES = {".xlsx", ".xls", ".xlsm", ".ods"}
 
+UNNAMED_HEADER_LABEL = "unnamed_header"
+
 QILT_2024_GOS_FILE_NAME = "2024_GOS_National_Report_Tables.xlsx"
 QILT_2024_GOS_L_FILE_NAME = "2024_GOS-L_National_Report_Tables.xlsx"
 
