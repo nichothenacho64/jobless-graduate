@@ -7,13 +7,12 @@ from typing import Optional
 import pandas as pd
 
 from src.exceptions import SheetNotFoundError
-from src.loaders import list_excel_sheets, resolve_spreadsheet_path
+from src.loaders import load_excel_sheet, list_excel_sheets, resolve_spreadsheet_path
 from src.types import Folder, QILTTableKind
 from src.parsers.sheets import (
     build_column_names,
     count_nonempty_cells,
     drop_trailing_blank_rows,
-    find_next_nonblank_row,
     clean_cell_text,
     get_row_texts,
 )
@@ -49,7 +48,7 @@ class QILTRowBounds:
 
 @dataclass(slots=True)
 class QILTParsedSheet:
-    name: str
+    sheet_name: str
     title: str
     rows: QILTRowBounds
     classification: str
@@ -57,13 +56,7 @@ class QILTParsedSheet:
     metadata: dict[str, list[str]]
 
 def parse_qilt_sheet(folder: Folder, file_name: str, sheet_name: str) -> QILTParsedSheet:
-    file_path = resolve_spreadsheet_path(folder, file_name)
-    sheet_names = list_excel_sheets(folder, file_name)
-
-    if sheet_name not in sheet_names:
-        raise SheetNotFoundError(sheet_name, file_path.name, sheet_names)
-
-    raw_sheet = pd.read_excel(file_path, sheet_name=sheet_name, header=None)
+    raw_sheet = load_excel_sheet(folder, file_name, sheet_name, header=None)
 
     title = _find_title(raw_sheet)
     header_row_idx = _find_header_row(raw_sheet)
@@ -81,13 +74,13 @@ def parse_qilt_sheet(folder: Folder, file_name: str, sheet_name: str) -> QILTPar
         data_last=data_last_row_idx,
         footer_start=footer_start_row_idx,
     )
-    table = _extract_table(raw_sheet, rows.header, rows.data_first, rows.data_last)
 
+    table = _extract_table(raw_sheet, rows.header, rows.data_first, rows.data_last)
     metadata = _extract_metadata_sections(raw_sheet, rows.footer_start)
     classification = _classify_qilt_table(table)
 
     return QILTParsedSheet(
-        name=sheet_name,
+        sheet_name=sheet_name,
         title=title,
         rows=rows,
         classification=classification,
@@ -95,8 +88,21 @@ def parse_qilt_sheet(folder: Folder, file_name: str, sheet_name: str) -> QILTPar
         metadata=metadata,
     )
 
-# def parse_qilt_table(folder: Folder, file_name: str, sheet_name: str) -> pd.DataFrame:
-#     return parse_qilt_sheet(folder, file_name, sheet_name).table
+def find_all_qilt_sheets(folder: Folder, file_name: str) -> pd.DataFrame:
+    sheet_title_list: list[dict[str, int | str]] = []
+    all_sheet_names = list_excel_sheets(folder, file_name)
+    
+    for sheet_number, sheet_name in enumerate(all_sheet_names, start=1):
+        parsed_sheet = parse_qilt_sheet(folder, file_name, sheet_name)
+        sheet_title_list.append(
+            {
+                "Sheet number": sheet_number,
+                "Sheet name": sheet_name,
+                "Sheet title": parsed_sheet.title,
+            }
+        )
+
+    return pd.DataFrame(sheet_title_list).set_index("Sheet number")
 
 def _find_title(raw_sheet: pd.DataFrame) -> str:
     for value in raw_sheet.iloc[QILT_TITLE_ROW_INDEX].tolist():
@@ -110,19 +116,7 @@ def _find_header_row(raw_sheet: pd.DataFrame) -> int:
     search_stop = min(len(raw_sheet), QILT_HEADER_SEARCH_END_ROW_EXCLUSIVE)
 
     for row_index in range(QILT_HEADER_SEARCH_START_ROW, search_stop):
-        row = raw_sheet.iloc[row_index]
-
-        if count_nonempty_cells(row) < 2:
-            continue
-
-        next_nonblank_row_index = find_next_nonblank_row(raw_sheet, row_index + 1)
-
-        if next_nonblank_row_index is None:
-            continue
-
-        next_row = raw_sheet.iloc[next_nonblank_row_index]
-
-        if count_nonempty_cells(next_row) >= 2:
+        if count_nonempty_cells(raw_sheet.iloc[row_index]) > 0: # the header is at row 3
             return row_index
 
     raise ValueError("Could not identify the QILT header row.")
@@ -133,8 +127,8 @@ def _find_footer_start_row(raw_sheet: pd.DataFrame, start_row_index: int) -> Opt
 
         if any(text in QILT_METADATA_LABELS for text in current_row_texts):
             return row_index
-
-    return None
+    else:
+        return None
 
 def _find_data_end_row(
     raw_sheet: pd.DataFrame,
