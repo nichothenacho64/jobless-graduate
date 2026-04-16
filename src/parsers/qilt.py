@@ -6,8 +6,7 @@ from typing import Optional
 
 import pandas as pd
 
-from src.exceptions import SheetNotFoundError
-from src.loaders import load_excel_sheet, list_excel_sheets, resolve_spreadsheet_path
+from src.loaders import load_excel_sheet, list_excel_sheets
 from src.types import Folder, QILTTableKind
 from src.parsers.sheets import (
     build_column_names,
