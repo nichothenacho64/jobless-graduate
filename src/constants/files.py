@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+
 from src.sources import find_abs_source_files
 
 FOLDER_DIR = Path(__file__).resolve().parents[2]

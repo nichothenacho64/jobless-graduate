@@ -14,6 +14,13 @@ QILT_HEADER_SEARCH_END_ROW_EXCLUSIVE = 8
 QILT_SINGLE_METRIC_EXPECTED_ROW_COUNT = 1
 QILT_METRIC_ROWS_MAX_ROW_COUNT = 5
 
+GOS_SUBGROUP_SHEET_NAME = "EMP_UG_ALL_2Y_DG"
+GOS_L_SUBGROUP_SHEET_NAME = "STMT_UG_ALL_1Y_SG"
+TOTAL_ROW_GROUP = "Total"
+
+GOS_SOURCE_LABEL = "GOS"
+GOS_L_SOURCE_LABEL = "GOS-L"
+
 QILT_MISSING_TEXT_VALUES = frozenset(
     {"", "-", "—", "–", "..", "...", "n/a", "na", "n.p.", "n/p", "np", "nil"}
 )
@@ -69,3 +76,15 @@ SUBGROUP_LONG_OUTCOME_SPECS: tuple[tuple[str, str, str, str], ...] = (
         "labour_force_participation_change",
     ),
 )
+
+QILT_OUTCOME_TITLES = {
+    "full_time_employment": "Full-time employment",
+    "overall_employment": "Overall employment",
+    "labour_force_participation": "Labour-force participation",
+}
+
+QILT_OUTCOME_SHORT_TITLES = {
+    "full_time_employment": "Full-time",
+    "overall_employment": "Overall",
+    "labour_force_participation": "LFP",
+}

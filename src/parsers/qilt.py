@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Optional
-
 import pandas as pd
 
-from src.loaders import load_excel_sheet, list_excel_sheets
+from src.loaders import list_excel_sheets, load_excel_sheet
 from src.parsers.qilt_classification import classify_qilt_table
 from src.parsers.qilt_extract import (
     extract_metadata_sections,
@@ -16,23 +13,7 @@ from src.parsers.qilt_extract import (
     find_title,
     rename_dimension_columns,
 )
-from src.types import Folder, Metadata
-
-@dataclass(slots=True)
-class QILTRowBounds:
-    header: int
-    data_first: int
-    data_last: int
-    footer_start: Optional[int]
-
-@dataclass(slots=True)
-class QILTParsedSheet:
-    sheet_name: str
-    title: str
-    rows: QILTRowBounds
-    classification: str
-    table: pd.DataFrame
-    metadata: Metadata
+from src.types import Folder, QILTParsedSheet, QILTRowBounds
 
 def parse_qilt_sheet(folder: Folder, file_name: str, sheet_name: str) -> QILTParsedSheet:
     raw_sheet = load_excel_sheet(folder, file_name, sheet_name, header=None)

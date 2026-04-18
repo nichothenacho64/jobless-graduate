@@ -1,21 +1,18 @@
-from src.exceptions import (
-    RawFolderNotFoundError,
-    RawFolderDirectoryError,
-    SpreadsheetNotFoundError,
-    SpreadsheetFormatError,
-    SheetNotFoundError,
-)
-from src.constants.files import (
-    RAW_DIR,
-    RAW_DIR_LOOKUP,
-)
-
-from src.constants.parsing import SPREADSHEET_SUFFIXES
-from src.types import Folder
-
 from pathlib import Path
-from typing import cast, Optional
+from typing import Optional, cast
+
 import pandas as pd
+
+from src.constants.files import RAW_DIR, RAW_DIR_LOOKUP
+from src.constants.parsing import SPREADSHEET_SUFFIXES
+from src.exceptions import (
+    RawFolderDirectoryError,
+    RawFolderNotFoundError,
+    SheetNotFoundError,
+    SpreadsheetFormatError,
+    SpreadsheetNotFoundError,
+)
+from src.types import Folder
 
 def resolve_folder_path(folder: Folder) -> Path:  # ! for both folders or path objects
     if isinstance(folder, Path):

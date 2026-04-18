@@ -1,10 +1,17 @@
 from __future__ import annotations
 
-import pandas as pd
-
 from dataclasses import replace
 from typing import Optional
 
+import pandas as pd
+
+from src.constants.parsing import SHEET_WHITESPACE_PATTERN
+from src.constants.qilt import (
+    QILT_FOOTNOTE_SYMBOL_PATTERN,
+    QILT_MISSING_TEXT_VALUES,
+    QILT_SUBGROUP_TEXT_EQUIVALENTS,
+    QILT_TRAILING_FOOTNOTE_PATTERN,
+)
 from src.exceptions import EmptyTableError
 from src.parsers.qilt import QILTParsedSheet, parse_qilt_sheet
 from src.preparation.cleaners import (
@@ -16,11 +23,12 @@ from src.preparation.cleaners import (
 from src.preparation.numbers import parse_sheet_number
 from src.preparation.series import (
     coerce_numeric_series,
+    is_missing_value,
     series_is_numeric_like,
     series_is_text_like,
 )
-from src.constants.qilt import QILT_MISSING_TEXT_VALUES, QILT_TRAILING_FOOTNOTE_PATTERN
 from src.types import Folder
+
 
 def prepare_qilt_sheet(folder: Folder, file_name: str, sheet_name: str) -> QILTParsedSheet:
     parsed_sheet = parse_qilt_sheet(folder, file_name, sheet_name)
@@ -32,13 +40,13 @@ def clean_qilt_parsed_sheet(parsed_sheet: QILTParsedSheet) -> QILTParsedSheet:
     return replace(
         parsed_sheet,
         table=cleaned_table,
-        metadata=cleaned_metadata
+        metadata=cleaned_metadata,
     )
 
 def clean_qilt_table(table: pd.DataFrame) -> pd.DataFrame:
     cleaned_table = table.copy()
     cleaned_columns: list[str] = []
-    
+
     for column in cleaned_table.columns:
         cleaned_column = clean_column_name(column, text_cleaner=_clean_qilt_text)
         cleaned_columns.append(cleaned_column)
@@ -50,7 +58,7 @@ def clean_qilt_table(table: pd.DataFrame) -> pd.DataFrame:
 
     cleaned_table = cleaned_table.dropna(axis=0, how="all").dropna(axis=1, how="all")
     cleaned_table = cleaned_table.reset_index(drop=True)
-    
+
     if cleaned_table.empty:
         raise EmptyTableError("The cleaned QILT table")
 
@@ -81,3 +89,20 @@ def parse_qilt_number(value: object) -> Optional[int | float]:
         value,
         trailing_note_pattern=QILT_TRAILING_FOOTNOTE_PATTERN,
     )
+
+def clean_qilt_display_text(value: object) -> Optional[str]:
+    if is_missing_value(value):
+        return None
+
+    text = str(value).strip()
+    text = QILT_FOOTNOTE_SYMBOL_PATTERN.sub("", text)
+    text = SHEET_WHITESPACE_PATTERN.sub(" ", text).strip()
+    return text or None
+
+def normalise_qilt_key_text(value: object) -> Optional[str]:
+    text = clean_qilt_display_text(value)
+    if text is None:
+        return None
+
+    equivalent_text = QILT_SUBGROUP_TEXT_EQUIVALENTS.get(text, text)
+    return equivalent_text.lower()

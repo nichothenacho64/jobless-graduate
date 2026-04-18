@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from pathlib import Path
-from src.constants.parsing import SPREADSHEET_SUFFIXES
-
 import re
+from pathlib import Path
+
+from src.constants.parsing import SPREADSHEET_SUFFIXES
 
 def _normalise_file_stem(stem: str) -> str:
     return re.sub(r"[^A-Z0-9]+", "-", stem.upper()).strip("-")

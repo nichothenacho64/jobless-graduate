@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import re
 from typing import Optional
 
-import re
 import pandas as pd
 
 from src.constants.parsing import (
@@ -10,8 +10,9 @@ from src.constants.parsing import (
     COLUMN_NAME_UNDERSCORE_PATTERN,
     SHEET_WHITESPACE_PATTERN,
 )
-from src.types import TextCleaner, Metadata
 from src.preparation.series import is_missing_value
+from src.types import Metadata, TextCleaner
+
 
 def clean_text(
     value: object,
@@ -52,7 +53,7 @@ def clean_column_name(
     standardised_text = COLUMN_NAME_NON_ALNUM_PATTERN.sub("_", standardised_text)
     standardised_text = COLUMN_NAME_UNDERSCORE_PATTERN.sub("_", standardised_text)
     standardised_text = standardised_text.strip("_")
-    
+
     if not standardised_text:
         raise ValueError("Column names cannot be empty after standardisation.")
 

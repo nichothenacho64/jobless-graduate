@@ -5,6 +5,12 @@ from typing import Optional
 import pandas as pd
 
 from src.constants.parsing import UNNAMED_HEADER_LABEL
+from src.constants.qilt import (
+    QILT_HEADER_SEARCH_END_ROW_EXCLUSIVE,
+    QILT_HEADER_SEARCH_START_ROW,
+    QILT_METADATA_LABELS,
+    QILT_TITLE_ROW_INDEX,
+)
 from src.exceptions import EmptyTableError
 from src.parsers.sheets import (
     build_column_names,
@@ -12,12 +18,6 @@ from src.parsers.sheets import (
     count_nonempty_cells,
     drop_trailing_blank_rows,
     get_row_texts,
-)
-from src.constants.qilt import (
-    QILT_HEADER_SEARCH_END_ROW_EXCLUSIVE,
-    QILT_HEADER_SEARCH_START_ROW,
-    QILT_METADATA_LABELS,
-    QILT_TITLE_ROW_INDEX,
 )
 from src.types import Metadata
 

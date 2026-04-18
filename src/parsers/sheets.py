@@ -1,15 +1,18 @@
 from __future__ import annotations
 
-import pandas as pd
 from typing import Optional
 
+import pandas as pd
+
 from src.constants.parsing import SHEET_WHITESPACE_PATTERN, UNNAMED_HEADER_LABEL
+
 
 def clean_cell_text(value: object) -> str:
     if isinstance(value, float) and pd.isna(value):
         return ""
 
     return str(value).strip()
+
 
 def get_row_texts(row: pd.Series) -> list[str]:
     texts: list[str] = []
@@ -21,6 +24,7 @@ def get_row_texts(row: pd.Series) -> list[str]:
 
     return texts
 
+
 def count_nonempty_cells(row: pd.Series) -> int:
     nonempty_cell_count = 0
 
@@ -30,6 +34,7 @@ def count_nonempty_cells(row: pd.Series) -> int:
 
     return nonempty_cell_count
 
+
 def find_next_nonblank_row(raw_sheet: pd.DataFrame, start_row_index: int) -> Optional[int]:
     for row_index in range(start_row_index, len(raw_sheet)):
         row = raw_sheet.iloc[row_index]
@@ -38,6 +43,7 @@ def find_next_nonblank_row(raw_sheet: pd.DataFrame, start_row_index: int) -> Opt
             return row_index
 
     return None
+
 
 def drop_trailing_blank_rows(table: pd.DataFrame) -> pd.DataFrame:
     end_index = len(table) - 1
@@ -54,6 +60,7 @@ def drop_trailing_blank_rows(table: pd.DataFrame) -> pd.DataFrame:
     trimmed_table = table.iloc[:row_stop]
 
     return trimmed_table.reset_index(drop=True)
+
 
 def build_column_names(header_row: pd.Series) -> list[str]:
     column_names: list[str] = []
@@ -80,3 +87,4 @@ def build_column_names(header_row: pd.Series) -> list[str]:
         column_names.append(column_name)
 
     return column_names
+

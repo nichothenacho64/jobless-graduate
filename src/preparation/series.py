@@ -1,18 +1,11 @@
-# series_is_text_like
-# series_is_numeric_like
-# coerce_numeric_series
-# resolve_nullable_numeric_dtype
+from __future__ import annotations
+
+import math
+from typing import Optional
 
 import pandas as pd
-import math
 
-from typing import Optional
-from src.types import (
-    NumericValue, 
-    NumericConverter, 
-    NumberParser, 
-    NullableNumericDtype
-)
+from src.types import NullableNumericDtype, NumberParser, NumericConverter, NumericValue
 
 def is_missing_value(value: object) -> bool:
     if value is None or value is pd.NA or value is pd.NaT:
@@ -91,3 +84,4 @@ def coerce_numeric_series(
         index=series.index,
         name=series.name,
     )
+

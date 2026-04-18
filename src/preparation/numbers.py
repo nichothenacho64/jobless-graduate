@@ -1,10 +1,13 @@
+from __future__ import annotations
+
 import math
 import re
-
 from typing import Optional
+
 from src.types import NumericValue
 
 SHEET_NUMBER_PATTERN = re.compile(r"(?P<sign>-)?(?P<number>\d+(?:\.\d+)?)")
+
 
 def parse_sheet_number(
     value: object,
@@ -51,6 +54,7 @@ def parse_sheet_number(
         is_negative=is_parentheses_negative,
     )
 
+
 def _normalise_sheet_number_text(
     value: object,
     *,
@@ -87,6 +91,7 @@ def _normalise_sheet_number_text(
 
     return text, is_negative
 
+
 def _clean_parsed_number(
     number_text: str,
     *,
@@ -102,3 +107,4 @@ def _clean_parsed_number(
         return int(parsed_number)
 
     return parsed_number
+
