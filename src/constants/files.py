@@ -5,6 +5,7 @@ from pathlib import Path
 from src.sources import find_abs_source_files
 
 FOLDER_DIR = Path(__file__).resolve().parents[2]
+ASSETS_DIR = FOLDER_DIR / "assets"
 DATA_DIR = FOLDER_DIR / "data"
 RAW_DIR = DATA_DIR / "raw"
 PROCESSED_DIR = DATA_DIR / "processed"

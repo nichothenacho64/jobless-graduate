@@ -13,9 +13,6 @@ QILT_HEADER_SEARCH_END_ROW_EXCLUSIVE = 8
 
 QILT_SINGLE_METRIC_EXPECTED_ROW_COUNT = 1
 QILT_METRIC_ROWS_MAX_ROW_COUNT = 5
-
-GOS_SUBGROUP_SHEET_NAME = "EMP_UG_ALL_2Y_DG"
-GOS_L_SUBGROUP_SHEET_NAME = "STMT_UG_ALL_1Y_SG"
 TOTAL_ROW_GROUP = "Total"
 
 GOS_SOURCE_LABEL = "GOS"
@@ -36,10 +33,22 @@ QILT_METADATA_LABELS = {
 
 QILT_PARTICIPATING_INSTITIONS_LINE = "No. of participating institutions"
 
+GOS_AGGREGATE_SHORT_TERM_COMPARISON_COLUMNS = {
+    "short_term_full_time_employment": "full_time_employment",
+    "short_term_overall_employment": "overall_employment",
+    "short_term_labour_force_participation": "labour_force_participation_rate",
+}
+
 GOS_SHORT_TERM_COMPARISON_COLUMNS = {
     "short_term_full_time_employment": "full_time_employment_2024",
     "short_term_overall_employment": "overall_employment_2024",
     "short_term_labour_force_participation": "labour_force_participation_rate_2024",
+}
+
+GOS_GENDER_SHORT_TERM_COLUMNS_BY_ROW_LABEL = {
+    "Full-time employment": "short_term_full_time_employment",
+    "Overall employment": "short_term_overall_employment",
+    "Labour force participation rate": "short_term_labour_force_participation",
 }
 
 GOS_L_MEDIUM_TERM_COMPARISON_COLUMNS = {
@@ -56,31 +65,32 @@ QILT_SUBGROUP_TEXT_EQUIVALENTS = {
     "Language other than English": "Other",
 }
 
-SUBGROUP_LONG_OUTCOME_SPECS: tuple[tuple[str, str, str, str], ...] = (
+QILT_SUBGROUP_DISPLAY_ORDER_BY_ROW_GROUP = {
+    "Socio-economic status": ("High", "Medium", "Low"),
+}
+
+QILT_SHORT_MEDIUM_OUTCOME_SPECS: tuple[tuple[str, str, str], ...] = (
     (
         "full_time_employment",
         "short_term_full_time_employment",
         "medium_term_full_time_employment",
-        "full_time_employment_change",
     ),
     (
         "overall_employment",
         "short_term_overall_employment",
         "medium_term_overall_employment",
-        "overall_employment_change",
     ),
     (
         "labour_force_participation",
         "short_term_labour_force_participation",
         "medium_term_labour_force_participation",
-        "labour_force_participation_change",
     ),
 )
 
 QILT_OUTCOME_TITLES = {
     "full_time_employment": "Full-time employment",
     "overall_employment": "Overall employment",
-    "labour_force_participation": "Labour-force participation",
+    "labour_force_participation": "Labour force participation",
 }
 
 QILT_OUTCOME_SHORT_TITLES = {

@@ -1,17 +1,20 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Literal, Optional
 
+import numpy as np
 import pandas as pd
 
 from src.constants.files import RAW_SOURCE_DIRS
 
-type Folder = str | Path
-type NumericValue = int | float
-type Metadata = dict[str, list[str]]
-type NullableNumericDtype = pd.Int64Dtype | pd.Float64Dtype
+Folder = str | Path
+NumericValue = int | float
+Metadata = dict[str, list[str]]
+NullableNumericDtype = pd.Int64Dtype | pd.Float64Dtype
 
-type QILTTableKind = Literal[
+QILTTableKind = Literal[
     "collection_summary",
     "transition_matrix",
     "single_metric_time_series",
@@ -20,9 +23,27 @@ type QILTTableKind = Literal[
     "wide_table",
 ]
 
-type NumericConverter = Callable[[NumericValue], NumericValue]
-type TextCleaner = Callable[[object], Optional[str]]
-type NumberParser = Callable[[object], Optional[NumericValue]]
+NumericConverter = Callable[[NumericValue], NumericValue]
+TextCleaner = Callable[[object], Optional[str]]
+NumberParser = Callable[[object], Optional[NumericValue]]
+
+@dataclass(frozen=True, slots=True)
+class AxisSpec:
+    minimum: float
+    maximum: float
+    tick_step: float
+
+    @property
+    def limits(self) -> tuple[float, float]:
+        return (self.minimum, self.maximum)
+
+    @property
+    def ticks(self) -> np.ndarray:
+        return np.arange(
+            self.minimum,
+            self.maximum + self.tick_step,
+            self.tick_step,
+        )
 
 @dataclass
 class ExcelSheet:

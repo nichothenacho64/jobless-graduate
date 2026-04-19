@@ -29,6 +29,9 @@ from src.preparation.series import (
 )
 from src.types import Folder
 
+def prepare_qilt_table(folder: Folder, file_name: str, sheet_name: str) -> pd.DataFrame:
+    parsed_sheet = parse_qilt_sheet(folder, file_name, sheet_name)
+    return clean_qilt_parsed_sheet(parsed_sheet).table
 
 def prepare_qilt_sheet(folder: Folder, file_name: str, sheet_name: str) -> QILTParsedSheet:
     parsed_sheet = parse_qilt_sheet(folder, file_name, sheet_name)
