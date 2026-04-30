@@ -7,7 +7,7 @@ from typing import Callable, Literal, Optional
 import numpy as np
 import pandas as pd
 
-from src.constants.files import RAW_SOURCE_DIRS
+from src.constants import RAW_SOURCE_DIRS
 
 Folder = str | Path
 NumericValue = int | float

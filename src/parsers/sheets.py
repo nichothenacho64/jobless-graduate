@@ -4,7 +4,7 @@ from typing import Optional
 
 import pandas as pd
 
-from src.constants.parsing import SHEET_WHITESPACE_PATTERN, UNNAMED_HEADER_LABEL
+from src.parsers.constants import SHEET_WHITESPACE_PATTERN, UNNAMED_HEADER_LABEL
 
 
 def clean_cell_text(value: object) -> str:
@@ -87,4 +87,3 @@ def build_column_names(header_row: pd.Series) -> list[str]:
         column_names.append(column_name)
 
     return column_names
-

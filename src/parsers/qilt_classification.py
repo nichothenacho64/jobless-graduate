@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import pandas as pd
 
-from src.constants.parsing import UNNAMED_HEADER_LABEL
-from src.constants.qilt import (
+from src.parsers.constants import (
     QILT_METRIC_ROWS_MAX_ROW_COUNT,
     QILT_PARTICIPATING_INSTITIONS_LINE,
     QILT_SINGLE_METRIC_EXPECTED_ROW_COUNT,
     QILT_YEAR_PATTERN,
+    UNNAMED_HEADER_LABEL,
 )
 from src.types import QILTTableKind
 

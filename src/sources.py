@@ -3,7 +3,32 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from src.constants.parsing import SPREADSHEET_SUFFIXES
+QILT_FOLDER_NAME = "QILT"
+ABS_FOLDER_NAME = "ABS"
+ABS_EXTRAS_FOLDER_NAME = "Extras"
+ABS_EXTRAS_FOLDER_KEY = "ABS_EXTRAS"
+
+QILT_FOLDER_ALIAS = "qilt"
+ABS_FOLDER_ALIAS = "abs"
+ABS_EXTRAS_FOLDER_ALIAS = "abs_extras"
+
+QILT_2024_GOS_SOURCE = "QILT-2024-GOS"
+QILT_2024_GOS_L_SOURCE = "QILT-2024-GOS-L"
+
+FOLDER_DIR = Path(__file__).resolve().parents[1]
+ASSETS_DIR = FOLDER_DIR / "assets"
+DATA_DIR = FOLDER_DIR / "data"
+RAW_DIR = DATA_DIR / "raw"
+PROCESSED_DIR = DATA_DIR / "processed"
+
+QILT_RAW_DIR = RAW_DIR / QILT_FOLDER_NAME
+ABS_RAW_DIR = RAW_DIR / ABS_FOLDER_NAME
+ABS_EXTRAS_RAW_DIR = ABS_RAW_DIR / ABS_EXTRAS_FOLDER_NAME
+
+QILT_2024_GOS_FILE_NAME = "2024_GOS_National_Report_Tables.xlsx"
+QILT_2024_GOS_L_FILE_NAME = "2024_GOS-L_National_Report_Tables.xlsx"
+
+SPREADSHEET_SUFFIXES = {".xlsx", ".xls", ".xlsm", ".ods"}
 
 def _normalise_file_stem(stem: str) -> str:
     return re.sub(r"[^A-Z0-9]+", "-", stem.upper()).strip("-")
@@ -43,3 +68,23 @@ def find_abs_source_files(abs_directory: Path) -> dict[str, str]:
         abs_files[source_key] = file_path.name
 
     return abs_files
+
+RAW_SOURCE_DIRS: dict[str, dict[str, str]] = {
+    QILT_FOLDER_NAME: {
+        QILT_2024_GOS_SOURCE: QILT_2024_GOS_FILE_NAME,
+        QILT_2024_GOS_L_SOURCE: QILT_2024_GOS_L_FILE_NAME,
+    },
+    ABS_FOLDER_NAME: find_abs_source_files(ABS_RAW_DIR),
+    ABS_EXTRAS_FOLDER_KEY: {
+        # ?? for later files
+    },
+}
+
+RAW_DIR_LOOKUP: dict[str, Path] = {
+    QILT_RAW_DIR.name: QILT_RAW_DIR,
+    ABS_RAW_DIR.name: ABS_RAW_DIR,
+    ABS_EXTRAS_RAW_DIR.name: ABS_EXTRAS_RAW_DIR,
+    QILT_FOLDER_ALIAS: QILT_RAW_DIR,
+    ABS_FOLDER_ALIAS: ABS_RAW_DIR,
+    ABS_EXTRAS_FOLDER_ALIAS: ABS_EXTRAS_RAW_DIR,
+}

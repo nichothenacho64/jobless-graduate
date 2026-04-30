@@ -5,7 +5,7 @@ from typing import Optional
 
 import pandas as pd
 
-from src.constants.parsing import (
+from src.parsers.constants import (
     COLUMN_NAME_NON_ALNUM_PATTERN,
     COLUMN_NAME_UNDERSCORE_PATTERN,
     SHEET_WHITESPACE_PATTERN,

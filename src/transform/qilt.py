@@ -4,7 +4,7 @@ from typing import Optional
 
 import pandas as pd
 
-from src.constants.qilt import (
+from src.transform.constants import (
     QILT_SUBGROUP_DISPLAY_ORDER_BY_ROW_GROUP,
     QILT_SUBGROUP_TEXT_EQUIVALENTS,
 )

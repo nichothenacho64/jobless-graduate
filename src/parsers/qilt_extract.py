@@ -4,12 +4,12 @@ from typing import Optional
 
 import pandas as pd
 
-from src.constants.parsing import UNNAMED_HEADER_LABEL
-from src.constants.qilt import (
+from src.parsers.constants import (
     QILT_HEADER_SEARCH_END_ROW_EXCLUSIVE,
     QILT_HEADER_SEARCH_START_ROW,
     QILT_METADATA_LABELS,
     QILT_TITLE_ROW_INDEX,
+    UNNAMED_HEADER_LABEL,
 )
 from src.exceptions import EmptyTableError
 from src.parsers.sheets import (

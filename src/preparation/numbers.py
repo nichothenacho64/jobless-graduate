@@ -4,9 +4,8 @@ import math
 import re
 from typing import Optional
 
+from src.preparation.constants import SHEET_NUMBER_PATTERN
 from src.types import NumericValue
-
-SHEET_NUMBER_PATTERN = re.compile(r"(?P<sign>-)?(?P<number>\d+(?:\.\d+)?)")
 
 
 def parse_sheet_number(
@@ -107,4 +106,3 @@ def _clean_parsed_number(
         return int(parsed_number)
 
     return parsed_number
-

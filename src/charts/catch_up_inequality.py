@@ -9,39 +9,8 @@ from matplotlib.colors import TwoSlopeNorm
 from matplotlib.figure import Figure
 
 import src.charts.style as ChartStyle
-import src.constants.charts as ChartConstants
-from src.constants.qilt import (
-    QILT_OUTCOME_SHORT_TITLES,
-    QILT_OUTCOME_TITLES,
-    QILT_SHORT_MEDIUM_OUTCOME_SPECS,
-)
-
-SHORT_TERM_LABEL = "Short-term gap (4 months)"
-MEDIUM_TERM_LABEL = "Medium-term gap (3 years)"
-CATCH_UP_LEVELS_TITLE = "Short-term and medium-term subgroup levels"
-CATCH_UP_CHANGE_HEATMAP_TITLE = "Change from short-term to medium-term"
-CATCH_UP_GAP_WIDTH_TITLE = "Within-group inequality gap widths"
-GAP_WIDTH_PANEL_WIDTH_RATIOS = (1.24, 1.0, 0.86)
-GAP_WIDTH_PANEL_STYLES = {
-    "full_time_employment": {
-        "alpha": 1.0,
-        "line_width": 2.2,
-        "marker_size": 42,
-        "title_alpha": 1.0,
-    },
-    "overall_employment": {
-        "alpha": 0.9,
-        "line_width": 1.9,
-        "marker_size": 38,
-        "title_alpha": 0.95,
-    },
-    "labour_force_participation": {
-        "alpha": 0.62,
-        "line_width": 1.5,
-        "marker_size": 34,
-        "title_alpha": 0.78,
-    },
-}
+import src.charts.constants as ChartConstants
+from src.transform.constants import QILT_SHORT_MEDIUM_OUTCOME_SPECS
 
 def create_catch_up_levels_chart(
     levels_table: pd.DataFrame,
@@ -86,7 +55,7 @@ def create_catch_up_levels_chart(
         ChartStyle.draw_group_boundaries(axis, group_boundaries)
         ChartStyle.style_outcome_axis(
             axis,
-            title=QILT_OUTCOME_TITLES[outcome_key],
+            title=ChartConstants.QILT_OUTCOME_TITLES[outcome_key],
             x_label="Percentage",
         )
         axis.set_xlim(*ChartConstants.SUBGROUP_LEVELS_X_AXIS.limits)
@@ -102,7 +71,7 @@ def create_catch_up_levels_chart(
     )
 
     figure.suptitle(
-        CATCH_UP_LEVELS_TITLE,
+        ChartConstants.CATCH_UP_LEVELS_TITLE,
         fontsize=ChartConstants.SUBGROUP_CHART_TITLE_FONT_SIZE,
         color=ChartConstants.TEXT_COLOR,
         x=0.12,
@@ -142,7 +111,7 @@ def create_catch_up_change_heatmap(
 
     axis.set_xticks(np.arange(len(outcome_keys)))
     axis.set_xticklabels(
-        [QILT_OUTCOME_SHORT_TITLES[outcome_key] for outcome_key in outcome_keys]
+        [ChartConstants.QILT_OUTCOME_SHORT_TITLES[outcome_key] for outcome_key in outcome_keys]
     )
     axis.set_yticks(np.arange(len(ordered_table)))
     axis.set_yticklabels(
@@ -152,7 +121,7 @@ def create_catch_up_change_heatmap(
         )
     )
     axis.set_title(
-        CATCH_UP_CHANGE_HEATMAP_TITLE,
+        ChartConstants.CATCH_UP_CHANGE_HEATMAP_TITLE,
         loc="left",
         fontsize=ChartConstants.SUBGROUP_CHART_TITLE_FONT_SIZE,
         color=ChartConstants.TEXT_COLOR,
@@ -217,11 +186,11 @@ def create_catch_up_gap_width_chart(gap_width_table: pd.DataFrame) -> Figure:
         ncols=len(QILT_SHORT_MEDIUM_OUTCOME_SPECS),
         figsize=(11.9, 5.6),
         sharey=True,
-        gridspec_kw={"width_ratios": GAP_WIDTH_PANEL_WIDTH_RATIOS},
+        gridspec_kw={"width_ratios": ChartConstants.GAP_WIDTH_PANEL_WIDTH_RATIOS},
     )
 
     for axis, (outcome_key, _, _) in zip(axes, QILT_SHORT_MEDIUM_OUTCOME_SPECS):
-        panel_style = GAP_WIDTH_PANEL_STYLES[outcome_key]
+        panel_style = ChartConstants.GAP_WIDTH_PANEL_STYLES[outcome_key]
         outcome_table = (
             ordered_table.loc[ordered_table["outcome_key"] == outcome_key]
             .sort_values(["row_group_order", "row_group"], kind="mergesort")
@@ -251,7 +220,7 @@ def create_catch_up_gap_width_chart(gap_width_table: pd.DataFrame) -> Figure:
             row_positions[available_mask],
             color=ChartConstants.SHORT_TERM_COLOR,
             s=panel_style["marker_size"],
-            label=SHORT_TERM_LABEL,
+            label=ChartConstants.CATCH_UP_SHORT_TERM_LABEL,
             alpha=panel_style["alpha"],
             zorder=ChartConstants.DUMBBELL_LEFT_POINT_ZORDER,
         )
@@ -262,13 +231,13 @@ def create_catch_up_gap_width_chart(gap_width_table: pd.DataFrame) -> Figure:
             edgecolors="white",
             linewidths=0.9,
             s=panel_style["marker_size"],
-            label=MEDIUM_TERM_LABEL,
+            label=ChartConstants.CATCH_UP_MEDIUM_TERM_LABEL,
             alpha=panel_style["alpha"],
             zorder=ChartConstants.DUMBBELL_RIGHT_POINT_ZORDER,
         )
         ChartStyle.style_outcome_axis(
             axis,
-            title=QILT_OUTCOME_TITLES[outcome_key],
+            title=ChartConstants.QILT_OUTCOME_TITLES[outcome_key],
             x_label="Gap width (percentage points)",
         )
         axis.title.set_alpha(panel_style["title_alpha"])
@@ -298,7 +267,7 @@ def create_catch_up_gap_width_chart(gap_width_table: pd.DataFrame) -> Figure:
     )
 
     figure.suptitle(
-        CATCH_UP_GAP_WIDTH_TITLE,
+        ChartConstants.CATCH_UP_GAP_WIDTH_TITLE,
         fontsize=ChartConstants.SUBGROUP_CHART_TITLE_FONT_SIZE,
         color=ChartConstants.TEXT_COLOR,
         x=0.08,

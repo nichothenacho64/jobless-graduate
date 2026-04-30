@@ -5,13 +5,13 @@ from typing import Optional
 
 import pandas as pd
 
-from src.constants.parsing import SHEET_WHITESPACE_PATTERN
-from src.constants.qilt import (
+from src.parsers.constants import SHEET_WHITESPACE_PATTERN
+from src.preparation.constants import (
     QILT_FOOTNOTE_SYMBOL_PATTERN,
     QILT_MISSING_TEXT_VALUES,
-    QILT_SUBGROUP_TEXT_EQUIVALENTS,
     QILT_TRAILING_FOOTNOTE_PATTERN,
 )
+from src.transform.constants import QILT_SUBGROUP_TEXT_EQUIVALENTS
 from src.exceptions import EmptyTableError
 from src.parsers.qilt import QILTParsedSheet, parse_qilt_sheet
 from src.preparation.cleaners import (

@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable, Mapping
 import pandas as pd
 
-from src.constants.qilt import (
+from src.transform.constants import (
     GOS_L_MEDIUM_TERM_COMPARISON_COLUMNS,
     GOS_SHORT_TERM_COMPARISON_COLUMNS,
     QILT_SHORT_MEDIUM_OUTCOME_SPECS,

@@ -6,35 +6,8 @@ import pandas as pd
 from matplotlib.figure import Figure
 
 import src.charts.style as ChartStyle
-import src.constants.charts as ChartConstants
-from src.constants.qilt import (
-    QILT_OUTCOME_TITLES,
-    QILT_SHORT_MEDIUM_OUTCOME_SPECS,
-)
-
-UNEQUAL_DISTRIBUTION_TITLE = "2024 short-term subgroup gaps by dimension"
-UNEQUAL_PANEL_WIDTH_RATIOS = (1.24, 1.0, 0.86)
-UNEQUAL_GAP_LABEL_OFFSET = 1.35
-UNEQUAL_PANEL_STYLES = {
-    "full_time_employment": {
-        "alpha": 1.0,
-        "line_width": 2.3,
-        "marker_size": 42,
-        "title_alpha": 1.0,
-    },
-    "overall_employment": {
-        "alpha": 0.9,
-        "line_width": 1.9,
-        "marker_size": 38,
-        "title_alpha": 0.95,
-    },
-    "labour_force_participation": {
-        "alpha": 0.62,
-        "line_width": 1.5,
-        "marker_size": 34,
-        "title_alpha": 0.78,
-    },
-}
+import src.charts.constants as ChartConstants
+from src.transform.constants import QILT_SHORT_MEDIUM_OUTCOME_SPECS
 
 def create_unequal_distribution_chart(levels_table: pd.DataFrame) -> Figure:
     ChartStyle.apply_chart_style()
@@ -49,11 +22,11 @@ def create_unequal_distribution_chart(levels_table: pd.DataFrame) -> Figure:
         ncols=len(QILT_SHORT_MEDIUM_OUTCOME_SPECS),
         figsize=(12.4, 5.8),
         sharey=True,
-        gridspec_kw={"width_ratios": UNEQUAL_PANEL_WIDTH_RATIOS},
+        gridspec_kw={"width_ratios": ChartConstants.UNEQUAL_PANEL_WIDTH_RATIOS},
     )
 
     for axis, (outcome_key, _, _) in zip(axes, QILT_SHORT_MEDIUM_OUTCOME_SPECS):
-        panel_style = UNEQUAL_PANEL_STYLES[outcome_key]
+        panel_style = ChartConstants.UNEQUAL_PANEL_STYLES[outcome_key]
         low_values = pd.to_numeric(
             ordered_table[f"{outcome_key}_low_value"],
             errors="coerce",
@@ -102,7 +75,8 @@ def create_unequal_distribution_chart(levels_table: pd.DataFrame) -> Figure:
             gap_value = gap_values[row_index]
             axis.text(
                 min(
-                    max(low_values[row_index], high_values[row_index]) + UNEQUAL_GAP_LABEL_OFFSET,
+                    max(low_values[row_index], high_values[row_index])
+                    + ChartConstants.UNEQUAL_GAP_LABEL_OFFSET,
                     ChartConstants.SUBGROUP_LEVELS_X_AXIS.maximum - 0.4,
                 ),
                 row_positions[row_index],
@@ -133,7 +107,7 @@ def create_unequal_distribution_chart(levels_table: pd.DataFrame) -> Figure:
 
         ChartStyle.style_outcome_axis(
             axis,
-            title=QILT_OUTCOME_TITLES[outcome_key],
+            title=ChartConstants.QILT_OUTCOME_TITLES[outcome_key],
             x_label="2024 short-term rate (percentage)",
         )
         axis.title.set_alpha(panel_style["title_alpha"])
@@ -157,7 +131,7 @@ def create_unequal_distribution_chart(levels_table: pd.DataFrame) -> Figure:
     )
 
     figure.suptitle(
-        UNEQUAL_DISTRIBUTION_TITLE,
+        ChartConstants.UNEQUAL_DISTRIBUTION_TITLE,
         fontsize=ChartConstants.SUBGROUP_CHART_TITLE_FONT_SIZE,
         color=ChartConstants.TEXT_COLOR,
         x=0.11,

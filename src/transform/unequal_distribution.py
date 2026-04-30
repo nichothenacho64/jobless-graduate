@@ -4,7 +4,7 @@ from typing import Optional
 
 import pandas as pd
 
-from src.constants.qilt import (
+from src.transform.constants import (
     GOS_GENDER_SHORT_TERM_COLUMNS_BY_ROW_LABEL,
     GOS_SHORT_TERM_COMPARISON_COLUMNS,
     QILT_SHORT_MEDIUM_OUTCOME_SPECS,

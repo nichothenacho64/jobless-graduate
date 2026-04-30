@@ -16,42 +16,32 @@ from matplotlib.text import Text
 from matplotlib.transforms import blended_transform_factory
 
 from src.preparation.series import is_missing_value
-import src.constants.charts as ChartConstants
-from src.constants.qilt import QILT_SUBGROUP_TEXT_EQUIVALENTS
-from src.constants.files import ASSETS_DIR
-
-SOURCE_SANS_3_DIRECTORY = ASSETS_DIR / "fonts" / "source_sans_3"
-
-SOURCE_SANS_3_VARIANTS = {
-    "regular": "SourceSans3-Regular.ttf",
-    "bold": "SourceSans3-Bold.ttf",
-    "italic": "SourceSans3-Italic.ttf",
-    "bold_italic": "SourceSans3-BoldItalic.ttf",
-}
+import src.charts.constants as ChartConstants
+from src.transform.constants import QILT_SUBGROUP_TEXT_EQUIVALENTS
 
 
 @lru_cache(maxsize=1)
 def _load_source_sans_3_font_variants() -> dict[str, Path]:
     font_paths = {
         path.name: path
-        for path in SOURCE_SANS_3_DIRECTORY.iterdir()
+        for path in ChartConstants.SOURCE_SANS_3_DIRECTORY.iterdir()
         if path.suffix.lower() in {".ttf", ".otf"}
     }
 
     if not font_paths:
         raise FileNotFoundError(
-            f"No font files found in {SOURCE_SANS_3_DIRECTORY}"
+            f"No font files found in {ChartConstants.SOURCE_SANS_3_DIRECTORY}"
         )
 
     missing_variants = sorted(
         file_name
-        for file_name in SOURCE_SANS_3_VARIANTS.values()
+        for file_name in ChartConstants.SOURCE_SANS_3_VARIANTS.values()
         if file_name not in font_paths
     )
     if missing_variants:
         missing_display = ", ".join(missing_variants)
         raise FileNotFoundError(
-            f"Missing Source Sans 3 font variants in {SOURCE_SANS_3_DIRECTORY}: "
+            f"Missing Source Sans 3 font variants in {ChartConstants.SOURCE_SANS_3_DIRECTORY}: "
             f"{missing_display}"
         )
 
@@ -60,7 +50,7 @@ def _load_source_sans_3_font_variants() -> dict[str, Path]:
 
     return {
         variant_name: font_paths[file_name]
-        for variant_name, file_name in SOURCE_SANS_3_VARIANTS.items()
+        for variant_name, file_name in ChartConstants.SOURCE_SANS_3_VARIANTS.items()
     }
 
 

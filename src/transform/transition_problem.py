@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import pandas as pd
 
-from src.constants.qilt import (
+from src.parsers.constants import QILT_YEAR_PATTERN
+from src.transform.constants import (
     GOS_AGGREGATE_SHORT_TERM_COMPARISON_COLUMNS,
     GOS_L_MEDIUM_TERM_COMPARISON_COLUMNS,
-    QILT_YEAR_PATTERN,
 )
 from src.preparation.qilt import clean_qilt_display_text
 
