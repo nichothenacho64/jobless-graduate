@@ -25,7 +25,7 @@ from src.parsers.sheets import (
     require_cell_text,
 )
 from src.types import (
-    ABSBounds,
+    ABSSourceBounds,
     ABSMeasurement,
     ABSMeasurementCell,
     ABSParsedTable,
@@ -46,7 +46,7 @@ def _last_nonblank_row(raw_sheet: pd.DataFrame) -> int:
 def _row_has_measure_values(
     raw_sheet: pd.DataFrame,
     row_index: int,
-    bounds: ABSBounds,
+    bounds: ABSSourceBounds,
 ) -> bool:
     for col_index in range(bounds.col_first, bounds.col_last + 1):
         if clean_cell_text(raw_sheet.iat[row_index, col_index]):
@@ -73,7 +73,7 @@ def _is_footer_row(row: pd.Series) -> bool:
 def _next_body_row_kind(
     raw_sheet: pd.DataFrame,
     row_bounds: ABSRowBounds,
-    bounds: ABSBounds,
+    bounds: ABSSourceBounds,
     start_row: int,
 ) -> Optional[BodyRowKind]:
     for row_index in range(start_row, row_bounds.body_last + 1):
@@ -253,7 +253,7 @@ def infer_abs_row_bounds(
 def infer_abs_subject_and_row_groups(
     raw_sheet: pd.DataFrame,
     row_bounds: ABSRowBounds,
-    bounds: ABSBounds,
+    bounds: ABSSourceBounds,
 ) -> tuple[Optional[str], dict[int, list[str]]]:
     subject_candidates: list[str] = []
     row_group_paths: dict[int, list[str]] = {}
@@ -310,7 +310,7 @@ def _header_label_for_column(
 def flatten_abs_column_headers(
     raw_sheet: pd.DataFrame,
     row_bounds: ABSRowBounds,
-    bounds: ABSBounds,
+    bounds: ABSSourceBounds,
 ) -> dict[int, list[str]]:
     column_headers: dict[int, list[str]] = {}
 
@@ -367,12 +367,12 @@ def _build_record(
     return record
 
 
-def tidy_abs_subtable(
+def _build_parsed_subtable(
     raw_sheet: pd.DataFrame,
     measurement_cell: ABSMeasurementCell,
     subject: Optional[str],
     row_bounds: ABSRowBounds,
-    bounds: ABSBounds,
+    bounds: ABSSourceBounds,
     row_group_paths: dict[int, list[str]],
 ) -> pd.DataFrame:
     records: list[dict[str, object]] = []
@@ -412,7 +412,7 @@ def tidy_abs_subtable(
     return pd.DataFrame(records)
 
 
-def _extract_raw_subtable(raw_sheet: pd.DataFrame, bounds: ABSBounds) -> pd.DataFrame:
+def _extract_raw_subtable(raw_sheet: pd.DataFrame, bounds: ABSSourceBounds) -> pd.DataFrame:
     return raw_sheet.iloc[
         bounds.row_first : bounds.row_last + 1,
         bounds.col_first : bounds.col_last + 1,
@@ -438,7 +438,7 @@ def _build_subtable(
         body_last,
     )
 
-    bounds = ABSBounds(
+    bounds = ABSSourceBounds(
         row_first=measurement_cell.row,
         row_last=body_last,
         col_first=measurement_cell.col,
@@ -465,7 +465,7 @@ def _build_subtable(
         source_bounds=bounds,
         row_bounds=row_bounds,
         raw_table=_extract_raw_subtable(raw_sheet, bounds),
-        tidy_table=tidy_abs_subtable(
+        parsed_table=_build_parsed_subtable(
             raw_sheet,
             measurement_cell,
             subject,

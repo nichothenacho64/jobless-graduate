@@ -1,4 +1,5 @@
 # for excluding secondary notebooks from GitHub linguist statistics
-notebooks/01_eda.ipynb linguist-generated=true
-notebooks/02_analysis.ipynb linguist-generated=true
-notebooks/04_extra_charts.ipynb linguist-generated=true
+notebooks/01a_eda_qilt.ipynb linguist-vendored
+notebooks/01b_eda_abs.ipynb linguist-vendored
+notebooks/02_analysis.ipynb linguist-vendored
+notebooks/04_extra_charts.ipynb linguist-vendored

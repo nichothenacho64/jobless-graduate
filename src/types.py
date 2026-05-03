@@ -100,7 +100,7 @@ class ABSMeasurementCell:
     measurement_label: str
 
 @dataclass(slots=True)
-class ABSBounds:
+class ABSSourceBounds:
     row_first: int
     row_last: int
     col_first: int
@@ -119,10 +119,10 @@ class ABSParsedTable:
     value_kind: ABSMeasurement
     source_measurement_label: str
     subject_label: Optional[str]
-    source_bounds: ABSBounds
+    source_bounds: ABSSourceBounds
     row_bounds: ABSRowBounds
     raw_table: pd.DataFrame
-    tidy_table: pd.DataFrame
+    parsed_table: pd.DataFrame
 
 @dataclass(slots=True)
 class ABSParsedSheet:
