@@ -25,16 +25,16 @@ ABS_TABLE_LABEL_PATTERN = re.compile(
     r"^Table\s+(?P<NUMBER>\d+)\b\s*(?P<TITLE>.*)$",
     re.IGNORECASE,
 )
-ABS_TABLE_SOURCE_KEY_PATTERN = re.compile(r"^SEW-T(?P<START>\d+)(?:-\d+)?$")
+ABS_TABLE_SOURCE_KEY_PATTERN = re.compile(r"^SEW-T(?P<START>\d+)(?:-(?P<END>\d+))?$")
 ABS_MEASUREMENT_LABELS = {
     "Estimate ('000)": "estimate_count",
     "ESTIMATE ('000)": "estimate_count",
     "Proportion (%)": "proportion_percent",
     "Proportion (%)(a)": "proportion_percent",
     "Relative Standard Error of estimate (%)": "rse_estimate_percent",
-    "Relative Standard Error of proportion (%)": "rse_proportion_percent",
-    "95% Margin of Error of proportion (±)": "moe_proportion_pp",
-    "95% Margin of error of proportion (±)": "moe_proportion_pp",
+    "Relative Standard Error of proportion (%)": "rse_estimate_percent",
+    "95% Margin of Error of proportion (±)": "margin_error_proportion",
+    "95% Margin of error of proportion (±)": "margin_error_proportion",
 }
 
 QILT_SINGLE_METRIC_EXPECTED_ROW_COUNT = 1

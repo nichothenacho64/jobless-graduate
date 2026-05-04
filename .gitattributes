@@ -1,5 +1,6 @@
 # for excluding secondary notebooks from GitHub linguist statistics
 notebooks/01a_eda_qilt.ipynb linguist-vendored
 notebooks/01b_eda_abs.ipynb linguist-vendored
-notebooks/02_analysis.ipynb linguist-vendored
+notebooks/02a_analysis_qilt.ipynb linguist-vendored
+notebooks/02b_analysis_abs.ipynb linguist-vendored
 notebooks/04_extra_charts.ipynb linguist-vendored

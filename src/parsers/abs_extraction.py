@@ -3,9 +3,10 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Optional, cast
 
+from openpyxl import load_workbook
 import pandas as pd
 
-from src.loaders import list_excel_sheets
+from src.loaders import list_excel_sheets, resolve_spreadsheet_path
 from src.parsers.constants import (
     ABS_CONTENTS_SHEET_NAME,
     ABS_FOOTER_NOTE_PATTERN,
@@ -254,11 +255,14 @@ def infer_abs_subject_and_row_groups(
     raw_sheet: pd.DataFrame,
     row_bounds: ABSRowBounds,
     bounds: ABSSourceBounds,
-) -> tuple[Optional[str], dict[int, list[str]]]:
+    row_indents: Mapping[int, int],
+) -> tuple[Optional[str], dict[int, list[str]], dict[int, int]]:
     subject_candidates: list[str] = []
     row_group_paths: dict[int, list[str]] = {}
+    row_group_indents: dict[int, int] = {}
 
     current_path: list[str] = []
+    current_group_indent: Optional[int] = None
     pending_subject_path: list[str] = []
 
     for row_index in range(row_bounds.body_first, row_bounds.body_last + 1):
@@ -266,11 +270,14 @@ def infer_abs_subject_and_row_groups(
         if not row_label:
             continue
 
+        row_indent = row_indents.get(row_index, 0)
         has_values = _row_has_measure_values(raw_sheet, row_index, bounds)
 
         if has_values:
             if current_path:
                 row_group_paths[row_index] = current_path.copy()
+                if current_group_indent is not None:
+                    row_group_indents[row_index] = current_group_indent
             continue
 
         next_kind = _next_body_row_kind(
@@ -286,11 +293,13 @@ def infer_abs_subject_and_row_groups(
                 subject_candidates.append(row_label)
         elif pending_subject_path:
             current_path = [*pending_subject_path, row_label]
+            current_group_indent = row_indent
         else:
             current_path = [row_label]
+            current_group_indent = row_indent
 
     subject = subject_candidates[0] if len(subject_candidates) == 1 else None
-    return subject, row_group_paths
+    return subject, row_group_paths, row_group_indents
 
 
 def _header_label_for_column(
@@ -334,24 +343,32 @@ def flatten_abs_column_headers(
 
 
 def _build_record(
+    table_number: int,
+    table_title: str,
     measurement_cell: ABSMeasurementCell,
     subject: Optional[str],
     row_index: int,
     col_index: int,
     row_label: str,
+    row_indent: int,
     row_group_path: list[str],
+    row_group_indent: Optional[int],
     header_labels: list[str],
     value: object,
     value_text: str,
 ) -> dict[str, object]:
     value_marker = value_text.lower()
     record: dict[str, object] = {
+        "table_number": table_number,
+        "table_title": table_title,
         "measurement": measurement_cell.measurement,
         "measurement_label": measurement_cell.measurement_label,
         "subject": subject,
         "row_group": row_group_path[-1] if row_group_path else None,
         "row_group_path": " | ".join(row_group_path),
         "row_label": row_label,
+        "row_indent": row_indent,
+        "row_group_indent": row_group_indent,
         "column_header": " | ".join(header_labels),
         "source_row": row_index + 1,
         "source_column": col_index + 1,
@@ -369,11 +386,15 @@ def _build_record(
 
 def _build_parsed_subtable(
     raw_sheet: pd.DataFrame,
+    table_number: int,
+    table_title: str,
     measurement_cell: ABSMeasurementCell,
     subject: Optional[str],
     row_bounds: ABSRowBounds,
     bounds: ABSSourceBounds,
+    row_indents: Mapping[int, int],
     row_group_paths: dict[int, list[str]],
+    row_group_indents: dict[int, int],
 ) -> pd.DataFrame:
     records: list[dict[str, object]] = []
     column_headers = flatten_abs_column_headers(raw_sheet, row_bounds, bounds)
@@ -387,6 +408,8 @@ def _build_parsed_subtable(
             continue
 
         row_group_path = row_group_paths.get(row_index, [])
+        row_group_indent = row_group_indents.get(row_index)
+        row_indent = row_indents.get(row_index, 0)
 
         for col_index in range(bounds.col_first, bounds.col_last + 1):
             value = raw_sheet.iat[row_index, col_index]
@@ -397,12 +420,16 @@ def _build_parsed_subtable(
 
             records.append(
                 _build_record(
+                    table_number=table_number,
+                    table_title=table_title,
                     measurement_cell=measurement_cell,
                     subject=subject,
                     row_index=row_index,
                     col_index=col_index,
                     row_label=row_label,
+                    row_indent=row_indent,
                     row_group_path=row_group_path,
+                    row_group_indent=row_group_indent,
                     header_labels=column_headers.get(col_index, []),
                     value=value,
                     value_text=value_text,
@@ -421,9 +448,12 @@ def _extract_raw_subtable(raw_sheet: pd.DataFrame, bounds: ABSSourceBounds) -> p
 
 def _build_subtable(
     raw_sheet: pd.DataFrame,
+    table_number: int,
+    table_title: str,
     sheet_rows: ABSRowBounds,
     measurement_cell: ABSMeasurementCell,
     measurement_cells: list[ABSMeasurementCell],
+    row_indents: Mapping[int, int],
 ) -> ABSParsedTable:
     body_last = _infer_subtable_body_last(
         sheet_rows.body_last,
@@ -452,10 +482,11 @@ def _build_subtable(
         footer_start=sheet_rows.footer_start,
     )
 
-    subject, row_group_paths = infer_abs_subject_and_row_groups(
+    subject, row_group_paths, row_group_indents = infer_abs_subject_and_row_groups(
         raw_sheet,
         row_bounds,
         bounds,
+        row_indents,
     )
 
     return ABSParsedTable(
@@ -467,19 +498,26 @@ def _build_subtable(
         raw_table=_extract_raw_subtable(raw_sheet, bounds),
         parsed_table=_build_parsed_subtable(
             raw_sheet,
+            table_number,
+            table_title,
             measurement_cell,
             subject,
             row_bounds,
             bounds,
+            row_indents,
             row_group_paths,
+            row_group_indents,
         ),
     )
 
 
 def extract_abs_subtables(
     raw_sheet: pd.DataFrame,
+    table_number: int,
+    table_title: str,
     rows: ABSRowBounds,
     measurement_cells: list[ABSMeasurementCell],
+    row_indents: Mapping[int, int],
 ) -> list[ABSParsedTable]:
     subtables: list[ABSParsedTable] = []
 
@@ -487,9 +525,12 @@ def extract_abs_subtables(
         subtables.append(
             _build_subtable(
                 raw_sheet,
+                table_number,
+                table_title,
                 rows,
                 measurement_cell,
                 measurement_cells,
+                row_indents,
             )
         )
 
@@ -547,3 +588,23 @@ def list_abs_table_sheets(folder: Folder, source_file: str) -> list[str]:
         )
 
     return sheet_names[1:]
+
+def load_abs_row_indents(
+    folder: Folder,
+    source_file: str,
+    sheet_name: str,
+) -> dict[int, int]:
+    file_path = resolve_spreadsheet_path(folder, source_file)
+    workbook = load_workbook(file_path, data_only=True, read_only=False)
+
+    try:
+        worksheet = workbook[sheet_name]
+        row_indents: dict[int, int] = {}
+
+        for row_number in range(1, worksheet.max_row + 1):
+            indent = worksheet.cell(row_number, 1).alignment.indent
+            row_indents[row_number - 1] = int(indent or 0)
+
+        return row_indents
+    finally:
+        workbook.close()

@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import math
 import re
-from typing import Optional
+from typing import Any, Optional, cast
 
 from src.preparation.constants import SHEET_NUMBER_PATTERN
+from src.preparation.series import is_missing_value
 from src.types import NumericValue
 
 
@@ -106,3 +107,10 @@ def _clean_parsed_number(
         return int(parsed_number)
 
     return parsed_number
+
+
+def coerce_optional_int(value: object) -> Optional[int]:
+    if is_missing_value(value):
+        return None
+
+    return int(cast(Any, value))

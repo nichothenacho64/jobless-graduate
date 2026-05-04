@@ -4,7 +4,7 @@ import pandas as pd
 
 from src.loaders import list_excel_sheets, load_excel_sheet
 from src.types import Folder, QILTParsedSheet, QILTRowBounds, SheetTitleList
-from parsers.qilt_extraction import (
+from src.parsers.qilt_extraction import (
     classify_qilt_table,
     extract_metadata_sections,
     extract_table,
@@ -53,7 +53,7 @@ def find_all_qilt_sheets(folder: Folder, file_name: str) -> pd.DataFrame:
     sheet_title_list: SheetTitleList = []
     all_sheet_names = list_excel_sheets(folder, file_name)
     
-    for sheet_number, sheet_name in enumerate(all_sheet_names, start=1):
+    for sheet_number, sheet_name in enumerate(all_sheet_names):
         parsed_sheet = parse_qilt_sheet(folder, file_name, sheet_name)
         sheet_title_list.append(
             {

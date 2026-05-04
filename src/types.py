@@ -29,8 +29,7 @@ ABSMeasurement = Literal[
     "estimate_count",
     "proportion_percent",
     "rse_estimate_percent",
-    "rse_proportion_percent",
-    "moe_proportion_pp",
+    "margin_error_proportion",
 ]
 
 NumericConverter = Callable[[NumericValue], NumericValue]
@@ -128,8 +127,18 @@ class ABSParsedTable:
 class ABSParsedSheet:
     source_file: str
     sheet_name: str
+    table_number: int
     title: str
     rows: ABSRowBounds
     table: pd.DataFrame
     subtables: list[ABSParsedTable]
+    metadata: Metadata
+
+@dataclass(slots=True)
+class ABSPreparedSheet:
+    source_file: str
+    sheet_name: str
+    table_number: int
+    title: str
+    table: pd.DataFrame
     metadata: Metadata

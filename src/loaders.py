@@ -3,15 +3,27 @@ from typing import Optional, cast
 
 import pandas as pd
 
-from src.sources import RAW_DIR, RAW_DIR_LOOKUP, SPREADSHEET_SUFFIXES
+from src.parsers.constants import ABS_TABLE_SOURCE_KEY_PATTERN
+from src.sources import (
+    ABS_FOLDER_NAME,
+    QILT_2024_GOS_L_SOURCE,
+    QILT_2024_GOS_SOURCE,
+    QILT_FOLDER_NAME,
+    RAW_DIR,
+    RAW_DIR_LOOKUP,
+    RAW_SOURCE_DIRS,
+    SPREADSHEET_SUFFIXES,
+)
 from src.exceptions import (
+    ABSSheetSourceError,
     RawFolderDirectoryError,
     RawFolderNotFoundError,
     SheetNotFoundError,
+    SheetNumberNotFoundError,
     SpreadsheetFormatError,
     SpreadsheetNotFoundError,
 )
-from src.types import Folder
+from src.types import ExcelSheet, Folder
 
 def resolve_folder_path(folder: Folder) -> Path:  # ! for both folders or path objects
     if isinstance(folder, Path):
@@ -63,3 +75,44 @@ def load_excel_sheet(
         raise SheetNotFoundError(sheet_name, file_path.name, sheet_names)
 
     return excel_file.parse(sheet_name=sheet_name, header=header)
+
+def initialise_gos_sheet(sheet_number: int) -> ExcelSheet:
+    return _initialise_qilt_sheet(QILT_2024_GOS_SOURCE, sheet_number)
+
+def initialise_gos_l_sheet(sheet_number: int) -> ExcelSheet:
+    return _initialise_qilt_sheet(QILT_2024_GOS_L_SOURCE, sheet_number)
+
+def initialise_abs_sheet(sheet_number: int) -> ExcelSheet:
+    for data_source in RAW_SOURCE_DIRS[ABS_FOLDER_NAME]:
+        match = ABS_TABLE_SOURCE_KEY_PATTERN.fullmatch(data_source)
+        if match is None:
+            continue
+
+        first_sheet = int(match.group("START"))
+        last_sheet = int(match.group("END") or first_sheet)
+        if first_sheet <= sheet_number <= last_sheet:
+            return ExcelSheet(
+                folder=ABS_FOLDER_NAME,
+                data_source=data_source,
+                sheet_name=f"Table {sheet_number}",
+            )
+
+    raise ABSSheetSourceError(
+        sheet_number,
+        RAW_SOURCE_DIRS[ABS_FOLDER_NAME],
+    )
+
+def _initialise_qilt_sheet(data_source: str, sheet_number: int) -> ExcelSheet:
+    file_name = RAW_SOURCE_DIRS[QILT_FOLDER_NAME][data_source]
+    sheet_names = list_excel_sheets(QILT_FOLDER_NAME, file_name)
+
+    if sheet_number < 0 or sheet_number >= len(sheet_names):
+        raise SheetNumberNotFoundError(sheet_number, data_source, len(sheet_names))
+
+    sheet_name = sheet_names[sheet_number]
+
+    return ExcelSheet(
+        folder=QILT_FOLDER_NAME,
+        data_source=data_source,
+        sheet_name=sheet_name,
+    )

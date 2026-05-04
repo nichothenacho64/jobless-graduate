@@ -84,4 +84,3 @@ def coerce_numeric_series(
         index=series.index,
         name=series.name,
     )
-
