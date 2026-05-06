@@ -8,11 +8,14 @@ from src.transform.constants import (
     GOS_L_MEDIUM_TERM_COMPARISON_COLUMNS,
 )
 from src.preparation.qilt import clean_qilt_display_text
+from src.types import QILTPreparedSheet
 
 def build_transition_problem_table(
-    gos_table: pd.DataFrame,
-    gos_l_table: pd.DataFrame,
+    gos_sheet: QILTPreparedSheet,
+    gos_l_sheet: QILTPreparedSheet,
 ) -> pd.DataFrame:
+    gos_table = gos_sheet.table
+    gos_l_table = gos_l_sheet.table
     prepared_gos_table = _prepare_transition_short_term_table(gos_table)
     prepared_gos_l_table = _prepare_transition_medium_term_table(gos_l_table)
 

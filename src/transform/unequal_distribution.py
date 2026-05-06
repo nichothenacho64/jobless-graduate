@@ -12,11 +12,14 @@ from src.transform.constants import (
 )
 from src.preparation.qilt import clean_qilt_display_text
 from src.transform.qilt import build_qilt_pair_label, select_qilt_ordered_pair_rows
+from src.types import QILTPreparedSheet
 
 def build_unequal_distribution_table(
-    gos_table: pd.DataFrame,
-    gender_table: Optional[pd.DataFrame] = None,
+    gos_sheet: QILTPreparedSheet,
+    gender_sheet: Optional[QILTPreparedSheet] = None,
 ) -> pd.DataFrame:
+    gos_table = gos_sheet.table
+    gender_table = gender_sheet.table if gender_sheet is not None else None
     prepared_rows: list[dict[str, object]] = []
     gender_rows = _build_gender_rows(gender_table) if gender_table is not None else None
     inserted_gender_rows = False

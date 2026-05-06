@@ -15,15 +15,17 @@ from src.transform.qilt import (
     make_qilt_subgroup_key,
     select_qilt_ordered_pair_rows,
 )
-from src.types import MetricComparison
+from src.types import MetricComparison, QILTPreparedSheet
 
 
 def build_catch_up_levels_table(
-    gos_table: pd.DataFrame,
-    gos_l_table: pd.DataFrame,
+    gos_sheet: QILTPreparedSheet,
+    gos_l_sheet: QILTPreparedSheet,
     *,
     include_total: bool = False,
 ) -> pd.DataFrame:
+    gos_table = gos_sheet.table
+    gos_l_table = gos_l_sheet.table
     metric_comparisons = _pair_metric_columns(
         GOS_SHORT_TERM_COMPARISON_COLUMNS,
         GOS_L_MEDIUM_TERM_COMPARISON_COLUMNS,
@@ -66,7 +68,21 @@ def build_catch_up_levels_table(
     return final_table.reset_index(drop=True)
 
 
-def build_catch_up_gap_width_table(levels_table: pd.DataFrame) -> pd.DataFrame:
+def build_catch_up_gap_width_table(
+    gos_sheet: QILTPreparedSheet,
+    gos_l_sheet: QILTPreparedSheet,
+    *,
+    include_total: bool = False,
+) -> pd.DataFrame:
+    levels_table = build_catch_up_levels_table(
+        gos_sheet,
+        gos_l_sheet,
+        include_total=include_total,
+    )
+    return _build_catch_up_gap_width_from_levels(levels_table)
+
+
+def _build_catch_up_gap_width_from_levels(levels_table: pd.DataFrame) -> pd.DataFrame:
     summary_rows: list[dict[str, object]] = []
 
     for row_group, group_table in levels_table.groupby("row_group", sort=False):

@@ -30,9 +30,6 @@ QILT_2024_GOS_L_FILE_NAME = "2024_GOS-L_National_Report_Tables.xlsx"
 
 SPREADSHEET_SUFFIXES = {".xlsx", ".xls", ".xlsm", ".ods"}
 
-def _normalise_file_stem(stem: str) -> str:
-    return re.sub(r"[^A-Z0-9]+", "-", stem.upper()).strip("-")
-
 def _find_abs_source_key(file_path: Path) -> str:
     abs_table_pattern = re.compile(r"\bT(?P<START>\d+)(?:_T(?P<END>\d+))?\b", re.IGNORECASE)
     
@@ -49,7 +46,8 @@ def _find_abs_source_key(file_path: Path) -> str:
     if "DIL" in file_path.stem.upper():
         return "SEW-DIL"
 
-    return f"SEW-{_normalise_file_stem(file_path.stem)}"
+    normalised_file_stem = re.sub(r"[^A-Z0-9]+", "-", file_path.stem.upper()).strip("-")
+    return f"SEW-{normalised_file_stem}"
 
 def find_abs_source_files(abs_directory: Path) -> dict[str, str]:
     if not abs_directory.exists() or not abs_directory.is_dir():
@@ -75,9 +73,6 @@ RAW_SOURCE_DIRS: dict[str, dict[str, str]] = {
         QILT_2024_GOS_L_SOURCE: QILT_2024_GOS_L_FILE_NAME,
     },
     ABS_FOLDER_NAME: find_abs_source_files(ABS_RAW_DIR),
-    ABS_EXTRAS_FOLDER_KEY: {
-        # ?? for later files
-    },
 }
 
 RAW_DIR_LOOKUP: dict[str, Path] = {

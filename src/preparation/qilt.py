@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import replace
 from typing import Optional, cast
 
 import pandas as pd
@@ -12,7 +11,7 @@ from src.preparation.constants import (
 )
 from src.transform.constants import QILT_SUBGROUP_TEXT_EQUIVALENTS
 from src.exceptions import EmptyTableError
-from src.parsers.qilt import QILTParsedSheet, parse_qilt_sheet
+from src.parsers.qilt import parse_qilt_sheet
 from src.preparation.cleaners import (
     clean_column_name,
     clean_metadata_sections,
@@ -21,21 +20,24 @@ from src.preparation.cleaners import (
     clean_text_or_numeric_series,
 )
 from src.preparation.numbers import parse_sheet_number
-from src.types import Folder, NumericValue
+from src.types import Folder, NumericValue, QILTParsedSheet, QILTPreparedSheet
 
 def prepare_qilt_table(folder: Folder, file_name: str, sheet_name: str) -> pd.DataFrame:
-    parsed_sheet = parse_qilt_sheet(folder, file_name, sheet_name)
-    return clean_qilt_parsed_sheet(parsed_sheet).table
+    prepared_sheet = prepare_qilt_sheet(folder, file_name, sheet_name)
+    return prepared_sheet.table
 
-def prepare_qilt_sheet(folder: Folder, file_name: str, sheet_name: str) -> QILTParsedSheet:
+def prepare_qilt_sheet(folder: Folder, file_name: str, sheet_name: str) -> QILTPreparedSheet:
     parsed_sheet = parse_qilt_sheet(folder, file_name, sheet_name)
     return clean_qilt_parsed_sheet(parsed_sheet)
 
-def clean_qilt_parsed_sheet(parsed_sheet: QILTParsedSheet) -> QILTParsedSheet:
+def clean_qilt_parsed_sheet(parsed_sheet: QILTParsedSheet) -> QILTPreparedSheet:
     cleaned_metadata = clean_metadata_sections(parsed_sheet.metadata, text_cleaner=_clean_qilt_text)
     cleaned_table = clean_qilt_table(parsed_sheet.table)
-    return replace(
-        parsed_sheet,
+    return QILTPreparedSheet(
+        sheet_name=parsed_sheet.sheet_name,
+        title=parsed_sheet.title,
+        rows=parsed_sheet.rows,
+        classification=parsed_sheet.classification,
         table=cleaned_table,
         metadata=cleaned_metadata,
     )

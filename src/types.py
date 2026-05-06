@@ -87,7 +87,16 @@ class QILTParsedSheet:
     sheet_name: str
     title: str
     rows: QILTRowBounds
-    classification: str
+    classification: QILTTableKind
+    table: pd.DataFrame
+    metadata: Metadata
+
+@dataclass(slots=True)
+class QILTPreparedSheet:
+    sheet_name: str
+    title: str
+    rows: QILTRowBounds
+    classification: QILTTableKind
     table: pd.DataFrame
     metadata: Metadata
 

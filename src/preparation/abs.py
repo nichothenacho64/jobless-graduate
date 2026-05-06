@@ -23,7 +23,11 @@ from src.preparation.constants import (
     ABS_PREPARED_INDEX_COLUMNS,
     ABS_NO_PARENT_SENTINEL,
     ABS_MEASUREMENT_ALIASES,
+    ABS_NOT_AVAILABLE_VALUE_TEXT,
+    ABS_RELIABILITY_MARKER_PATTERN,
+    ABS_SUPPRESSED_VALUE_TEXT,
     ABS_TRAILING_FOOTNOTE_PATTERN,
+    ABS_VALUE_TRAILING_NOTE_PATTERN,
     ABS_WHOLE_YEAR_DECIMAL_PATTERN,
     ABS_DISPLAY_MISSING_TEXT_VALUES,
     ABS_PREPARED_SCHEMA,
@@ -39,11 +43,14 @@ from src.preparation.series import (
 from src.types import ABSParsedSheet, ABSPreparedSheet, Folder, NumericValue
 
 
-def prepare_abs_sheet(
-    folder: Folder, source_file: str, sheet_name: str
-) -> ABSPreparedSheet:
+def prepare_abs_sheet(folder: Folder, source_file: str, sheet_name: str) -> ABSPreparedSheet:
     parsed_sheet = parse_abs_sheet(folder, source_file, sheet_name)
     return prepare_abs_parsed_sheet(parsed_sheet)
+
+
+def prepare_abs_table(folder: Folder, source_file: str, sheet_name: str) -> pd.DataFrame:
+    prepared_sheet = prepare_abs_sheet(folder, source_file, sheet_name)
+    return prepared_sheet.table.copy()
 
 
 def prepare_abs_parsed_sheet(parsed_sheet: ABSParsedSheet) -> ABSPreparedSheet:
@@ -52,20 +59,19 @@ def prepare_abs_parsed_sheet(parsed_sheet: ABSParsedSheet) -> ABSPreparedSheet:
         text_cleaner=_clean_abs_text,
     )
 
-    cleaned_records: list[pd.DataFrame] = []
+    parsed_records: list[pd.DataFrame] = []
 
     for subtable in parsed_sheet.subtables:
         if subtable.parsed_table.empty:
             continue
 
-        records = _normalise_abs_records(subtable.parsed_table)
-        cleaned_records.append(records)
+        parsed_records.append(subtable.parsed_table)
 
-    if not cleaned_records:
+    if not parsed_records:
         raise EmptyTableError("The parsed ABS subtables")
 
-    combined_records = pd.concat(cleaned_records, ignore_index=True)
-    prepared = _prepare_normalised_abs_records(combined_records)
+    combined_records = pd.concat(parsed_records, ignore_index=True)
+    prepared = clean_abs_table(combined_records)
 
     return ABSPreparedSheet(
         source_file=parsed_sheet.source_file,
@@ -75,6 +81,11 @@ def prepare_abs_parsed_sheet(parsed_sheet: ABSParsedSheet) -> ABSPreparedSheet:
         table=prepared,
         metadata=cleaned_metadata,
     )
+
+
+def clean_abs_table(records: pd.DataFrame) -> pd.DataFrame:
+    normalised_records = _normalise_abs_records(records)
+    return _prepare_normalised_abs_records(normalised_records)
 
 
 def _prepare_normalised_abs_records(records: pd.DataFrame) -> pd.DataFrame:
@@ -101,7 +112,7 @@ def clean_abs_display_text(value: object) -> Optional[str]:
 def parse_abs_number(value: object) -> Optional[NumericValue]:
     return parse_sheet_number(
         value,
-        trailing_note_pattern=ABS_TRAILING_FOOTNOTE_PATTERN,
+        trailing_note_pattern=ABS_VALUE_TRAILING_NOTE_PATTERN,
     )
 
 
@@ -113,6 +124,7 @@ def _normalise_abs_records(records: pd.DataFrame) -> pd.DataFrame:
     ]
 
     _fail_if_duplicate_columns(normalised_records)
+    _attach_abs_reliability_flags(normalised_records)
 
     for column in normalised_records.columns:
         column_series = cast(pd.Series, normalised_records[column])
@@ -152,7 +164,7 @@ def _normalise_abs_series(series: pd.Series, *, column_name: str) -> pd.Series:
             )
         ).astype("string")
 
-    if column_name in {"is_suppressed", "is_not_available"}:
+    if column_name in {"is_reliable", "is_suppressed", "is_not_available"}:
         cleaned_series = series.map(
             lambda value: clean_text_value(value, text_cleaner=_clean_abs_text)
         )
@@ -164,6 +176,23 @@ def _normalise_abs_series(series: pd.Series, *, column_name: str) -> pd.Series:
         text_cleaner=_clean_abs_text,
         number_parser=parse_abs_number,
     )
+
+
+def _attach_abs_reliability_flags(records: pd.DataFrame) -> None:
+    _require_columns(records, {"value_text"})
+    records["is_reliable"] = records["value_text"].map(_abs_value_is_reliable)
+
+
+def _abs_value_is_reliable(value: object) -> bool:
+    text = clean_source_text(value, missing_text_values=ABS_EMPTY_TEXT_VALUES)
+    if text is None:
+        return False
+
+    marker = ABS_TRAILING_FOOTNOTE_PATTERN.sub("", text).strip().casefold()
+    if marker in {ABS_SUPPRESSED_VALUE_TEXT, ABS_NOT_AVAILABLE_VALUE_TEXT}:
+        return False
+
+    return ABS_RELIABILITY_MARKER_PATTERN.search(text) is None
 
 
 def _keep_australia_aggregate_rows(records: pd.DataFrame) -> pd.DataFrame:
@@ -326,6 +355,7 @@ def _pivot_measurements_to_schema(records: pd.DataFrame) -> pd.DataFrame:
             "row_path",
             "measurement",
             "value",
+            "is_reliable",
             "is_suppressed",
             "is_not_available",
         },
@@ -355,6 +385,7 @@ def _pivot_measurements_to_schema(records: pd.DataFrame) -> pd.DataFrame:
     prepared["row_parent"] = (
         prepared["row_parent"].replace(ABS_NO_PARENT_SENTINEL, pd.NA).astype("string")
     )
+    prepared["is_reliable"] = prepared["is_reliable"].fillna(False).astype(bool)
     prepared["is_suppressed"] = prepared["is_suppressed"].fillna(False).astype(bool)
     prepared["is_not_available"] = (
         prepared["is_not_available"].fillna(False).astype(bool)
@@ -389,8 +420,12 @@ def _pivot_measurement_flags(pivot_source: pd.DataFrame) -> pd.DataFrame:
             ABS_PREPARED_INDEX_COLUMNS,
             dropna=False,
             sort=False,
-        )[["is_suppressed", "is_not_available"]]
-        .any()
+        )
+        .agg(
+            is_reliable=("is_reliable", "all"),
+            is_suppressed=("is_suppressed", "any"),
+            is_not_available=("is_not_available", "any"),
+        )
         .reset_index()
     )
 
