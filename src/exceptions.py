@@ -4,11 +4,11 @@ from pathlib import Path
 
 class RawFolderNotFoundError(FileNotFoundError):
     def __init__(self, folder_path: Path, known_folders: Iterable[object]):
-        formatted_folders = ", ".join(sorted(map(str, known_folders)))
+        formatted_folders = ", ".join(str(known_folders))
         super().__init__(
             f"""
             Raw folder not found: {folder_path}
-            Known raw folders: {formatted_folders}
+            Known raw folders: {sorted(formatted_folders)}
             """
         )
 
@@ -25,11 +25,11 @@ class SpreadsheetNotFoundError(FileNotFoundError):
 
 class SpreadsheetFormatError(ValueError):
     def __init__(self, file_suffix: str, supported_formats: Iterable[object]):
-        formatted_formats = ", ".join(sorted(map(str, supported_formats)))
+        formatted_formats = ", ".join(str(supported_formats))
         super().__init__(
             f"""
             Unsupported spreadsheet format: {file_suffix}
-            Supported formats: {formatted_formats}
+            Supported formats: {sorted(formatted_formats)}
             """
         )
 
@@ -41,11 +41,11 @@ class SheetNotFoundError(ValueError):
         file_name: str,
         available_sheets: Iterable[object],
     ):
-        formatted_sheets = ", ".join(sorted(map(str, available_sheets)))
+        formatted_sheets = ", ".join(str(available_sheets))
         super().__init__(
             f"""
             Sheet not found: {sheet_name!r} in {file_name}
-            Available sheets: {formatted_sheets}
+            Available sheets: {sorted(formatted_sheets)}
             """
         )
 
@@ -63,11 +63,11 @@ class SheetNumberNotFoundError(ValueError):
 
 class ABSSheetSourceError(ValueError):
     def __init__(self, sheet_number: int, available_sources: Iterable[object]):
-        formatted_sources = ", ".join(sorted(map(str, available_sources)))
+        formatted_sources = ", ".join(str(available_sources))
         super().__init__(
             f"""
             Could not find an ABS workbook containing sheet {sheet_number}.
-            Available ABS sources: {formatted_sources}
+            Available ABS sources: {sorted(formatted_sources)}
             """
         )
 

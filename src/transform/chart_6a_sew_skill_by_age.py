@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from src.preparation.abs import clean_abs_display_text
+from src.preparation.abs import clean_abs_display_text, format_abs_column_label
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
     CHART_6A_TABLE_COLUMNS,
@@ -10,7 +10,6 @@ from src.transform.constants import (
     SEW_AGE_GROUP_ORDER,
     SEW_SKILL_LEVEL_ORDER,
 )
-from src.transform.abs import format_abs_column_label
 from src.types import ABSPreparedSheet
 
 

@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import pandas as pd
 
-from src.preparation.abs import clean_abs_display_text
+from src.preparation.abs import clean_abs_display_text, parse_abs_number
+from src.preparation.series import is_missing_value
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
     CHART_6B_TABLE_COLUMNS,
     SEW_35_SOURCE_KEY,
     SEW_DEGREE_SUPPLY_BASE_YEAR,
 )
-from src.transform.abs import parse_abs_year
 from src.types import ABSPreparedSheet
 
 
@@ -19,15 +19,15 @@ def build_chart_6b_table(sew_table_35_sheet: ABSPreparedSheet) -> pd.DataFrame:
     prepared_rows: list[dict[str, object]] = []
 
     for _, row in source_rows.iterrows():
-        year = parse_abs_year(row["column_header"])
+        parsed_year = parse_abs_number(row["column_header"])
         value = row["estimate_count"]
 
-        if year is None or pd.isna(value):
+        if parsed_year is None or is_missing_value(value):
             continue
 
         prepared_rows.append(
             {
-                "year": year,
+                "year": int(parsed_year),
                 "index_2016_100": round(float(value) / base_value * 100, 1),
                 "source_key": SEW_35_SOURCE_KEY,
             }
@@ -53,7 +53,7 @@ def _select_person_total_rows(table: pd.DataFrame) -> pd.DataFrame:
 
 
 def _select_base_value(source_rows: pd.DataFrame) -> float:
-    years = source_rows["column_header"].map(parse_abs_year)
+    years = source_rows["column_header"].map(parse_abs_number)
     base_rows = source_rows.loc[years == SEW_DEGREE_SUPPLY_BASE_YEAR]
 
     if base_rows.empty:
@@ -62,7 +62,7 @@ def _select_base_value(source_rows: pd.DataFrame) -> float:
         )
 
     base_value = base_rows["estimate_count"].iloc[0]
-    if pd.isna(base_value) or float(base_value) == 0:
+    if is_missing_value(base_value) or float(base_value) == 0:
         raise ValueError(
             "SEW Table 35 "
             f"{SEW_DEGREE_SUPPLY_BASE_YEAR} base-year value is unavailable."

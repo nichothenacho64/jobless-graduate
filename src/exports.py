@@ -6,19 +6,20 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.sources import PROCESSED_DIR
+from src.preparation.series import is_missing_scalar, format_row_key_value
+from src.sources import (
+    PROCESSED_DIR,
+    QILT_2024_GOS_L_SOURCE,
+    QILT_2024_GOS_SOURCE,
+    QILT_FOLDER_NAME,
+    RAW_SOURCE_DIRS,
+)
 from src.transform.constants import (
     CHART_METADATA_FILE_NAME,
-    CHART_METADATA_SPECS,
     CHART_OUTPUT_FILENAMES,
     CHART_SOURCE_KEY_COLUMNS,
-    QILT_METRIC_DEFINITIONS,
-    QILT_SOURCE_METADATA_SPECS,
-    SEW_RELIABILITY_MARKER_MEANINGS,
-    SEW_UNIT_DEFINITIONS,
-    TIME_WINDOW_DEFINITIONS,
 )
-from src.types import ABSPreparedSheet, QILTPreparedSheet
+from src.types import ABSPreparedSheet, ChartMetadata, MissingValues, QILTPreparedSheet
 
 
 def export_chart_table(table: pd.DataFrame, filename: str) -> Path:
@@ -43,7 +44,7 @@ def export_chart_tables(chart_tables: Mapping[str, pd.DataFrame]) -> dict[str, P
     return exported_paths
 
 
-def export_chart_metadata_json(metadata: Mapping[str, object]) -> Path:
+def export_chart_metadata(metadata: Mapping[str, object]) -> Path:
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     path = PROCESSED_DIR / CHART_METADATA_FILE_NAME
     path.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
@@ -53,64 +54,49 @@ def export_chart_metadata_json(metadata: Mapping[str, object]) -> Path:
 def build_chart_metadata(
     chart_tables: Mapping[str, pd.DataFrame],
     chart_sources: Mapping[str, object],
-) -> dict[str, object]:
-    metadata: dict[str, object] = {}
+) -> ChartMetadata:
+    metadata: ChartMetadata = {}
 
     for chart_id, chart_table in chart_tables.items():
-        if chart_id not in CHART_METADATA_SPECS:
-            raise KeyError(f"No chart metadata spec is defined for {chart_id!r}.")
         if chart_id not in CHART_OUTPUT_FILENAMES:
             raise KeyError(f"No chart output filename is defined for {chart_id!r}.")
 
         source_keys = _collect_source_keys(chart_table)
-        chart_entry: dict[str, object] = {
+        source_metadata = _build_sources(source_keys, chart_sources)
+
+        chart_entry: ChartMetadata = {
             "chart_id": chart_id,
             "data_file": CHART_OUTPUT_FILENAMES[chart_id],
             "source_keys": source_keys,
-            "sources": _build_sources(source_keys, chart_sources),
+            "sources": source_metadata,
         }
-        chart_entry.update(_build_chart_spec_metadata(CHART_METADATA_SPECS[chart_id]))
 
-        excluded_comparisons = _build_missing_gap_notes(chart_table)
-        if excluded_comparisons:
-            chart_entry["excluded_comparisons"] = excluded_comparisons
+        row_caveats = _build_missing_value_caveats(chart_table)
+        if row_caveats:
+            chart_entry["row_caveats"] = row_caveats
 
         metadata[chart_id] = chart_entry
 
     return metadata
 
 
-def build_qilt_source_metadata(
-    source_key: str,
-    prepared_sheet: QILTPreparedSheet,
-) -> dict[str, object]:
-    if source_key not in QILT_SOURCE_METADATA_SPECS:
-        raise KeyError(f"No QILT source metadata spec is defined for {source_key!r}.")
-
-    source_spec = QILT_SOURCE_METADATA_SPECS[source_key]
+def build_qilt_source_metadata(source_key: str, prepared_sheet: QILTPreparedSheet) -> ChartMetadata:
+    source_context = _derive_qilt_source_context(source_key)
     return {
         "source_key": source_key,
-        "source_system": source_spec["source_system"],
-        "dataset": source_spec["dataset"],
-        "dataset_label": source_spec["dataset_label"],
-        "plain_label": source_spec["plain_label"],
-        "source_file": source_spec["source_file"],
+        "source_system": "QILT",
+        "dataset": source_context["dataset"],
+        "plain_label": source_context["plain_label"],
+        "source_file": source_context["source_file"],
         "sheet_name": prepared_sheet.sheet_name,
-        "sheet_number": source_spec["sheet_number"],
+        "sheet_number": source_context["sheet_number"],
         "sheet_title": prepared_sheet.title,
         "classification": prepared_sheet.classification,
         "source_metadata": prepared_sheet.metadata,
-        "suppression_unavailable_note": (
-            "Blank exported values reflect source values that were suppressed, "
-            "unavailable, or not present after QILT preparation."
-        ),
     }
 
 
-def build_abs_source_metadata(
-    source_key: str,
-    prepared_sheet: ABSPreparedSheet,
-) -> dict[str, object]:
+def build_sew_source_metadata(source_key: str, prepared_sheet: ABSPreparedSheet) -> ChartMetadata:
     expected_source_key = f"sew_{prepared_sheet.table_number}"
     if source_key != expected_source_key:
         raise ValueError(
@@ -118,53 +104,23 @@ def build_abs_source_metadata(
             f"table {prepared_sheet.table_number}."
         )
 
-    return {
+    source_metadata: ChartMetadata = {
         "source_key": source_key,
         "source_system": "ABS",
         "dataset": "SEW",
-        "dataset_label": "ABS Education and Work",
         "plain_label": f"SEW #{prepared_sheet.table_number}",
         "source_file": prepared_sheet.source_file,
         "sheet_name": prepared_sheet.sheet_name,
         "table_number": prepared_sheet.table_number,
         "sheet_title": prepared_sheet.title,
         "source_metadata": prepared_sheet.metadata,
-        "units": SEW_UNIT_DEFINITIONS,
-        "reliability": {
-            "is_reliable": (
-                "True only when the retained national/Australia-wide value has no "
-                "warning marker and is not suppressed or unavailable."
-            ),
-            "marker_meanings": SEW_RELIABILITY_MARKER_MEANINGS,
-        },
-        "suppression_unavailable_note": (
-            "SEW values marked *, **, #, np, or na are not reliable for chart claims."
-        ),
     }
 
+    reliability_summary = _build_abs_reliability_summary(prepared_sheet.table)
+    if reliability_summary:
+        source_metadata["reliability_summary"] = reliability_summary
 
-def _build_chart_spec_metadata(spec: Mapping[str, object]) -> dict[str, object]:
-    spec_metadata = dict(spec)
-    metric_keys = spec_metadata.get("metric_keys")
-    time_windows = spec_metadata.get("time_windows")
-
-    if isinstance(metric_keys, list):
-        spec_metadata["metric_definitions"] = _select_metric_definitions(metric_keys)
-    if isinstance(time_windows, list):
-        spec_metadata["time_window_definitions"] = {
-            time_window: TIME_WINDOW_DEFINITIONS[time_window]
-            for time_window in time_windows
-        }
-
-    return spec_metadata
-
-
-def _select_metric_definitions(metric_keys: list[str]) -> dict[str, str]:
-    return {
-        metric_key: QILT_METRIC_DEFINITIONS[metric_key]
-        for metric_key in metric_keys
-        if metric_key in QILT_METRIC_DEFINITIONS
-    }
+    return source_metadata
 
 
 def _collect_source_keys(chart_table: pd.DataFrame) -> list[str]:
@@ -182,44 +138,144 @@ def _collect_source_keys(chart_table: pd.DataFrame) -> list[str]:
     return source_keys
 
 
-def _build_sources(
-    source_keys: list[str],
-    chart_sources: Mapping[str, object],
-) -> dict[str, object]:
+def _build_sources(source_keys: list[str], chart_sources: Mapping[str, object]) -> dict[str, object]:
     sources: dict[str, object] = {}
 
     for source_key in source_keys:
         if source_key not in chart_sources:
-            raise KeyError(f"Missing prepared source for chart source key {source_key!r}.")
+            raise KeyError(
+                f"Missing prepared source for chart source key {source_key!r}."
+            )
 
         prepared_sheet = chart_sources[source_key]
         if isinstance(prepared_sheet, QILTPreparedSheet):
             sources[source_key] = build_qilt_source_metadata(source_key, prepared_sheet)
-        elif isinstance(prepared_sheet, ABSPreparedSheet):
-            sources[source_key] = build_abs_source_metadata(source_key, prepared_sheet)
-        else:
-            raise TypeError("Chart source metadata requires QILTPreparedSheet or ABSPreparedSheet.")
+            continue
+
+        if isinstance(prepared_sheet, ABSPreparedSheet):
+            sources[source_key] = build_sew_source_metadata(source_key, prepared_sheet)
+            continue
+
+        raise TypeError(
+            "Chart source metadata requires QILTPreparedSheet or ABSPreparedSheet."
+        )
 
     return sources
 
 
-def _build_missing_gap_notes(chart_table: pd.DataFrame) -> list[dict[str, object]]:
-    if "gap_pp" not in chart_table:
-        return []
+def _derive_qilt_source_context(source_key: str) -> dict[str, object]:
+    if source_key.startswith("gos_l_"):
+        dataset = "GOS-L"
+        sheet_number = _parse_source_key_number(source_key, "gos_l_")
+        source_file = RAW_SOURCE_DIRS[QILT_FOLDER_NAME][QILT_2024_GOS_L_SOURCE]
+    elif source_key.startswith("gos_"):
+        dataset = "GOS"
+        sheet_number = _parse_source_key_number(source_key, "gos_")
+        source_file = RAW_SOURCE_DIRS[QILT_FOLDER_NAME][QILT_2024_GOS_SOURCE]
+    else:
+        raise KeyError(f"Cannot derive QILT source metadata for {source_key!r}.")
 
-    missing_rows = chart_table.loc[chart_table["gap_pp"].isna()]
-    if missing_rows.empty:
-        return []
+    return {
+        "dataset": dataset,
+        "plain_label": f"{dataset} #{sheet_number}",
+        "source_file": source_file,
+        "sheet_number": sheet_number,
+    }
 
-    notes: list[dict[str, object]] = []
-    for _, row in missing_rows.iterrows():
-        note: dict[str, object] = {
-            "reason": "Comparison unavailable after suppressed or missing values.",
-        }
-        if "subgroup_dimension" in row:
-            note["subgroup_dimension"] = row["subgroup_dimension"]
-        if "time_window" in row:
-            note["time_window"] = row["time_window"]
-        notes.append(note)
 
-    return notes
+def _parse_source_key_number(source_key: str, prefix: str) -> int:
+    source_number = source_key.removeprefix(prefix)
+    if not source_number.isdecimal():
+        raise KeyError(f"Cannot derive sheet number from source key {source_key!r}.")
+
+    return int(source_number)
+
+
+def _build_abs_reliability_summary(table: pd.DataFrame) -> dict[str, int]:
+    if "is_reliable" not in table.columns:
+        return {}
+
+    reliable = table["is_reliable"].fillna(False).astype(bool)
+    summary = {
+        "prepared_rows": int(len(table)),
+        "reliable_rows": int(reliable.sum()),
+        "unreliable_rows": int((~reliable).sum()),
+    }
+
+    for column in ("is_suppressed", "is_not_available"):
+        if column in table.columns:
+            summary[column.replace("is_", "") + "_rows"] = int(
+                table[column].fillna(False).astype(bool).sum()
+            )
+
+    return summary
+
+
+def _build_missing_value_caveats(chart_table: pd.DataFrame) -> MissingValues:
+    row_caveats: MissingValues = {}
+    value_columns = [
+        str(column)
+        for column in chart_table.columns
+        if str(column).endswith(("_pct", "_pp")) or str(column).startswith("index_")
+    ]
+    value_column_set = set(value_columns)
+
+    for _, row in chart_table.iterrows():
+        missing_columns = [
+            column for column in value_columns if is_missing_scalar(row[column])
+        ]
+        if not missing_columns:
+            continue
+
+        row_key = _build_row_key(
+            row,
+            caveat_columns=set(missing_columns),
+            value_columns=value_column_set,
+        )
+        row_caveats.setdefault(row_key, []).append(
+            {
+                "type": "missing_value",
+                "columns": missing_columns,
+            }
+        )
+
+    return row_caveats
+
+
+def _build_row_key(
+    row: pd.Series,
+    *,
+    caveat_columns: set[str],
+    value_columns: set[str],
+) -> str:
+    key_parts: list[str] = []
+
+    for row_column in row.index:
+        column = str(row_column)
+        if not _is_row_key_column(column, caveat_columns=caveat_columns, value_columns=value_columns):
+            continue
+
+        if is_missing_scalar(row[column]):
+            continue
+
+        key_parts.append(f"{column}={format_row_key_value(row[column])}")
+
+    if key_parts:
+        return "|".join(key_parts)
+
+    return f"row={format_row_key_value(row.name)}"
+
+
+def _is_row_key_column(
+    column: str,
+    *,
+    caveat_columns: set[str],
+    value_columns: set[str],
+) -> bool:
+    if column in caveat_columns or column in CHART_SOURCE_KEY_COLUMNS:
+        return False
+
+    if column == "sort_order" or column.endswith("_order"):
+        return False
+
+    return column not in value_columns

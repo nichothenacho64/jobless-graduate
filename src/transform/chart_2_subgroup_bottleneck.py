@@ -14,7 +14,7 @@ from src.transform.constants import (
     GOS_SHORT_TERM_COMPARISON_COLUMNS,
     TOTAL_ROW_GROUP,
 )
-from src.transform.qilt import format_qilt_subgroup_label, select_qilt_ordered_pair_rows
+from src.transform.qilt import build_qilt_subgroup_pair_summary
 from src.types import QILTPreparedSheet
 
 
@@ -105,39 +105,12 @@ def _build_chart_2_summary_row(group_table: pd.DataFrame) -> dict[str, object]:
         "source_key": source_key,
     }
 
-    full_time_pair = select_qilt_ordered_pair_rows(
-        group_table.rename(columns={"subgroup_dimension": "row_group"}),
+    pair_summary = build_qilt_subgroup_pair_summary(
+        group_table,
         value_column="full_time_employment",
     )
-
-    if full_time_pair is None:
-        summary_row.update(
-            {
-                "gap_pp": None,
-                "lower_group": None,
-                "lower_group_pct": None,
-                "higher_group": None,
-                "higher_group_pct": None,
-            }
-        )
-        return summary_row
-
-    low_row, high_row = full_time_pair
-    low_value = low_row["full_time_employment"]
-    high_value = high_row["full_time_employment"]
-    value_available = pd.notna(low_value) and pd.notna(high_value)
-
-    summary_row.update(
-        {
-            "gap_pp": round(float(high_value - low_value), 1)
-            if value_available
-            else None,
-            "lower_group": format_qilt_subgroup_label(low_row["row_label"]),
-            "lower_group_pct": low_value if value_available else None,
-            "higher_group": format_qilt_subgroup_label(high_row["row_label"]),
-            "higher_group_pct": high_value if value_available else None,
-        }
-    )
+    pair_summary.pop("comparison_label")
+    summary_row.update(pair_summary)
     return summary_row
 
 

@@ -1,17 +1,6 @@
 from __future__ import annotations
 
-from src.sources import QILT_2024_GOS_FILE_NAME, QILT_2024_GOS_L_FILE_NAME
-
 TOTAL_ROW_GROUP = "Total"
-
-GOS_SOURCE_LABEL = "GOS"
-GOS_L_SOURCE_LABEL = "GOS-L"
-
-GOS_AGGREGATE_SHORT_TERM_COMPARISON_COLUMNS = {
-    "short_term_full_time_employment": "full_time_employment",
-    "short_term_overall_employment": "overall_employment",
-    "short_term_labour_force_participation": "labour_force_participation_rate",
-}
 
 GOS_SHORT_TERM_COMPARISON_COLUMNS = {
     "short_term_full_time_employment": "full_time_employment_2024",
@@ -90,8 +79,13 @@ CHART_TABLE_SCHEMAS = {
     CHART_3_ID: [
         "comparison_id",
         "subgroup_dimension",
+        "comparison_label",
         "time_window",
         "time_window_order",
+        "lower_group",
+        "lower_group_pct",
+        "higher_group",
+        "higher_group_pct",
         "gap_pp",
         "source_key",
         "sort_order",
@@ -127,6 +121,7 @@ CHART_TABLE_SCHEMAS = {
         "selector_id",
         "selector_label",
         "subgroup_dimension",
+        "comparison_label",
         "group_role",
         "group_label",
         "time_window",
@@ -161,7 +156,6 @@ GOS_8_SOURCE_KEY = "gos_8"
 GOS_21_SOURCE_KEY = "gos_21"
 GOS_L_1_SOURCE_KEY = "gos_l_1"
 GOS_L_6_SOURCE_KEY = "gos_l_6"
-GOS_L_23_SOURCE_KEY = "gos_l_23"
 GOS_L_26_SOURCE_KEY = "gos_l_26"
 GOS_L_160_SOURCE_KEY = "gos_l_160"
 SEW_32_SOURCE_KEY = "sew_32"
@@ -170,8 +164,8 @@ SEW_DEGREE_SUPPLY_BASE_YEAR = 2016
 
 SHORT_TERM_TIME_WINDOW = "short_term"
 MEDIUM_TERM_TIME_WINDOW = "medium_term"
-CHART_7_LOWER_GROUP_ROLE = "lower_short_term"
-CHART_7_HIGHER_GROUP_ROLE = "higher_short_term"
+CHART_7_LOWER_GROUP_ROLE = "lower_reference"
+CHART_7_HIGHER_GROUP_ROLE = "higher_reference"
 
 CHART_5_WORK_FIT_METRIC_KEY = "skills_education_utilisation"
 
@@ -216,178 +210,3 @@ CHART_SOURCE_KEY_COLUMNS = (
     "employment_source_key",
     "fit_source_key",
 )
-
-QILT_SOURCE_METADATA_SPECS = {
-    GOS_5_SOURCE_KEY: {
-        "source_system": "QILT",
-        "dataset": "GOS",
-        "dataset_label": "Graduate Outcomes Survey",
-        "plain_label": "GOS #5",
-        "source_file": QILT_2024_GOS_FILE_NAME,
-        "sheet_number": 5,
-    },
-    GOS_8_SOURCE_KEY: {
-        "source_system": "QILT",
-        "dataset": "GOS",
-        "dataset_label": "Graduate Outcomes Survey",
-        "plain_label": "GOS #8",
-        "source_file": QILT_2024_GOS_FILE_NAME,
-        "sheet_number": 8,
-    },
-    GOS_21_SOURCE_KEY: {
-        "source_system": "QILT",
-        "dataset": "GOS",
-        "dataset_label": "Graduate Outcomes Survey",
-        "plain_label": "GOS #21",
-        "source_file": QILT_2024_GOS_FILE_NAME,
-        "sheet_number": 21,
-    },
-    GOS_L_1_SOURCE_KEY: {
-        "source_system": "QILT",
-        "dataset": "GOS-L",
-        "dataset_label": "Graduate Outcomes Survey - Longitudinal",
-        "plain_label": "GOS-L #1",
-        "source_file": QILT_2024_GOS_L_FILE_NAME,
-        "sheet_number": 1,
-    },
-    GOS_L_6_SOURCE_KEY: {
-        "source_system": "QILT",
-        "dataset": "GOS-L",
-        "dataset_label": "Graduate Outcomes Survey - Longitudinal",
-        "plain_label": "GOS-L #6",
-        "source_file": QILT_2024_GOS_L_FILE_NAME,
-        "sheet_number": 6,
-    },
-    GOS_L_23_SOURCE_KEY: {
-        "source_system": "QILT",
-        "dataset": "GOS-L",
-        "dataset_label": "Graduate Outcomes Survey - Longitudinal",
-        "plain_label": "GOS-L #23",
-        "source_file": QILT_2024_GOS_L_FILE_NAME,
-        "sheet_number": 23,
-    },
-    GOS_L_26_SOURCE_KEY: {
-        "source_system": "QILT",
-        "dataset": "GOS-L",
-        "dataset_label": "Graduate Outcomes Survey - Longitudinal",
-        "plain_label": "GOS-L #26",
-        "source_file": QILT_2024_GOS_L_FILE_NAME,
-        "sheet_number": 26,
-    },
-    GOS_L_160_SOURCE_KEY: {
-        "source_system": "QILT",
-        "dataset": "GOS-L",
-        "dataset_label": "Graduate Outcomes Survey - Longitudinal",
-        "plain_label": "GOS-L #160",
-        "source_file": QILT_2024_GOS_L_FILE_NAME,
-        "sheet_number": 160,
-    },
-}
-
-QILT_METRIC_DEFINITIONS = {
-    "full_time_employment": (
-        "Percentage of graduates available for full-time work who were employed "
-        "full-time."
-    ),
-    "work_fit_underutilisation": (
-        "Percentage of employed graduates whose skills and education were not "
-        "fully utilised in their job."
-    ),
-}
-
-TIME_WINDOW_DEFINITIONS = {
-    SHORT_TERM_TIME_WINDOW: "Around four months after graduation.",
-    MEDIUM_TERM_TIME_WINDOW: "Around three years after graduation.",
-}
-
-SEW_RELIABILITY_MARKER_MEANINGS = {
-    "*": "Estimate has a relative standard error of 25% to 50%.",
-    "**": "Estimate has a relative standard error greater than 50%.",
-    "#": "Estimate has a margin of error greater than 10 percentage points.",
-    "np": "Value is not published.",
-    "na": "Value is not available.",
-}
-
-SEW_UNIT_DEFINITIONS = {
-    "estimate_count": "thousands of persons",
-    "proportion_percent": "percent",
-    "rse_estimate_percent": "percent",
-    "rse_proportion_percent": "percent",
-    "margin_error_proportion": "percentage points",
-}
-
-CHART_METADATA_SPECS = {
-    CHART_1_ID: {
-        "metric_keys": ["full_time_employment"],
-        "units": "percentage",
-        "time_windows": [SHORT_TERM_TIME_WINDOW, MEDIUM_TERM_TIME_WINDOW],
-        "transformation_caveats": [
-            "GOS-L uses paired short-term and medium-term rolling cohort rows.",
-            "The GOS overlay uses total survey-round values from the 2024 workbook.",
-        ],
-    },
-    CHART_2_ID: {
-        "metric_keys": ["full_time_employment"],
-        "units": {
-            "gap_pp": "percentage points",
-            "lower_group_pct": "percentage",
-            "higher_group_pct": "percentage",
-        },
-        "time_windows": [SHORT_TERM_TIME_WINDOW],
-        "transformation_caveats": [
-            "Each subgroup dimension keeps the lowest and highest short-term values.",
-        ],
-    },
-    CHART_3_ID: {
-        "metric_keys": ["full_time_employment"],
-        "units": {
-            "gap_pp": "percentage points",
-        },
-        "time_windows": [SHORT_TERM_TIME_WINDOW, MEDIUM_TERM_TIME_WINDOW],
-        "transformation_caveats": [
-            "Short-term and medium-term gaps are calculated independently.",
-        ],
-    },
-    CHART_4_ID: {
-        "metric_keys": ["full_time_employment"],
-        "units": "percentage",
-        "time_windows": [SHORT_TERM_TIME_WINDOW, MEDIUM_TERM_TIME_WINDOW],
-    },
-    CHART_5_ID: {
-        "metric_keys": ["full_time_employment", "work_fit_underutilisation"],
-        "units": {
-            "fte_gain_pp": "percentage points",
-            "fit_change_pp": "percentage points",
-        },
-        "time_windows": [SHORT_TERM_TIME_WINDOW, MEDIUM_TERM_TIME_WINDOW],
-        "transformation_caveats": [
-            (
-                "fit_change_pp is short-term underutilisation minus medium-term "
-                "underutilisation, so positive values indicate a lower reported "
-                "underutilisation rate by the medium-term window."
-            ),
-        ],
-    },
-    CHART_6A_ID: {
-        "units": {
-            "share_pct": "percent",
-        },
-        "source_systems": ["ABS"],
-    },
-    CHART_6B_ID: {
-        "units": {
-            "index_2016_100": "index, 2016 = 100",
-        },
-        "source_systems": ["ABS"],
-    },
-    CHART_7_ID: {
-        "metric_keys": ["full_time_employment"],
-        "units": {
-            "value_pct": "percentage",
-        },
-        "time_windows": [SHORT_TERM_TIME_WINDOW, MEDIUM_TERM_TIME_WINDOW],
-        "transformation_caveats": [
-            "The table compares group-level outcomes only.",
-        ],
-    },
-}

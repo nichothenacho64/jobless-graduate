@@ -59,6 +59,8 @@ def find_abs_source_files(abs_directory: Path) -> dict[str, str]:
     for file_path in sorted(abs_directory.iterdir()):
         if not file_path.is_file():
             continue
+        if file_path.name.startswith("~$"):
+            continue
         if file_path.suffix.lower() not in allowed_suffixes:
             continue
 

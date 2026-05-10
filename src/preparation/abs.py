@@ -46,11 +46,6 @@ def prepare_abs_sheet(folder: Folder, source_file: str, sheet_name: str) -> ABSP
     return prepare_abs_parsed_sheet(parsed_sheet)
 
 
-def prepare_abs_table(folder: Folder, source_file: str, sheet_name: str) -> pd.DataFrame:
-    prepared_sheet = prepare_abs_sheet(folder, source_file, sheet_name)
-    return prepared_sheet.table.copy()
-
-
 def prepare_abs_parsed_sheet(parsed_sheet: ABSParsedSheet) -> ABSPreparedSheet:
     cleaned_metadata = clean_metadata_sections(
         parsed_sheet.metadata,
@@ -107,6 +102,18 @@ def clean_abs_display_text(value: object) -> Optional[str]:
     return text or None
 
 
+def format_abs_column_label(value: object) -> Optional[str]:
+    text = clean_abs_display_text(value)
+    if text is None:
+        return None
+
+    parts = [part.strip() for part in text.split("|") if part.strip()]
+    if not parts:
+        return None
+
+    return parts[-1]
+
+
 def parse_abs_number(value: object) -> Optional[NumericValue]:
     return parse_sheet_number(
         value,
@@ -121,7 +128,20 @@ def _normalise_abs_records(records: pd.DataFrame) -> pd.DataFrame:
         for column in normalised_records.columns
     ]
 
-    _fail_if_duplicate_columns(normalised_records)
+    if normalised_records.columns.has_duplicates:
+        duplicate_columns = {
+            column
+            for column, is_duplicate in zip(
+                normalised_records.columns,
+                normalised_records.columns.duplicated(),
+            )
+            if is_duplicate
+        }
+        raise ValueError(
+            "ABS column cleaning produced duplicate columns: "
+            f"{', '.join(sorted(map(str, duplicate_columns)))}"
+        )
+
     _attach_abs_reliability_flags(normalised_records)
 
     for column in normalised_records.columns:
@@ -202,13 +222,9 @@ def _keep_australia_aggregate_rows(records: pd.DataFrame) -> pd.DataFrame:
     )
     if not bool(australia_mask.any()):
         if _records_are_implicit_national(records, header_columns):
-            # SEW charts use Australia-wide context. Some SEW time-series tables
-            # are already national and therefore have no state/territory column.
             return records.reset_index(drop=True)
 
-        raise ValueError(
-            "Could not identify an Australia aggregate column in the ABS parsed table."
-        )
+        raise ValueError("Could not identify an Australia aggregate column in the ABS parsed table.")
 
     return records.loc[australia_mask].reset_index(drop=True)
 
@@ -269,10 +285,7 @@ def _collect_header_tokens(
 
 
 def _build_abs_row_hierarchy(records: pd.DataFrame) -> pd.DataFrame:
-    _require_columns(
-        records,
-        set(ABS_ROW_IDENTITY_COLUMNS),
-    )
+    _require_columns(records, set(ABS_ROW_IDENTITY_COLUMNS))
 
     row_hierarchy = (
         records.loc[:, ABS_ROW_IDENTITY_COLUMNS]
@@ -378,8 +391,33 @@ def _pivot_measurements_to_schema(records: pd.DataFrame) -> pd.DataFrame:
         axis=1,
     )
 
-    _fail_if_unexpected_measurements(pivot_source)
-    _fail_if_duplicate_measurement_rows(pivot_source)
+    unexpected_measurements = sorted(
+        set(pivot_source["measurement"].dropna()) - set(ABS_MEASUREMENT_COLUMNS)
+    )
+    if unexpected_measurements:
+        raise ValueError(
+            "ABS measurements cannot fit the prepared schema: "
+            + ", ".join(unexpected_measurements)
+        )
+
+    pivot_source["row_parent"] = pivot_source["row_parent"].fillna(
+        ABS_NO_PARENT_SENTINEL
+    )
+
+    duplicate_mask = pivot_source.duplicated(
+        ABS_PREPARED_INDEX_COLUMNS + ["measurement"],
+        keep=False,
+    )
+    if bool(duplicate_mask.any()):
+        duplicate_rows = pivot_source.loc[
+            duplicate_mask,
+            ABS_PREPARED_INDEX_COLUMNS + ["measurement"],
+        ]
+        raise ValueError(
+            "ABS Australia values are not unique after filtering; "
+            "the prepared schema cannot represent remaining column dimensions. "
+            f"Example duplicate: {duplicate_rows.iloc[0].to_dict()}"
+        )
 
     values = _pivot_measurement_values(pivot_source)
     flags = _pivot_measurement_flags(pivot_source)
@@ -477,40 +515,6 @@ def _normalise_measurement_name_for_row(row: pd.Series) -> object:
     return measurement
 
 
-def _fail_if_unexpected_measurements(pivot_source: pd.DataFrame) -> None:
-    unexpected_measurements = sorted(
-        set(pivot_source["measurement"].dropna()) - set(ABS_MEASUREMENT_COLUMNS)
-    )
-    if unexpected_measurements:
-        raise ValueError(
-            "ABS measurements cannot fit the prepared schema: "
-            + ", ".join(unexpected_measurements)
-        )
-
-
-def _fail_if_duplicate_measurement_rows(pivot_source: pd.DataFrame) -> None:
-    pivot_source["row_parent"] = pivot_source["row_parent"].fillna(
-        ABS_NO_PARENT_SENTINEL
-    )
-
-    duplicate_mask = pivot_source.duplicated(
-        ABS_PREPARED_INDEX_COLUMNS + ["measurement"],
-        keep=False,
-    )
-    if not bool(duplicate_mask.any()):
-        return
-
-    duplicate_rows = pivot_source.loc[
-        duplicate_mask,
-        ABS_PREPARED_INDEX_COLUMNS + ["measurement"],
-    ]
-    raise ValueError(
-        "ABS Australia values are not unique after filtering; "
-        "the prepared schema cannot represent remaining column dimensions. "
-        f"Example duplicate: {duplicate_rows.iloc[0].to_dict()}"
-    )
-
-
 def _select_abs_prepared_schema(prepared: pd.DataFrame) -> pd.DataFrame:
     missing_columns = [
         column for column in ABS_PREPARED_SCHEMA if column not in prepared.columns
@@ -529,24 +533,6 @@ def _select_abs_prepared_schema(prepared: pd.DataFrame) -> pd.DataFrame:
         raise ValueError("ABS prepared schema mismatch; " + "; ".join(message_parts))
 
     return prepared.loc[:, ABS_PREPARED_SCHEMA].reset_index(drop=True)
-
-
-def _fail_if_duplicate_columns(records: pd.DataFrame) -> None:
-    if not records.columns.has_duplicates:
-        return
-
-    duplicates = {
-        column
-        for column, is_duplicate in zip(
-            records.columns,
-            records.columns.duplicated(),
-        )
-        if is_duplicate
-    }
-    raise ValueError(
-        "ABS column cleaning produced duplicate columns: "
-        f"{', '.join(sorted(map(str, duplicates)))}"
-    )
 
 
 def _require_columns(records: pd.DataFrame, columns: set[str]) -> None:

@@ -12,12 +12,14 @@ from src.sources import RAW_SOURCE_DIRS
 Folder = str | Path
 NumericValue = int | float
 Metadata = dict[str, list[str]]
+ChartMetadata = dict[str, object]
 NullableNumericDtype = pd.Int64Dtype | pd.Float64Dtype
 SheetTitleList = list[dict[str, int | str]]
 BodyRowKind = Literal["label", "values"]
 NumericConverter = Callable[[NumericValue], NumericValue]
 TextCleaner = Callable[[object], Optional[str]]
 NumberParser = Callable[[object], Optional[NumericValue]]
+MissingValues = dict[str, list[dict[str, object]]]
 
 QILTTableKind = Literal[
     "collection_summary",
@@ -35,6 +37,18 @@ ABSMeasurement = Literal[
     "rse_proportion_percent",
     "margin_error_proportion",
 ]
+
+QILTValidationComparison = Literal[
+    "one_to_one",
+    "1:1",
+    "one_to_many",
+    "1:m",
+    "many_to_one",
+    "m:1",
+    "many_to_many",
+    "m:m",
+]
+
 
 @dataclass(frozen=True, slots=True)
 class AxisSpec:
@@ -54,6 +68,7 @@ class AxisSpec:
             self.tick_step,
         )
 
+
 @dataclass
 class ExcelSheet:
     folder: Folder
@@ -65,6 +80,7 @@ class ExcelSheet:
         folder = self.folder.name if isinstance(self.folder, Path) else self.folder
         return RAW_SOURCE_DIRS[folder][self.data_source]
 
+
 @dataclass(frozen=True)
 class MetricComparison:
     metric_key: str
@@ -74,13 +90,15 @@ class MetricComparison:
     @property
     def change_column(self) -> str:
         return f"{self.metric_key}_change"
-    
+
+
 @dataclass(slots=True)
 class QILTRowBounds:
     header: int
     data_first: int
     data_last: int
     footer_start: Optional[int]
+
 
 @dataclass(slots=True)
 class QILTParsedSheet:
@@ -91,6 +109,7 @@ class QILTParsedSheet:
     table: pd.DataFrame
     metadata: Metadata
 
+
 @dataclass(slots=True)
 class QILTPreparedSheet:
     sheet_name: str
@@ -100,12 +119,14 @@ class QILTPreparedSheet:
     table: pd.DataFrame
     metadata: Metadata
 
+
 @dataclass(frozen=True, slots=True)
 class ABSMeasurementCell:
     row: int
     col: int
     measurement: ABSMeasurement
     measurement_label: str
+
 
 @dataclass(slots=True)
 class ABSSourceBounds:
@@ -114,6 +135,7 @@ class ABSSourceBounds:
     col_first: int
     col_last: int
 
+
 @dataclass(slots=True)
 class ABSRowBounds:
     header_first: int
@@ -121,6 +143,7 @@ class ABSRowBounds:
     body_first: int
     body_last: int
     footer_start: Optional[int]
+
 
 @dataclass(slots=True)
 class ABSParsedTable:
@@ -131,6 +154,7 @@ class ABSParsedTable:
     row_bounds: ABSRowBounds
     raw_table: pd.DataFrame
     parsed_table: pd.DataFrame
+
 
 @dataclass(slots=True)
 class ABSParsedSheet:
@@ -143,6 +167,7 @@ class ABSParsedSheet:
     subtables: list[ABSParsedTable]
     metadata: Metadata
 
+
 @dataclass(slots=True)
 class ABSPreparedSheet:
     source_file: str
@@ -152,5 +177,7 @@ class ABSPreparedSheet:
     table: pd.DataFrame
     metadata: Metadata
 
-PreparedSheet = TypeVar("PreparedSheet", QILTPreparedSheet, ABSPreparedSheet)
-SheetPreparer = Callable[[Folder, str, str], PreparedSheet]
+
+PreparedSheetType = TypeVar("PreparedSheetType", QILTPreparedSheet, ABSPreparedSheet)
+PreparedSheet = QILTPreparedSheet | ABSPreparedSheet
+SheetPreparer = Callable[[Folder, str, str], PreparedSheetType]

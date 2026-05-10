@@ -18,6 +18,7 @@ from src.preparation.series import (
 )
 from src.types import Metadata, NumberParser, TextCleaner
 
+
 def clean_text(
     value: object,
     *,
@@ -32,6 +33,7 @@ def clean_text(
 
     return text or None
 
+
 def clean_text_value(value: object, *, text_cleaner: TextCleaner) -> object:
     if is_missing_value(value):
         return pd.NA
@@ -44,6 +46,7 @@ def clean_text_value(value: object, *, text_cleaner: TextCleaner) -> object:
 
     return value
 
+
 def clean_source_text(
     value: object,
     *,
@@ -53,6 +56,7 @@ def clean_source_text(
         return None
 
     return clean_text(value, missing_text_values=missing_text_values)
+
 
 def clean_missing_text_value(
     value: object,
@@ -67,6 +71,7 @@ def clean_missing_text_value(
         return pd.NA if text is None else text
 
     return value
+
 
 def clean_text_or_numeric_series(
     series: pd.Series,
@@ -91,6 +96,7 @@ def clean_text_or_numeric_series(
 
     return cleaned_series
 
+
 def clean_column_name(
     column_name: object,
     *,
@@ -109,6 +115,7 @@ def clean_column_name(
         raise ValueError("Column names cannot be empty after standardisation.")
 
     return standardised_text
+
 
 def clean_metadata_sections(
     metadata: Metadata,
