@@ -28,6 +28,7 @@ from src.transform.constants import (
     CHART_6A_ID,
     CHART_6B_ID,
     CHART_7_ID,
+    CHART_TABLE_IDS_BY_NUMBER,
     GOS_5_SOURCE_KEY,
     GOS_8_SOURCE_KEY,
     GOS_21_SOURCE_KEY,
@@ -41,6 +42,7 @@ from src.transform.constants import (
 from src.types import (
     ABSPreparedSheet,
     ExcelSheet,
+    NumericValue,
     PreparedSheet,
     PreparedSheetType,
     QILTPreparedSheet,
@@ -58,8 +60,8 @@ def prepare_sheets(
     }
 
 
-def build_qilt_sheet_specs() -> dict[str, ExcelSheet]:
-    return {
+def prepare_all_sources() -> dict[str, PreparedSheetType]:
+    qilt_sheet_specs = {
         GOS_21_SOURCE_KEY: initialise_gos_sheet(21),
         GOS_5_SOURCE_KEY: initialise_gos_sheet(5),
         GOS_8_SOURCE_KEY: initialise_gos_sheet(8),
@@ -69,24 +71,13 @@ def build_qilt_sheet_specs() -> dict[str, ExcelSheet]:
         GOS_L_160_SOURCE_KEY: initialise_gos_l_sheet(160),
     }
 
-
-def build_abs_sheet_specs() -> dict[str, ExcelSheet]:
-    return {
+    abs_sheet_specs = {
         SEW_32_SOURCE_KEY: initialise_abs_sheet(32),
         SEW_35_SOURCE_KEY: initialise_abs_sheet(35),
     }
 
-
-def build_source_specs() -> dict[str, ExcelSheet]:
-    return {
-        **build_qilt_sheet_specs(),
-        **build_abs_sheet_specs(),
-    }
-
-
-def prepare_project_sources() -> dict[str, PreparedSheetType]:
-    prepared_qilt_sheets = prepare_sheets(build_qilt_sheet_specs(), prepare_qilt_sheet)
-    prepared_abs_sheets = prepare_sheets(build_abs_sheet_specs(), prepare_abs_sheet)
+    prepared_qilt_sheets = prepare_sheets(qilt_sheet_specs, prepare_qilt_sheet)
+    prepared_abs_sheets = prepare_sheets(abs_sheet_specs, prepare_abs_sheet)
     return {**prepared_qilt_sheets, **prepared_abs_sheets}
 
 
@@ -125,6 +116,7 @@ def build_chart_tables(
         CHART_7_ID: chart_7_table,
     }
 
+
 def _get_sheet_source(
     prepared_sources: Mapping[str, PreparedSheet],
     source_key: str,
@@ -137,3 +129,18 @@ def _get_sheet_source(
         )
 
     return prepared_source
+
+
+def get_chart_table(
+    chart_number: NumericValue, 
+    chart_tables: Mapping[str, pd.DataFrame],
+) -> pd.DataFrame:
+    if chart_number == 6:
+        raise KeyError("Chart 6 is split into 6.1 (6a) and 6.2 (6b).")
+
+    try:
+        chart_id = CHART_TABLE_IDS_BY_NUMBER[chart_number]
+    except KeyError:
+        raise KeyError(f"Unknown chart number: {chart_number!r}.") from None
+
+    return chart_tables[chart_id]

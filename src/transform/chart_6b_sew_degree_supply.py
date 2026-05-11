@@ -6,29 +6,42 @@ from src.preparation.abs import clean_abs_display_text, parse_abs_number
 from src.preparation.series import is_missing_value
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
+    CHART_6B_INDEX_COLUMN,
     CHART_6B_TABLE_COLUMNS,
     SEW_35_SOURCE_KEY,
     SEW_DEGREE_SUPPLY_BASE_YEAR,
+    SEW_DEGREE_SUPPLY_YEARS,
 )
-from src.types import ABSPreparedSheet
+from src.types import ABSPreparedSheet, ChartMetadata
+
+SEW_35_TABLE_NUMBER = 35
+SEW_35_MEASUREMENT_LABEL = "Estimate ('000)"
+SEW_35_QUALIFICATION_FILTER = (
+    "highest non-school qualification at bachelor degree level or above"
+)
+SEW_35_SUBJECT = f"People with a {SEW_35_QUALIFICATION_FILTER}"
+SEW_35_POPULATION_GROUP = "Persons"
+SEW_35_ROW_LABEL = "Total"
+SEW_DEGREE_SUPPLY_BASE_UNIT = "thousands of persons"
+SEW_DEGREE_SUPPLY_INDEX_FORMULA = "value / base_value * 100"
 
 
 def build_chart_6b_table(sew_table_35_sheet: ABSPreparedSheet) -> pd.DataFrame:
-    source_rows = _select_person_total_rows(sew_table_35_sheet.table)
+    _require_sew_table_35(sew_table_35_sheet)
+    source_rows = _select_degree_supply_source_rows(sew_table_35_sheet.table)
     base_value = _select_base_value(source_rows)
     prepared_rows: list[dict[str, object]] = []
 
     for _, row in source_rows.iterrows():
-        parsed_year = parse_abs_number(row["column_header"])
         value = row["estimate_count"]
 
-        if parsed_year is None or is_missing_value(value):
+        if is_missing_value(value):
             continue
 
         prepared_rows.append(
             {
-                "year": int(parsed_year),
-                "index_2016_100": round(float(value) / base_value * 100, 1),
+                "year": int(row["_year"]),
+                CHART_6B_INDEX_COLUMN: round(float(value) / base_value * 100, 1),
                 "source_key": SEW_35_SOURCE_KEY,
             }
         )
@@ -37,24 +50,99 @@ def build_chart_6b_table(sew_table_35_sheet: ABSPreparedSheet) -> pd.DataFrame:
     return select_chart_table_schema(chart_table, CHART_6B_TABLE_COLUMNS)
 
 
-def _select_person_total_rows(table: pd.DataFrame) -> pd.DataFrame:
+def build_chart_6b_derivation_metadata(
+    sew_table_35_sheet: ABSPreparedSheet,
+) -> ChartMetadata:
+    _require_sew_table_35(sew_table_35_sheet)
+    source_rows = _select_degree_supply_source_rows(sew_table_35_sheet.table)
+    base_value = _select_base_value(source_rows)
+
+    return {
+        "source_key": SEW_35_SOURCE_KEY,
+        "source_label": f"SEW #{SEW_35_TABLE_NUMBER}",
+        "table_number": SEW_35_TABLE_NUMBER,
+        "measurement": SEW_35_MEASUREMENT_LABEL,
+        "qualification_filter": SEW_35_QUALIFICATION_FILTER,
+        "population_group": SEW_35_POPULATION_GROUP,
+        "row_label": SEW_35_ROW_LABEL,
+        "base_year": SEW_DEGREE_SUPPLY_BASE_YEAR,
+        "base_value": round(base_value, 1),
+        "base_unit": SEW_DEGREE_SUPPLY_BASE_UNIT,
+        "index_formula": SEW_DEGREE_SUPPLY_INDEX_FORMULA,
+    }
+
+
+def _require_sew_table_35(sew_table_35_sheet: ABSPreparedSheet) -> None:
+    if sew_table_35_sheet.table_number != SEW_35_TABLE_NUMBER:
+        raise ValueError("Chart 6B requires SEW Table 35.")
+
+
+def _select_degree_supply_source_rows(table: pd.DataFrame) -> pd.DataFrame:
+    _require_columns(
+        table,
+        {
+            "subject",
+            "row_group",
+            "row_label",
+            "column_header",
+            "estimate_count",
+        },
+    )
+
+    subject = table["subject"].map(clean_abs_display_text)
     row_group = table["row_group"].map(clean_abs_display_text)
     row_label = table["row_label"].map(clean_abs_display_text)
     selected_rows = table.loc[
-        (row_group == "Persons")
-        & (row_label == "Total")
+        (subject == SEW_35_SUBJECT)
+        & (row_group == SEW_35_POPULATION_GROUP)
+        & (row_label == SEW_35_ROW_LABEL)
         & table["estimate_count"].notna()
+    ].copy()
+    selected_rows["_year"] = selected_rows["column_header"].map(_parse_year)
+    selected_rows = selected_rows.loc[
+        selected_rows["_year"].isin(SEW_DEGREE_SUPPLY_YEARS)
     ].copy()
 
     if selected_rows.empty:
-        raise ValueError("SEW Table 35 has no Persons/Total estimate rows.")
+        raise ValueError(
+            "SEW Table 35 has no Estimate ('000) rows for the "
+            "bachelor degree or above Persons/Total source row."
+        )
 
-    return selected_rows
+    _require_expected_years(selected_rows)
+
+    return selected_rows.sort_values("_year", kind="mergesort")
+
+
+def _parse_year(value: object) -> object:
+    parsed_year = parse_abs_number(value)
+    if parsed_year is None:
+        return pd.NA
+
+    return int(parsed_year)
+
+
+def _require_expected_years(source_rows: pd.DataFrame) -> None:
+    years = source_rows["_year"].dropna().astype(int)
+    duplicate_years = years.loc[years.duplicated()].drop_duplicates().tolist()
+    if duplicate_years:
+        raise ValueError(
+            "SEW Table 35 has multiple selected degree-supply rows for years: "
+            + ", ".join(map(str, duplicate_years))
+        )
+
+    missing_years = sorted(set(SEW_DEGREE_SUPPLY_YEARS) - set(years.tolist()))
+    if missing_years:
+        raise ValueError(
+            "SEW Table 35 is missing selected degree-supply rows for years: "
+            + ", ".join(map(str, missing_years))
+        )
 
 
 def _select_base_value(source_rows: pd.DataFrame) -> float:
-    years = source_rows["column_header"].map(parse_abs_number)
-    base_rows = source_rows.loc[years == SEW_DEGREE_SUPPLY_BASE_YEAR]
+    base_rows = source_rows.loc[
+        source_rows["_year"] == SEW_DEGREE_SUPPLY_BASE_YEAR
+    ]
 
     if base_rows.empty:
         raise ValueError(
@@ -69,3 +157,12 @@ def _select_base_value(source_rows: pd.DataFrame) -> float:
         )
 
     return float(base_value)
+
+
+def _require_columns(table: pd.DataFrame, columns: set[str]) -> None:
+    missing_columns = sorted(columns - set(table.columns))
+    if missing_columns:
+        raise ValueError(
+            "SEW Table 35 is missing required prepared columns: "
+            + ", ".join(missing_columns)
+        )

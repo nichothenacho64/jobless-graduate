@@ -59,6 +59,8 @@ CHART_6A_ID = "chart_6a_sew_skill_by_age"
 CHART_6B_ID = "chart_6b_sew_degree_supply"
 CHART_7_ID = "chart_7_subgroup_comparator"
 
+CHART_6B_INDEX_COLUMN = "bachelor_degree_or_above_count_index"
+
 CHART_TABLE_SCHEMAS = {
     CHART_1_ID: [
         "year",
@@ -114,7 +116,7 @@ CHART_TABLE_SCHEMAS = {
     ],
     CHART_6B_ID: [
         "year",
-        "index_2016_100",
+        CHART_6B_INDEX_COLUMN,
         "source_key",
     ],
     CHART_7_ID: [
@@ -161,6 +163,7 @@ GOS_L_160_SOURCE_KEY = "gos_l_160"
 SEW_32_SOURCE_KEY = "sew_32"
 SEW_35_SOURCE_KEY = "sew_35"
 SEW_DEGREE_SUPPLY_BASE_YEAR = 2016
+SEW_DEGREE_SUPPLY_YEARS = tuple(range(2016, 2026))
 
 SHORT_TERM_TIME_WINDOW = "short_term"
 MEDIUM_TERM_TIME_WINDOW = "medium_term"
@@ -203,6 +206,17 @@ CHART_OUTPUT_FILENAMES = {
     CHART_6A_ID: "chart_6a_sew_skill_by_age.csv",
     CHART_6B_ID: "chart_6b_sew_degree_supply.csv",
     CHART_7_ID: "chart_7_subgroup_comparator.csv",
+}
+
+CHART_TABLE_IDS_BY_NUMBER = {
+    1: CHART_1_ID,
+    2: CHART_2_ID,
+    3: CHART_3_ID,
+    4: CHART_4_ID,
+    5: CHART_5_ID,
+    6.1: CHART_6A_ID,
+    6.2: CHART_6B_ID,
+    7: CHART_7_ID,
 }
 
 CHART_SOURCE_KEY_COLUMNS = (
