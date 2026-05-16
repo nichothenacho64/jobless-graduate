@@ -12,11 +12,12 @@ def clean_cell_text(value: object) -> str:
         return ""
 
     return str(value).strip()
-    
-    
+
+
 def normalise_cell_text(value: object) -> str:
     text = clean_cell_text(value)
     return SHEET_WHITESPACE_PATTERN.sub(" ", text)
+
 
 def require_cell_text(
     raw_sheet: pd.DataFrame,
@@ -56,7 +57,9 @@ def count_nonempty_cells(row: pd.Series) -> int:
     return nonempty_cell_count
 
 
-def find_next_nonblank_row(raw_sheet: pd.DataFrame, start_row_index: int) -> Optional[int]:
+def find_next_nonblank_row(
+    raw_sheet: pd.DataFrame, start_row_index: int
+) -> Optional[int]:
     for row_index in range(start_row_index, len(raw_sheet)):
         row = raw_sheet.iloc[row_index]
 

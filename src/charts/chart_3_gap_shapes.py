@@ -123,10 +123,7 @@ def _build_behind_label(short_group: object, medium_group: object) -> str:
     if short_group_label == medium_group_label:
         return f"Behind: {short_group_label}"
 
-    return (
-        f"Behind: {short_group_label} (short); "
-        f"{medium_group_label} (medium)"
-    )
+    return f"Behind: {short_group_label} (short); {medium_group_label} (medium)"
 
 
 def _format_group_label(group_label: object) -> str:

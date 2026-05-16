@@ -41,7 +41,9 @@ from src.preparation.series import (
 from src.types import ABSParsedSheet, ABSPreparedSheet, Folder, NumericValue
 
 
-def prepare_abs_sheet(folder: Folder, source_file: str, sheet_name: str) -> ABSPreparedSheet:
+def prepare_abs_sheet(
+    folder: Folder, source_file: str, sheet_name: str
+) -> ABSPreparedSheet:
     parsed_sheet = parse_abs_sheet(folder, source_file, sheet_name)
     return prepare_abs_parsed_sheet(parsed_sheet)
 
@@ -224,7 +226,9 @@ def _keep_australia_aggregate_rows(records: pd.DataFrame) -> pd.DataFrame:
         if _records_are_implicit_national(records, header_columns):
             return records.reset_index(drop=True)
 
-        raise ValueError("Could not identify an Australia aggregate column in the ABS parsed table.")
+        raise ValueError(
+            "Could not identify an Australia aggregate column in the ABS parsed table."
+        )
 
     return records.loc[australia_mask].reset_index(drop=True)
 

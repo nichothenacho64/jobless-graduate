@@ -15,7 +15,7 @@ from src.transform.constants import (
     TOTAL_ROW_GROUP,
 )
 from src.transform.qilt import build_qilt_subgroup_pair_summary
-from src.types import QILTPreparedSheet
+from src.types import PreparedRows, QILTPreparedSheet
 
 
 def build_chart_2_table(
@@ -23,7 +23,7 @@ def build_chart_2_table(
     gender_sheet: Optional[QILTPreparedSheet] = None,
 ) -> pd.DataFrame:
     gender_table = gender_sheet.table if gender_sheet is not None else None
-    prepared_rows: list[dict[str, object]] = []
+    prepared_rows: PreparedRows = []
     gender_rows = _build_gender_rows(gender_table) if gender_table is not None else None
     inserted_gender_rows = False
 
@@ -69,7 +69,7 @@ def _build_demographic_row(row: pd.Series) -> dict[str, object]:
     }
 
 
-def _build_gender_rows(gender_table: pd.DataFrame) -> list[dict[str, object]]:
+def _build_gender_rows(gender_table: pd.DataFrame) -> PreparedRows:
     male_row: dict[str, object] = {
         "subgroup_dimension": "Gender",
         "row_label": "Male",

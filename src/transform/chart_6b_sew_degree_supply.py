@@ -6,13 +6,12 @@ from src.preparation.abs import clean_abs_display_text, parse_abs_number
 from src.preparation.series import is_missing_value
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
-    CHART_6B_INDEX_COLUMN,
     CHART_6B_TABLE_COLUMNS,
     SEW_35_SOURCE_KEY,
     SEW_DEGREE_SUPPLY_BASE_YEAR,
     SEW_DEGREE_SUPPLY_YEARS,
 )
-from src.types import ABSPreparedSheet, ChartMetadata
+from src.types import ABSPreparedSheet, ChartMetadata, PreparedRows
 
 SEW_35_TABLE_NUMBER = 35
 SEW_35_MEASUREMENT_LABEL = "Estimate ('000)"
@@ -30,7 +29,7 @@ def build_chart_6b_table(sew_table_35_sheet: ABSPreparedSheet) -> pd.DataFrame:
     _require_sew_table_35(sew_table_35_sheet)
     source_rows = _select_degree_supply_source_rows(sew_table_35_sheet.table)
     base_value = _select_base_value(source_rows)
-    prepared_rows: list[dict[str, object]] = []
+    prepared_rows: PreparedRows = []
 
     for _, row in source_rows.iterrows():
         value = row["estimate_count"]
@@ -41,7 +40,7 @@ def build_chart_6b_table(sew_table_35_sheet: ABSPreparedSheet) -> pd.DataFrame:
         prepared_rows.append(
             {
                 "year": int(row["_year"]),
-                CHART_6B_INDEX_COLUMN: round(float(value) / base_value * 100, 1),
+                "bachelor_degree_or_above_count_index": round(float(value) / base_value * 100, 1),
                 "source_key": SEW_35_SOURCE_KEY,
             }
         )
@@ -141,9 +140,7 @@ def _require_expected_years(source_rows: pd.DataFrame) -> None:
 
 
 def _select_base_value(source_rows: pd.DataFrame) -> float:
-    base_rows = source_rows.loc[
-        source_rows["_year"] == SEW_DEGREE_SUPPLY_BASE_YEAR
-    ]
+    base_rows = source_rows.loc[source_rows["_year"] == SEW_DEGREE_SUPPLY_BASE_YEAR]
 
     if base_rows.empty:
         raise ValueError(

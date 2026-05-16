@@ -8,11 +8,13 @@ import numpy as np
 
 from src.types import NullableNumericDtype, NumberParser, NumericConverter, NumericValue
 
+
 def is_missing_value(value: object) -> bool:
     if value is None or value is pd.NA or value is pd.NaT:
         return True
 
     return isinstance(value, float) and math.isnan(value)
+
 
 def is_missing_scalar(value: object) -> bool:
     value_is_missing = is_missing_value(value)
@@ -20,6 +22,7 @@ def is_missing_scalar(value: object) -> bool:
         return bool(value_is_missing)
 
     return False
+
 
 def series_is_text_like(series: pd.Series) -> bool:
     for value in series.tolist():
@@ -29,6 +32,7 @@ def series_is_text_like(series: pd.Series) -> bool:
             return False
 
     return True
+
 
 def series_is_numeric_like(
     series: pd.Series,
@@ -45,11 +49,13 @@ def series_is_numeric_like(
 
     return True
 
+
 def format_row_key_value(value: object) -> str:
     if isinstance(value, float) and value.is_integer():
         return str(int(value))
 
     return str(value)
+
 
 def resolve_nullable_numeric_dtype(
     values: list[NumericValue],
@@ -61,6 +67,7 @@ def resolve_nullable_numeric_dtype(
         return pd.Int64Dtype(), int
 
     return pd.Float64Dtype(), float
+
 
 def coerce_numeric_series(
     series: pd.Series,

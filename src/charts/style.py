@@ -162,6 +162,7 @@ def build_group_chart_labels(
 
     return labels
 
+
 def _format_chart_label_text(value: object) -> str:
     text = str(value)
     return QILT_SUBGROUP_TEXT_EQUIVALENTS.get(text, text)
@@ -270,8 +271,12 @@ def draw_group_pair_y_labels(
 
     transform = blended_transform_factory(axis.transAxes, axis.transData)
 
-    for row_position, row_group, pair_label in zip(row_positions, row_groups, pair_labels):
-        pair_label_text = "Unavailable" if is_missing_value(pair_label) else str(pair_label)
+    for row_position, row_group, pair_label in zip(
+        row_positions, row_groups, pair_labels
+    ):
+        pair_label_text = (
+            "Unavailable" if is_missing_value(pair_label) else str(pair_label)
+        )
 
         axis.text(
             GROUP_PAIR_LABEL_X_POSITION,

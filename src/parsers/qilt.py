@@ -15,7 +15,10 @@ from src.parsers.qilt_extraction import (
     rename_dimension_columns,
 )
 
-def parse_qilt_sheet(folder: Folder, file_name: str, sheet_name: str) -> QILTParsedSheet:
+
+def parse_qilt_sheet(
+    folder: Folder, file_name: str, sheet_name: str
+) -> QILTParsedSheet:
     raw_sheet = load_excel_sheet(folder, file_name, sheet_name, header=None)
 
     title = find_title(raw_sheet)
@@ -49,10 +52,11 @@ def parse_qilt_sheet(folder: Folder, file_name: str, sheet_name: str) -> QILTPar
         metadata=metadata,
     )
 
+
 def find_all_qilt_sheets(folder: Folder, file_name: str) -> pd.DataFrame:
     sheet_title_list: SheetTitleList = []
     all_sheet_names = list_excel_sheets(folder, file_name)
-    
+
     for sheet_number, sheet_name in enumerate(all_sheet_names):
         parsed_sheet = parse_qilt_sheet(folder, file_name, sheet_name)
         sheet_title_list.append(

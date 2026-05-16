@@ -22,16 +22,23 @@ from src.preparation.cleaners import (
 from src.preparation.numbers import parse_sheet_number
 from src.types import Folder, NumericValue, QILTParsedSheet, QILTPreparedSheet
 
+
 def prepare_qilt_table(folder: Folder, file_name: str, sheet_name: str) -> pd.DataFrame:
     prepared_sheet = prepare_qilt_sheet(folder, file_name, sheet_name)
     return prepared_sheet.table
 
-def prepare_qilt_sheet(folder: Folder, file_name: str, sheet_name: str) -> QILTPreparedSheet:
+
+def prepare_qilt_sheet(
+    folder: Folder, file_name: str, sheet_name: str
+) -> QILTPreparedSheet:
     parsed_sheet = parse_qilt_sheet(folder, file_name, sheet_name)
     return clean_qilt_parsed_sheet(parsed_sheet)
 
+
 def clean_qilt_parsed_sheet(parsed_sheet: QILTParsedSheet) -> QILTPreparedSheet:
-    cleaned_metadata = clean_metadata_sections(parsed_sheet.metadata, text_cleaner=_clean_qilt_text)
+    cleaned_metadata = clean_metadata_sections(
+        parsed_sheet.metadata, text_cleaner=_clean_qilt_text
+    )
     cleaned_table = clean_qilt_table(parsed_sheet.table)
     return QILTPreparedSheet(
         sheet_name=parsed_sheet.sheet_name,
@@ -41,6 +48,7 @@ def clean_qilt_parsed_sheet(parsed_sheet: QILTParsedSheet) -> QILTPreparedSheet:
         table=cleaned_table,
         metadata=cleaned_metadata,
     )
+
 
 def clean_qilt_table(table: pd.DataFrame) -> pd.DataFrame:
     cleaned_table = table.copy()
@@ -67,6 +75,7 @@ def clean_qilt_table(table: pd.DataFrame) -> pd.DataFrame:
 
     return cleaned_table
 
+
 def _clean_qilt_series(series: pd.Series, *, column_name: str) -> pd.Series:
     return clean_text_or_numeric_series(
         series,
@@ -75,14 +84,17 @@ def _clean_qilt_series(series: pd.Series, *, column_name: str) -> pd.Series:
         number_parser=parse_qilt_number,
     )
 
+
 def _clean_qilt_text(value: object) -> Optional[str]:
     return clean_text(value, missing_text_values=MISSING_TEXT_VALUES)
+
 
 def parse_qilt_number(value: object) -> Optional[NumericValue]:
     return parse_sheet_number(
         value,
         trailing_note_pattern=QILT_TRAILING_FOOTNOTE_PATTERN,
     )
+
 
 def clean_qilt_display_text(value: object) -> Optional[str]:
     text = clean_source_text(value)
@@ -91,6 +103,7 @@ def clean_qilt_display_text(value: object) -> Optional[str]:
 
     text = QILT_FOOTNOTE_SYMBOL_PATTERN.sub("", text)
     return clean_text(text, missing_text_values=frozenset({""}))
+
 
 def normalise_qilt_key_text(value: object) -> Optional[str]:
     text = clean_qilt_display_text(value)

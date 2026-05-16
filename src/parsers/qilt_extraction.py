@@ -43,13 +43,17 @@ def find_header_row(raw_sheet: pd.DataFrame) -> int:
     search_stop = min(len(raw_sheet), QILT_HEADER_SEARCH_END_ROW_EXCLUSIVE)
 
     for row_index in range(QILT_HEADER_SEARCH_START_ROW, search_stop):
-        if count_nonempty_cells(raw_sheet.iloc[row_index]) > 0:  # the header is at row 3
+        if (
+            count_nonempty_cells(raw_sheet.iloc[row_index]) > 0
+        ):  # the header is at row 3
             return row_index
 
     raise ValueError("Could not identify the QILT header row.")
 
 
-def find_footer_start_row(raw_sheet: pd.DataFrame, start_row_index: int) -> Optional[int]:
+def find_footer_start_row(
+    raw_sheet: pd.DataFrame, start_row_index: int
+) -> Optional[int]:
     for row_index in range(start_row_index, len(raw_sheet)):
         current_row_texts = get_row_texts(raw_sheet.iloc[row_index])
 
@@ -180,10 +184,13 @@ def rename_dimension_columns(table: pd.DataFrame, metadata: Metadata) -> pd.Data
     rename_map[first_row_label_column] = "Row group"
     rename_map[second_row_label_column] = "Row label"
 
-    for row_dimension_number, row_label_column in enumerate(additional_row_label_columns, start=3):
+    for row_dimension_number, row_label_column in enumerate(
+        additional_row_label_columns, start=3
+    ):
         rename_map[row_label_column] = f"Row dimension {row_dimension_number}"
 
     return table.rename(columns=rename_map)
+
 
 def classify_qilt_table(table: pd.DataFrame) -> QILTTableKind:
     column_names: list[str] = []
@@ -218,7 +225,10 @@ def classify_qilt_table(table: pd.DataFrame) -> QILTTableKind:
         else:
             all_data_columns_are_years = False
 
-    if row_count == QILT_SINGLE_METRIC_EXPECTED_ROW_COUNT and all_data_columns_are_years:
+    if (
+        row_count == QILT_SINGLE_METRIC_EXPECTED_ROW_COUNT
+        and all_data_columns_are_years
+    ):
         return "single_metric_time_series"
 
     if row_count <= QILT_METRIC_ROWS_MAX_ROW_COUNT and all_data_columns_are_years:

@@ -14,7 +14,7 @@ from src.transform.constants import (
     GOS_21_SOURCE_KEY,
     GOS_L_1_SOURCE_KEY,
 )
-from src.types import QILTPreparedSheet
+from src.types import PreparedRows, QILTPreparedSheet
 
 
 def build_chart_1_table(
@@ -40,11 +40,11 @@ def build_chart_1_table(
     return chart_table
 
 
-def _build_gos_short_term_full_time_rows(gos_table: pd.DataFrame) -> list[dict[str, object]]:
+def _build_gos_short_term_full_time_rows(gos_table: pd.DataFrame) -> PreparedRows:
     total_rows = gos_table.loc[
         gos_table["row_label"].map(clean_qilt_display_text) == "Total"
     ]
-    prepared_rows: list[dict[str, object]] = []
+    prepared_rows: PreparedRows = []
 
     for _, row in total_rows.iterrows():
         prepared_rows.append(
@@ -59,8 +59,8 @@ def _build_gos_short_term_full_time_rows(gos_table: pd.DataFrame) -> list[dict[s
     return prepared_rows
 
 
-def _build_gos_l_full_time_rows(gos_l_table: pd.DataFrame) -> list[dict[str, object]]:
-    prepared_rows: list[dict[str, object]] = []
+def _build_gos_l_full_time_rows(gos_l_table: pd.DataFrame) -> PreparedRows:
+    prepared_rows: PreparedRows = []
 
     for _, row in gos_l_table.iterrows():
         display_year = _extract_terminal_year(row["year"])

@@ -16,10 +16,10 @@ from src.sources import (
 )
 from src.transform.constants import (
     CHART_METADATA_FILE_NAME,
-    CHART_OUTPUT_FILENAMES,
     CHART_SOURCE_KEY_COLUMNS,
 )
 from src.types import ABSPreparedSheet, ChartMetadata, MissingValues, QILTPreparedSheet
+
 
 def export_chart_table(table: pd.DataFrame, filename: str) -> Path:
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
@@ -32,12 +32,9 @@ def export_chart_tables(chart_tables: Mapping[str, pd.DataFrame]) -> dict[str, P
     exported_paths: dict[str, Path] = {}
 
     for chart_id, table in chart_tables.items():
-        if chart_id not in CHART_OUTPUT_FILENAMES:
-            raise KeyError(f"No chart output filename is defined for {chart_id!r}.")
-
         exported_paths[chart_id] = export_chart_table(
             table,
-            CHART_OUTPUT_FILENAMES[chart_id],
+            f"{chart_id}.csv",
         )
 
     return exported_paths
@@ -57,15 +54,12 @@ def build_chart_metadata(
     metadata: ChartMetadata = {}
 
     for chart_id, chart_table in chart_tables.items():
-        if chart_id not in CHART_OUTPUT_FILENAMES:
-            raise KeyError(f"No chart output filename is defined for {chart_id!r}.")
-
         source_keys = _collect_source_keys(chart_table)
         source_metadata = _build_sources(source_keys, chart_sources)
 
         chart_entry: ChartMetadata = {
             "chart_id": chart_id,
-            "data_file": CHART_OUTPUT_FILENAMES[chart_id],
+            "data_file": f"{chart_id}.csv",
             "source_keys": source_keys,
             "sources": source_metadata,
         }
@@ -85,13 +79,15 @@ def _build_chart_specific_metadata(chart_table: pd.DataFrame) -> ChartMetadata:
     chart_metadata = chart_table.attrs.get("chart_metadata", {})
     if not isinstance(chart_metadata, Mapping):
         raise TypeError(
-            f"Chart table {"chart_metadata"!r} attribute must be a mapping."
+            f"Chart table {'chart_metadata'!r} attribute must be a mapping."
         )
 
     return dict(chart_metadata)
 
 
-def build_qilt_source_metadata(source_key: str, prepared_sheet: QILTPreparedSheet) -> ChartMetadata:
+def build_qilt_source_metadata(
+    source_key: str, prepared_sheet: QILTPreparedSheet
+) -> ChartMetadata:
     source_context = _derive_qilt_source_context(source_key)
     return {
         "source_key": source_key,
@@ -107,7 +103,9 @@ def build_qilt_source_metadata(source_key: str, prepared_sheet: QILTPreparedShee
     }
 
 
-def build_sew_source_metadata(source_key: str, prepared_sheet: ABSPreparedSheet) -> ChartMetadata:
+def build_sew_source_metadata(
+    source_key: str, prepared_sheet: ABSPreparedSheet
+) -> ChartMetadata:
     expected_source_key = f"sew_{prepared_sheet.table_number}"
     if source_key != expected_source_key:
         raise ValueError(
@@ -149,7 +147,9 @@ def _collect_source_keys(chart_table: pd.DataFrame) -> list[str]:
     return source_keys
 
 
-def _build_sources(source_keys: list[str], chart_sources: Mapping[str, object]) -> dict[str, object]:
+def _build_sources(
+    source_keys: list[str], chart_sources: Mapping[str, object]
+) -> dict[str, object]:
     sources: dict[str, object] = {}
 
     for source_key in source_keys:
@@ -263,7 +263,9 @@ def _build_row_key(
 
     for row_column in row.index:
         column = str(row_column)
-        if not _is_row_key_column(column, caveat_columns=caveat_columns, value_columns=value_columns):
+        if not _is_row_key_column(
+            column, caveat_columns=caveat_columns, value_columns=value_columns
+        ):
             continue
 
         if is_missing_scalar(row[column]):

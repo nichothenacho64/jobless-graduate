@@ -30,9 +30,12 @@ QILT_2024_GOS_L_FILE_NAME = "2024_GOS-L_National_Report_Tables.xlsx"
 
 SPREADSHEET_SUFFIXES = {".xlsx", ".xls", ".xlsm", ".ods"}
 
+
 def _find_abs_source_key(file_path: Path) -> str:
-    abs_table_pattern = re.compile(r"\bT(?P<START>\d+)(?:_T(?P<END>\d+))?\b", re.IGNORECASE)
-    
+    abs_table_pattern = re.compile(
+        r"\bT(?P<START>\d+)(?:_T(?P<END>\d+))?\b", re.IGNORECASE
+    )
+
     table_match = abs_table_pattern.search(file_path.stem)
     if table_match is not None:
         start_table = int(table_match.group("START"))
@@ -48,6 +51,7 @@ def _find_abs_source_key(file_path: Path) -> str:
 
     normalised_file_stem = re.sub(r"[^A-Z0-9]+", "-", file_path.stem.upper()).strip("-")
     return f"SEW-{normalised_file_stem}"
+
 
 def find_abs_source_files(abs_directory: Path) -> dict[str, str]:
     if not abs_directory.exists() or not abs_directory.is_dir():
@@ -68,6 +72,7 @@ def find_abs_source_files(abs_directory: Path) -> dict[str, str]:
         abs_files[source_key] = file_path.name
 
     return abs_files
+
 
 RAW_SOURCE_DIRS: dict[str, dict[str, str]] = {
     QILT_FOLDER_NAME: {

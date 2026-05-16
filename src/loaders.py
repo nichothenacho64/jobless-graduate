@@ -25,6 +25,7 @@ from src.exceptions import (
 )
 from src.types import ExcelSheet, Folder
 
+
 def resolve_folder_path(folder: Folder) -> Path:  # ! for both folders or path objects
     if isinstance(folder, Path):
         folder_path = folder
@@ -39,6 +40,7 @@ def resolve_folder_path(folder: Folder) -> Path:  # ! for both folders or path o
 
     return folder_path
 
+
 def resolve_spreadsheet_path(folder: Folder, file_name: str) -> Path:
     folder_path = resolve_folder_path(folder)
     file_path = folder_path / file_name
@@ -51,14 +53,17 @@ def resolve_spreadsheet_path(folder: Folder, file_name: str) -> Path:
 
     return file_path
 
+
 def open_excel_file(folder: Folder, file_name: str) -> tuple[Path, pd.ExcelFile]:
     file_path = resolve_spreadsheet_path(folder, file_name)
     excel_file = pd.ExcelFile(file_path)
     return file_path, excel_file
 
+
 def list_excel_sheets(folder: Folder, file_name: str) -> list[str]:
     _, excel_file = open_excel_file(folder, file_name)
     return cast(list[str], excel_file.sheet_names)
+
 
 def load_excel_sheet(
     folder: Folder,
@@ -76,11 +81,14 @@ def load_excel_sheet(
 
     return excel_file.parse(sheet_name=sheet_name, header=header)
 
+
 def initialise_gos_sheet(sheet_number: int) -> ExcelSheet:
     return _initialise_qilt_sheet(QILT_2024_GOS_SOURCE, sheet_number)
 
+
 def initialise_gos_l_sheet(sheet_number: int) -> ExcelSheet:
     return _initialise_qilt_sheet(QILT_2024_GOS_L_SOURCE, sheet_number)
+
 
 def initialise_abs_sheet(sheet_number: int) -> ExcelSheet:
     for data_source in RAW_SOURCE_DIRS[ABS_FOLDER_NAME]:
@@ -101,6 +109,7 @@ def initialise_abs_sheet(sheet_number: int) -> ExcelSheet:
         sheet_number,
         RAW_SOURCE_DIRS[ABS_FOLDER_NAME],
     )
+
 
 def _initialise_qilt_sheet(data_source: str, sheet_number: int) -> ExcelSheet:
     file_name = RAW_SOURCE_DIRS[QILT_FOLDER_NAME][data_source]

@@ -14,7 +14,7 @@ from src.transform.constants import (
 )
 from src.preparation.qilt import clean_qilt_display_text, normalise_qilt_key_text
 from src.preparation.series import is_missing_value
-from src.types import QILTValidationComparison
+from src.types import PreparedRows, QILTValidationComparison
 
 QILT_SHORT_TERM_VALUE_COLUMN = "short_term_value_pct"
 QILT_MEDIUM_TERM_VALUE_COLUMN = "medium_term_value_pct"
@@ -54,6 +54,7 @@ def format_qilt_subgroup_label(value: object) -> Optional[str]:
 
     return QILT_SUBGROUP_TEXT_EQUIVALENTS.get(text, text)
 
+
 def make_qilt_subgroup_key(
     row_group: object,
     row_label: object,
@@ -66,12 +67,14 @@ def make_qilt_subgroup_key(
 
     return row_group_key, row_label_key
 
+
 def build_qilt_subgroup_id(subgroup_dimension: object) -> str:
     key_text = normalise_qilt_key_text(subgroup_dimension)
     if key_text is None:
         return "unknown"
 
     return re.sub(r"[^a-z0-9]+", "_", key_text).strip("_")
+
 
 def select_qilt_ordered_pair_rows(
     group_table: pd.DataFrame,
@@ -104,6 +107,7 @@ def select_qilt_ordered_pair_rows(
     highest_row = sorted_rows.iloc[-1]
     return lowest_row, highest_row
 
+
 def select_qilt_subgroup_pair_rows(
     group_table: pd.DataFrame,
     *,
@@ -116,6 +120,7 @@ def select_qilt_subgroup_pair_rows(
         )
 
     return select_qilt_ordered_pair_rows(selection_table, value_column=value_column)
+
 
 def calculate_qilt_gap(
     extremes: Optional[tuple[pd.Series, pd.Series]],
@@ -133,6 +138,7 @@ def calculate_qilt_gap(
 
     return round(float(high_value - low_value), 1)
 
+
 def build_qilt_comparison_label(
     first_group: object,
     second_group: object,
@@ -144,6 +150,7 @@ def build_qilt_comparison_label(
         return None
 
     return f"{first_label} vs {second_label}"
+
 
 def build_qilt_subgroup_pair_summary(
     group_table: pd.DataFrame,
@@ -179,10 +186,9 @@ def build_qilt_subgroup_pair_summary(
         "lower_group_pct": low_value if value_available else None,
         "higher_group": format_qilt_subgroup_label(high_row["row_label"]),
         "higher_group_pct": high_value if value_available else None,
-        "gap_pp": round(float(high_value - low_value), 1)
-        if value_available
-        else None,
+        "gap_pp": round(float(high_value - low_value), 1) if value_available else None,
     }
+
 
 def build_qilt_gap_sort_order(
     table: pd.DataFrame,
@@ -215,6 +221,7 @@ def build_qilt_gap_sort_order(
         dtype="Int64",
     )
 
+
 def build_qilt_subgroup_gap_sort_order(
     table: pd.DataFrame,
     *,
@@ -235,6 +242,7 @@ def build_qilt_subgroup_gap_sort_order(
     ]
     return build_qilt_gap_sort_order(table, gap_table=pd.DataFrame(gap_rows))
 
+
 def _normalise_short_term_full_time_employment_table(
     gos_table: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -246,6 +254,7 @@ def _normalise_short_term_full_time_employment_table(
         value_column=QILT_SHORT_TERM_VALUE_COLUMN,
         include_labels=True,
     )
+
 
 def _normalise_medium_term_full_time_employment_table(
     gos_l_table: pd.DataFrame,
@@ -259,6 +268,7 @@ def _normalise_medium_term_full_time_employment_table(
         include_labels=False,
     )
 
+
 def _normalise_full_time_employment_table(
     table: pd.DataFrame,
     *,
@@ -266,7 +276,7 @@ def _normalise_full_time_employment_table(
     value_column: str,
     include_labels: bool,
 ) -> pd.DataFrame:
-    prepared_rows: list[dict[str, object]] = []
+    prepared_rows: PreparedRows = []
 
     for _, row in table.iterrows():
         row_group = clean_qilt_display_text(row["row_group"])
@@ -291,6 +301,7 @@ def _normalise_full_time_employment_table(
 
     return pd.DataFrame(prepared_rows)
 
+
 def _build_qilt_subgroup_order_key(
     row_group: object,
     row_label: object,
@@ -306,6 +317,7 @@ def _build_qilt_subgroup_order_key(
 
     return label_order, label_key
 
+
 def _build_qilt_subgroup_label_order_lookup(
     row_group_text: Optional[str],
 ) -> dict[str, int]:
@@ -317,7 +329,4 @@ def _build_qilt_subgroup_label_order_lookup(
         (),
     )
 
-    return {
-        label: order
-        for order, label in enumerate(ordered_labels)
-    }
+    return {label: order for order, label in enumerate(ordered_labels)}

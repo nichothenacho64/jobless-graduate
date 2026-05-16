@@ -19,7 +19,10 @@ from src.parsers.abs_extraction import (
 from src.sources import ABS_FOLDER_NAME, RAW_SOURCE_DIRS
 from src.types import ABSParsedSheet, Folder, SheetTitleList
 
-def parse_abs_sheet(folder: Folder, source_file: str, sheet_name: str) -> ABSParsedSheet:
+
+def parse_abs_sheet(
+    folder: Folder, source_file: str, sheet_name: str
+) -> ABSParsedSheet:
     raw_sheet = load_excel_sheet(folder, source_file, sheet_name, header=None)
 
     table_number = parse_abs_sheet_number(sheet_name)

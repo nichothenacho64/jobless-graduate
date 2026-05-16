@@ -63,7 +63,9 @@ TRANSITION_Y_LIMITS = (65, 95)
 TRANSITION_Y_TICKS = np.arange(65, 96, 5)
 TRANSITION_SHORT_TERM_LABEL = "Short-term (4 months after graduation)"
 TRANSITION_MEDIUM_TERM_LABEL = "Medium-term (3 years after graduation)"
-TRANSITION_CHART_TITLE = "Short-term and medium-term graduate outcomes by graduation year"
+TRANSITION_CHART_TITLE = (
+    "Short-term and medium-term graduate outcomes by graduation year"
+)
 TRANSITION_PANEL_HEIGHT_RATIOS = (1.3, 1.0, 0.82)
 TRANSITION_PANEL_STYLES = {
     "full_time_employment": {

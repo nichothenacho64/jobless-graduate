@@ -36,6 +36,7 @@ from src.types import (
     Metadata,
 )
 
+
 def _last_nonblank_row(raw_sheet: pd.DataFrame) -> int:
     for row_index in range(len(raw_sheet) - 1, -1, -1):
         if count_nonempty_cells(raw_sheet.iloc[row_index]) > 0:
@@ -240,7 +241,9 @@ def infer_abs_row_bounds(
     footer_start: Optional[int],
 ) -> ABSRowBounds:
     first_measurement_row = measurement_cells[0].row
-    body_last = footer_start - 1 if footer_start is not None else _last_nonblank_row(raw_sheet)
+    body_last = (
+        footer_start - 1 if footer_start is not None else _last_nonblank_row(raw_sheet)
+    )
 
     return ABSRowBounds(
         header_first=ABS_HEADER_FIRST_ROW_INDEX,
@@ -439,7 +442,9 @@ def _build_parsed_subtable(
     return pd.DataFrame(records)
 
 
-def _extract_raw_subtable(raw_sheet: pd.DataFrame, bounds: ABSSourceBounds) -> pd.DataFrame:
+def _extract_raw_subtable(
+    raw_sheet: pd.DataFrame, bounds: ABSSourceBounds
+) -> pd.DataFrame:
     return raw_sheet.iloc[
         bounds.row_first : bounds.row_last + 1,
         bounds.col_first : bounds.col_last + 1,
@@ -588,6 +593,7 @@ def list_abs_table_sheets(folder: Folder, source_file: str) -> list[str]:
         )
 
     return sheet_names[1:]
+
 
 def load_abs_row_indents(
     folder: Folder,

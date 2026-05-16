@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import cast
+
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.figure import Figure
@@ -35,7 +37,9 @@ def create_chart_1(chart_table: pd.DataFrame) -> Figure:
 
     figure, axis = plt.subplots(figsize=(8.8, 4.6))
 
-    for series_key, series_table in ordered_table.groupby("series_key", sort=False):
+    for raw_series_key, series_table in ordered_table.groupby("series_key", sort=False):
+        series_key = cast(str, raw_series_key)
+
         axis.plot(
             series_table[x_column],
             series_table["value_pct"],

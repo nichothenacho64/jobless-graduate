@@ -1,27 +1,22 @@
 from __future__ import annotations
 
+from collections.abc import Hashable
+
 import pandas as pd
 
 from src.preparation.series import is_missing_value
 from src.preparation.qilt import clean_qilt_display_text
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
+    CHART_5_EXCLUDED_STUDY_AREAS,
+    CHART_5_MEDIUM_TERM_UNDERUTILISATION_COLUMN,
+    CHART_5_SHORT_TERM_UNDERUTILISATION_COLUMN,
     CHART_5_TABLE_COLUMNS,
     CHART_5_WORK_FIT_METRIC_KEY,
     GOS_L_6_SOURCE_KEY,
     GOS_L_26_SOURCE_KEY,
 )
 from src.types import QILTPreparedSheet
-
-CHART_5_SHORT_TERM_UNDERUTILISATION_COLUMN = (
-    "extent_to_which_skills_and_education_not_fully_utilised_short_term_fte"
-)
-CHART_5_MEDIUM_TERM_UNDERUTILISATION_COLUMN = (
-    "extent_to_which_skills_and_education_not_fully_utilised_medium_term_fte"
-)
-CHART_5_EXCLUDED_STUDY_AREAS = {
-    "Total": "non-study-area summary row",
-}
 
 
 def build_chart_5_table(
@@ -104,10 +99,10 @@ def _exclude_non_plotted_rows(
     table: pd.DataFrame,
 ) -> tuple[pd.DataFrame, list[dict[str, object]]]:
     excluded_rows: list[dict[str, object]] = []
-    keep_mask = pd.Series(True, index=table.index)
+    excluded_index_labels: list[Hashable] = []
 
     for row_index, row in table.iterrows():
-        study_area = row["study_area"]
+        study_area = str(row["study_area"])
         if study_area in CHART_5_EXCLUDED_STUDY_AREAS:
             excluded_rows.append(
                 {
@@ -116,7 +111,7 @@ def _exclude_non_plotted_rows(
                     "source_keys": [GOS_L_6_SOURCE_KEY, GOS_L_26_SOURCE_KEY],
                 }
             )
-            keep_mask.loc[row_index] = False
+            excluded_index_labels.append(row_index)
             continue
 
         if is_missing_value(row["underutilisation_reduction_pp"]):
@@ -132,6 +127,6 @@ def _exclude_non_plotted_rows(
                     ],
                 }
             )
-            keep_mask.loc[row_index] = False
+            excluded_index_labels.append(row_index)
 
-    return table.loc[keep_mask].copy(), excluded_rows
+    return table.drop(index=excluded_index_labels).copy(), excluded_rows

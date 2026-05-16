@@ -5,19 +5,15 @@ import pandas as pd
 from src.preparation.qilt import clean_qilt_display_text
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
+    CHART_4_EXCLUDED_STUDY_AREAS,
     CHART_4_TABLE_COLUMNS,
     GOS_L_6_SOURCE_KEY,
 )
-from src.types import QILTPreparedSheet
-
-CHART_4_EXCLUDED_STUDY_AREAS = {
-    "Standard deviation": "non-study-area summary/statistical row",
-    "Total": "non-study-area summary row",
-}
+from src.types import PreparedRows, QILTPreparedSheet
 
 
 def build_chart_4_table(gos_l_area_sheet: QILTPreparedSheet) -> pd.DataFrame:
-    prepared_rows: list[dict[str, object]] = []
+    prepared_rows: PreparedRows = []
     excluded_rows: list[dict[str, object]] = []
 
     for _, row in gos_l_area_sheet.table.iterrows():

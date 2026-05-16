@@ -18,7 +18,7 @@ from src.transform.qilt import (
     build_qilt_subgroup_pair_summary,
     build_qilt_subgroup_id,
 )
-from src.types import QILTPreparedSheet
+from src.types import PreparedRows, QILTPreparedSheet
 
 
 def build_chart_3_table(
@@ -98,7 +98,7 @@ def build_chart_3_plot_table(chart_table: pd.DataFrame) -> pd.DataFrame:
     ]
 
 
-def _build_gap_shape_rows(group_table: pd.DataFrame) -> list[dict[str, object]]:
+def _build_gap_shape_rows(group_table: pd.DataFrame) -> PreparedRows:
     subgroup_dimension = str(group_table["subgroup_dimension"].iloc[0])
     comparison_id = build_qilt_subgroup_id(subgroup_dimension)
     short_summary = build_qilt_subgroup_pair_summary(

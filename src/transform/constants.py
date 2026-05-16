@@ -1,55 +1,13 @@
 from __future__ import annotations
 
+
+# Generic transform constants
 TOTAL_ROW_GROUP = "Total"
+SHORT_TERM_TIME_WINDOW = "short_term"
+MEDIUM_TERM_TIME_WINDOW = "medium_term"
 
-GOS_SHORT_TERM_COMPARISON_COLUMNS = {
-    "short_term_full_time_employment": "full_time_employment_2024",
-    "short_term_overall_employment": "overall_employment_2024",
-    "short_term_labour_force_participation": "labour_force_participation_rate_2024",
-}
 
-GOS_GENDER_SHORT_TERM_COLUMNS_BY_ROW_LABEL = {
-    "Full-time employment": "short_term_full_time_employment",
-    "Overall employment": "short_term_overall_employment",
-    "Labour force participation rate": "short_term_labour_force_participation",
-}
-
-GOS_L_MEDIUM_TERM_COMPARISON_COLUMNS = {
-    "medium_term_full_time_employment": "medium_term_full_time_employed",
-    "medium_term_overall_employment": "medium_term_overall_employed",
-    "medium_term_labour_force_participation": "medium_term_labour_force_participation",
-}
-
-QILT_SUBGROUP_TEXT_EQUIVALENTS = {
-    "30 years or under": "30 and under",
-    "Over 30 years": "Over 30",
-    "Internal/Mixed study mode": "Internal/Mixed",
-    "External study mode": "External",
-    "Language other than English": "Other",
-}
-
-QILT_SUBGROUP_DISPLAY_ORDER_BY_ROW_GROUP = {
-    "Socio-economic status": ("High", "Medium", "Low"),
-}
-
-QILT_SHORT_MEDIUM_OUTCOME_SPECS: tuple[tuple[str, str, str], ...] = (
-    (
-        "full_time_employment",
-        "short_term_full_time_employment",
-        "medium_term_full_time_employment",
-    ),
-    (
-        "overall_employment",
-        "short_term_overall_employment",
-        "medium_term_overall_employment",
-    ),
-    (
-        "labour_force_participation",
-        "short_term_labour_force_participation",
-        "medium_term_labour_force_participation",
-    ),
-)
-
+# Chart ids
 CHART_1_ID = "chart_1_transition_window"
 CHART_2_ID = "chart_2_subgroup_bottleneck"
 CHART_3_ID = "chart_3_gap_shapes"
@@ -59,8 +17,19 @@ CHART_6A_ID = "chart_6a_sew_skill_by_age"
 CHART_6B_ID = "chart_6b_sew_degree_supply"
 CHART_7_ID = "chart_7_subgroup_comparator"
 
-CHART_6B_INDEX_COLUMN = "bachelor_degree_or_above_count_index"
+CHART_TABLE_IDS_BY_NUMBER = {
+    1: CHART_1_ID,
+    2: CHART_2_ID,
+    3: CHART_3_ID,
+    4: CHART_4_ID,
+    5: CHART_5_ID,
+    6.1: CHART_6A_ID,
+    6.2: CHART_6B_ID,
+    7: CHART_7_ID,
+}
 
+
+# Chart table schemas for referencing column names directly
 CHART_TABLE_SCHEMAS = {
     CHART_1_ID: [
         "display_year",
@@ -117,7 +86,7 @@ CHART_TABLE_SCHEMAS = {
     ],
     CHART_6B_ID: [
         "year",
-        CHART_6B_INDEX_COLUMN,
+        "bachelor_degree_or_above_count_index",
         "source_key",
     ],
     CHART_7_ID: [
@@ -144,16 +113,8 @@ CHART_6A_TABLE_COLUMNS = CHART_TABLE_SCHEMAS[CHART_6A_ID]
 CHART_6B_TABLE_COLUMNS = CHART_TABLE_SCHEMAS[CHART_6B_ID]
 CHART_7_TABLE_COLUMNS = CHART_TABLE_SCHEMAS[CHART_7_ID]
 
-CHART_1_GOS_L_SHORT_TERM_FTE_SERIES_KEY = "gos_l_short_term_fte"
-CHART_1_GOS_L_MEDIUM_TERM_FTE_SERIES_KEY = "gos_l_medium_term_fte"
-CHART_1_GOS_SHORT_TERM_FTE_SERIES_KEY = "gos_short_term_fte"
 
-CHART_1_SERIES_ORDER = {
-    CHART_1_GOS_L_SHORT_TERM_FTE_SERIES_KEY: 0,
-    CHART_1_GOS_L_MEDIUM_TERM_FTE_SERIES_KEY: 1,
-    CHART_1_GOS_SHORT_TERM_FTE_SERIES_KEY: 2,
-}
-
+# Source keys
 GOS_5_SOURCE_KEY = "gos_5"
 GOS_8_SOURCE_KEY = "gos_8"
 GOS_21_SOURCE_KEY = "gos_21"
@@ -163,16 +124,59 @@ GOS_L_26_SOURCE_KEY = "gos_l_26"
 GOS_L_160_SOURCE_KEY = "gos_l_160"
 SEW_32_SOURCE_KEY = "sew_32"
 SEW_35_SOURCE_KEY = "sew_35"
-SEW_DEGREE_SUPPLY_BASE_YEAR = 2016
-SEW_DEGREE_SUPPLY_YEARS = tuple(range(2016, 2026))
 
-SHORT_TERM_TIME_WINDOW = "short_term"
-MEDIUM_TERM_TIME_WINDOW = "medium_term"
-CHART_7_GROUP_A_ROLE = "group_a"
-CHART_7_GROUP_B_ROLE = "group_b"
 
-CHART_5_WORK_FIT_METRIC_KEY = "skills_education_utilisation"
+# Shared QILT constants
+GOS_SHORT_TERM_COMPARISON_COLUMNS = {
+    "short_term_full_time_employment": "full_time_employment_2024",
+    "short_term_overall_employment": "overall_employment_2024",
+    "short_term_labour_force_participation": "labour_force_participation_rate_2024",
+}
 
+GOS_GENDER_SHORT_TERM_COLUMNS_BY_ROW_LABEL = {
+    "Full-time employment": "short_term_full_time_employment",
+    "Overall employment": "short_term_overall_employment",
+    "Labour force participation rate": "short_term_labour_force_participation",
+}
+
+GOS_L_MEDIUM_TERM_COMPARISON_COLUMNS = {
+    "medium_term_full_time_employment": "medium_term_full_time_employed",
+    "medium_term_overall_employment": "medium_term_overall_employed",
+    "medium_term_labour_force_participation": "medium_term_labour_force_participation",
+}
+
+QILT_SUBGROUP_TEXT_EQUIVALENTS = {
+    "30 years or under": "30 and under",
+    "Over 30 years": "Over 30",
+    "Internal/Mixed study mode": "Internal/Mixed",
+    "External study mode": "External",
+    "Language other than English": "Other",
+}
+
+QILT_SUBGROUP_DISPLAY_ORDER_BY_ROW_GROUP = {
+    "Socio-economic status": ("High", "Medium", "Low"),
+}
+
+QILT_SHORT_MEDIUM_OUTCOME_SPECS: tuple[tuple[str, str, str], ...] = (
+    (
+        "full_time_employment",
+        "short_term_full_time_employment",
+        "medium_term_full_time_employment",
+    ),
+    (
+        "overall_employment",
+        "short_term_overall_employment",
+        "medium_term_overall_employment",
+    ),
+    (
+        "labour_force_participation",
+        "short_term_labour_force_participation",
+        "medium_term_labour_force_participation",
+    ),
+)
+
+
+# Shared SEW constants
 SEW_SKILL_LEVEL_ORDER = {
     "Skill level 1 (highest)": 0,
     "Skill level 2": 1,
@@ -196,29 +200,51 @@ SEW_AGE_GROUP_ORDER = {
     "65–74": 5,
 }
 
+
+# Chart 1 — transition window
+CHART_1_GOS_L_SHORT_TERM_FTE_SERIES_KEY = "gos_l_short_term_fte"
+CHART_1_GOS_L_MEDIUM_TERM_FTE_SERIES_KEY = "gos_l_medium_term_fte"
+CHART_1_GOS_SHORT_TERM_FTE_SERIES_KEY = "gos_short_term_fte"
+
+CHART_1_SERIES_ORDER = {
+    CHART_1_GOS_L_SHORT_TERM_FTE_SERIES_KEY: 0,
+    CHART_1_GOS_L_MEDIUM_TERM_FTE_SERIES_KEY: 1,
+    CHART_1_GOS_SHORT_TERM_FTE_SERIES_KEY: 2,
+}
+
+
+# Chart 4 — field conversion
+CHART_4_EXCLUDED_STUDY_AREAS = {
+    "Standard deviation": "non-study-area summary/statistical row",
+    "Total": "non-study-area summary row",
+}
+
+
+# Chart 5 — work fit
+CHART_5_WORK_FIT_METRIC_KEY = "skills_education_utilisation"
+CHART_5_SHORT_TERM_UNDERUTILISATION_COLUMN = (
+    "extent_to_which_skills_and_education_not_fully_utilised_short_term_fte"
+)
+CHART_5_MEDIUM_TERM_UNDERUTILISATION_COLUMN = (
+    "extent_to_which_skills_and_education_not_fully_utilised_medium_term_fte"
+)
+CHART_5_EXCLUDED_STUDY_AREAS = {
+    "Total": "non-study-area summary row",
+}
+
+
+# Chart 6B — SEW degree supply
+SEW_DEGREE_SUPPLY_BASE_YEAR = 2016
+SEW_DEGREE_SUPPLY_YEARS = tuple(range(2016, 2026))
+
+
+# Chart 7 — subgroup comparator
+CHART_7_GROUP_A_ROLE = "group_a"
+CHART_7_GROUP_B_ROLE = "group_b"
+
+
+# Export metadata constants
 CHART_METADATA_FILE_NAME = "chart_metadata.json"
-
-CHART_OUTPUT_FILENAMES = {
-    CHART_1_ID: "chart_1_transition_window.csv",
-    CHART_2_ID: "chart_2_subgroup_bottleneck.csv",
-    CHART_3_ID: "chart_3_gap_shapes.csv",
-    CHART_4_ID: "chart_4_field_conversion.csv",
-    CHART_5_ID: "chart_5_work_fit.csv",
-    CHART_6A_ID: "chart_6a_sew_skill_by_age.csv",
-    CHART_6B_ID: "chart_6b_sew_degree_supply.csv",
-    CHART_7_ID: "chart_7_subgroup_comparator.csv",
-}
-
-CHART_TABLE_IDS_BY_NUMBER = {
-    1: CHART_1_ID,
-    2: CHART_2_ID,
-    3: CHART_3_ID,
-    4: CHART_4_ID,
-    5: CHART_5_ID,
-    6.1: CHART_6A_ID,
-    6.2: CHART_6B_ID,
-    7: CHART_7_ID,
-}
 
 CHART_SOURCE_KEY_COLUMNS = (
     "source_key",

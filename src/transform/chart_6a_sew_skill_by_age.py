@@ -10,11 +10,11 @@ from src.transform.constants import (
     SEW_AGE_GROUP_ORDER,
     SEW_SKILL_LEVEL_ORDER,
 )
-from src.types import ABSPreparedSheet
+from src.types import ABSPreparedSheet, PreparedRows
 
 
 def build_chart_6a_table(sew_table_32_sheet: ABSPreparedSheet) -> pd.DataFrame:
-    prepared_rows: list[dict[str, object]] = []
+    prepared_rows: PreparedRows = []
 
     for _, row in sew_table_32_sheet.table.iterrows():
         age_group = clean_abs_display_text(row["row_label"])

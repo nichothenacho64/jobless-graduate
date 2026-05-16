@@ -24,7 +24,7 @@ from src.transform.qilt import (
     format_qilt_subgroup_label,
     select_qilt_subgroup_pair_rows,
 )
-from src.types import QILTPreparedSheet
+from src.types import PreparedRows, QILTPreparedSheet
 
 
 def build_chart_7_table(
@@ -50,8 +50,7 @@ def build_chart_7_table(
         CHART_7_GROUP_B_ROLE: 1,
     }
     chart_table["_group_role_order"] = [
-        group_role_order[group_role]
-        for group_role in chart_table["group_role"]
+        group_role_order[group_role] for group_role in chart_table["group_role"]
     ]
     chart_table = chart_table.sort_values(
         ["sort_order", "time_window_order", "_group_role_order"],
@@ -67,7 +66,7 @@ def build_chart_7_table(
     return chart_table
 
 
-def _build_comparator_rows(group_table: pd.DataFrame) -> list[dict[str, object]]:
+def _build_comparator_rows(group_table: pd.DataFrame) -> PreparedRows:
     subgroup_dimension = str(group_table["subgroup_dimension"].iloc[0])
     selector_id = build_qilt_subgroup_id(subgroup_dimension)
     sort_order = group_table["sort_order"].iloc[0]
@@ -112,7 +111,7 @@ def _build_group_rows(
     comparison_label: Optional[str],
     group_role: str,
     sort_order: object,
-) -> list[dict[str, object]]:
+) -> PreparedRows:
     group_label = format_qilt_subgroup_label(row["row_label"])
     return [
         {

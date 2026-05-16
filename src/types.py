@@ -13,6 +13,7 @@ Folder = str | Path
 NumericValue = int | float
 Metadata = dict[str, list[str]]
 ChartMetadata = dict[str, object]
+PreparedRows = list[dict[str, object]]
 NullableNumericDtype = pd.Int64Dtype | pd.Float64Dtype
 SheetTitleList = list[dict[str, int | str]]
 BodyRowKind = Literal["label", "values"]

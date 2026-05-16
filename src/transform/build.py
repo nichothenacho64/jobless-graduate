@@ -90,8 +90,12 @@ def build_chart_tables(
 
     gos_l_1 = _get_sheet_source(prepared_sources, GOS_L_1_SOURCE_KEY, QILTPreparedSheet)
     gos_l_6 = _get_sheet_source(prepared_sources, GOS_L_6_SOURCE_KEY, QILTPreparedSheet)
-    gos_l_26 = _get_sheet_source(prepared_sources, GOS_L_26_SOURCE_KEY, QILTPreparedSheet)
-    gos_l_160 = _get_sheet_source(prepared_sources, GOS_L_160_SOURCE_KEY, QILTPreparedSheet)
+    gos_l_26 = _get_sheet_source(
+        prepared_sources, GOS_L_26_SOURCE_KEY, QILTPreparedSheet
+    )
+    gos_l_160 = _get_sheet_source(
+        prepared_sources, GOS_L_160_SOURCE_KEY, QILTPreparedSheet
+    )
 
     sew_32 = _get_sheet_source(prepared_sources, SEW_32_SOURCE_KEY, ABSPreparedSheet)
     sew_35 = _get_sheet_source(prepared_sources, SEW_35_SOURCE_KEY, ABSPreparedSheet)
@@ -132,7 +136,7 @@ def _get_sheet_source(
 
 
 def get_chart_table(
-    chart_number: NumericValue, 
+    chart_number: NumericValue,
     chart_tables: Mapping[str, pd.DataFrame],
 ) -> pd.DataFrame:
     if chart_number == 6:
