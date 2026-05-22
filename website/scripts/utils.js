@@ -20,3 +20,12 @@ export function unpack(data, key) {
 export function capitaliseWord(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
 }
+
+export function createNumberList(value) {
+    let numberArray = [];
+    
+    for (let i = 1; i <= value; i++) {
+        numberArray.push(i);
+    }
+    return numberArray;
+}

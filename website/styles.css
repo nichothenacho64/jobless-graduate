@@ -10,5 +10,15 @@
 }
 
 body {
-    font-family: "Source Sans 3", sans-serif; 
+    font-family: "Source Sans 3", sans-serif;
+    background-color: var(--background-colour);
+}
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+}
+
+.chart {
+    width: 75%;
 }

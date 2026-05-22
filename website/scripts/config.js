@@ -9,6 +9,7 @@ const REMOVED_MODE_BAR_BUTTONS = [
 ];
 
 const TO_IMAGE_BUTTON_OPTIONS = { format: "png" };
+const TRANSPARENT_BACKGROUND = "rgba(0, 0, 0, 0)";
 
 export const CHART_1_ID = "chart_1_transition_window";
 export const CHART_2_ID = "chart_2_subgroup_bottleneck";
@@ -26,4 +27,33 @@ export const GLOBAL_CONFIG = {
     displaylogo: false,
     modeBarButtonsToRemove: REMOVED_MODE_BAR_BUTTONS,
     toImageButtonOptions: TO_IMAGE_BUTTON_OPTIONS
+};
+
+export const GLOBAL_LAYOUT = {
+    paper_bgcolor: TRANSPARENT_BACKGROUND,
+    plot_bgcolor: TRANSPARENT_BACKGROUND
+};
+
+export const THEME_COLOURS = {
+    amber700: "#A55A1f",
+    blue700: "#2F5D7E",
+    amber500: "#D08A3C",
+    blue500: "#5E88A8",
+    amber300: "#E7C48B",
+    blue300: "#AFC6D8",
+    textColour: "#1F2328",
+    backgroundColour: "#FFFDF9"
+};
+
+export const CHART_1_TRACE_COLOURS = [THEME_COLOURS.amber500, THEME_COLOURS.blue500, THEME_COLOURS.amber700];
+
+export const CHART_2_DIMENSIONS = {
+    baseHeight: 180,
+    rowHeight: 50,
+    leftMargin: 220,
+};
+
+export const CHART_AXES = {
+    chart1XAxis: "Graduation year",
+    chart1YAxis: "Full-time employment (%)",
 };
