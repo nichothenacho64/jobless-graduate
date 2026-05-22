@@ -99,12 +99,21 @@ export function createHollowAxisMarker(row, traceNumber, groupColumn, colour) {
     const axisMarker = createAxisMarker(row, traceNumber, groupColumn, colour);
 
     axisMarker.marker.color = "#FFF";
+    axisMarker.hoverlabel.font.color = "#000";
     axisMarker.marker.line = {
         color: colour,
         width: 2
     };
 
     return axisMarker;
+}
+
+export function addDumbbellChartLegend(marker, name, group, showLegend) {
+    marker.name = name;
+    marker.legendgroup = group;
+    marker.showlegend = showLegend;
+
+    return marker;
 }
 
 export function getYTickValues(chartData) {

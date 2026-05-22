@@ -51,9 +51,16 @@ export const CHART_2_DIMENSIONS = {
     baseHeight: 180,
     rowHeight: 50,
     leftMargin: 220,
+    rightMargin: 150,
 };
 
 export const CHART_AXES = {
     chart1XAxis: "Graduation year",
     chart1YAxis: "Full-time employment (%)",
+    chart2XAxis: "2024 short-term full-time employment (%)",
+};
+
+export const DUMBBELL_LINE = {
+    width: 2.5,
+    color: "rgb(160, 160, 160)"
 };

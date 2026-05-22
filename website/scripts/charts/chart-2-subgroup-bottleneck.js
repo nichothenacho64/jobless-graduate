@@ -1,4 +1,5 @@
 import {
+    addDumbbellChartLegend,
     createAxisMarker,
     createHollowAxisMarker,
     renderChart,
@@ -9,6 +10,8 @@ import {
 import { loadChartData } from "../data.js";
 import {
     CHART_2_DIMENSIONS,
+    CHART_AXES,
+    DUMBBELL_LINE,
     THEME_COLOURS
 } from "../config.js";
 
@@ -16,8 +19,7 @@ export async function renderChart2(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
 
     const data = [];
-
-    console.log(chartData);
+    let showSubgroupLegend = true;
 
     for (let row of chartData) {
         const traceNumber = chartData.length - row["sort_order"];
@@ -28,14 +30,17 @@ export async function renderChart2(chartId) {
         const lowerGroupMarker = createAxisMarker(row, traceNumber, "lower_group", THEME_COLOURS.amber500);
         const higherGroupMarker = createHollowAxisMarker(row, traceNumber, "higher_group", THEME_COLOURS.amber500);
 
+        addDumbbellChartLegend(lowerGroupMarker, "Lower subgroup", "lower_group", showSubgroupLegend);
+        addDumbbellChartLegend(higherGroupMarker, "Higher subgroup", "higher_group", showSubgroupLegend);
+
+        showSubgroupLegend = false;
+
         const lineTrace = {
             x: [lowerGroupPercentage, higherGroupPercentage],
             y: [traceNumber, traceNumber],
             mode: "lines",
-            marker: {
-                width: 5,
-                color: "rgb(120, 120, 120)"
-            },
+            line: DUMBBELL_LINE,
+            showlegend: false,
             hoverinfo: "none"
         };
 
@@ -43,14 +48,12 @@ export async function renderChart2(chartId) {
     }
 
     const layout = {
-        title: "2024 short-term full-time employment gaps by subgroup dimension",
+        title: { text: "Chart 2" },
         height: CHART_2_DIMENSIONS.baseHeight + (chartData.length * CHART_2_DIMENSIONS.rowHeight),
-        showlegend: false,
+        showlegend: true,
         xaxis: {
             showline: true,
-            title: {
-                text: "2024 short-term full-time employment (%)"
-            },
+            title: { text: CHART_AXES.chart2XAxis },
             range: [55, 86],
             dtick: 5
         },
@@ -64,9 +67,9 @@ export async function renderChart2(chartId) {
         annotations: getGapLabelAnnotations(chartData),
         margin: {
             l: CHART_2_DIMENSIONS.leftMargin,
+            r: CHART_2_DIMENSIONS.rightMargin,
         }
     };
 
     renderChart(chartId, data, layout);
-    // console.log(chartData);
 }
