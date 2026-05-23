@@ -3,6 +3,7 @@ import {
     createAxisMarker,
     createHollowAxisMarker,
     renderChart,
+    getChartHeight,
     getYTickLabels,
     getYTickValues,
     getGapLabelAnnotations,
@@ -49,7 +50,8 @@ export async function renderChart2(chartId) {
 
     const layout = {
         title: { text: "Chart 2" },
-        height: CHART_2_DIMENSIONS.baseHeight + (chartData.length * CHART_2_DIMENSIONS.rowHeight),
+        // height: 
+        height: getChartHeight(CHART_2_DIMENSIONS.baseHeight, chartData.length, CHART_2_DIMENSIONS.rowHeight),
         showlegend: true,
         xaxis: {
             showline: true,

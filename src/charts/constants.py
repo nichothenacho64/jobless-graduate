@@ -166,4 +166,4 @@ CHART_2_X_AXIS = AxisSpec(55, 85, 5)
 CHART_2_GAP_LABEL_OFFSET = 1.0
 
 CHART_3_TITLE = "Short-term and medium-term full-time employment gap shapes"
-CHART_3_X_AXIS = AxisSpec(0, 18, 3)
+CHART_3_X_AXIS = AxisSpec(-1, 18, 3)

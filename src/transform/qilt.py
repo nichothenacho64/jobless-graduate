@@ -25,6 +25,7 @@ def build_qilt_full_time_employment_comparison_table(
     gos_l_table: pd.DataFrame,
     *,
     validate: Optional[QILTValidationComparison] = None,
+    how: str = "inner",
 ) -> pd.DataFrame:
     short_table = _normalise_short_term_full_time_employment_table(gos_table)
     medium_table = _normalise_medium_term_full_time_employment_table(gos_l_table)
@@ -33,14 +34,14 @@ def build_qilt_full_time_employment_comparison_table(
         return short_table.merge(
             medium_table,
             on="subgroup_key",
-            how="inner",
+            how=how,
             sort=False,
         )
 
     return short_table.merge(
         medium_table,
         on="subgroup_key",
-        how="inner",
+        how=how,
         sort=False,
         validate=validate,
     )

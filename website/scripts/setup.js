@@ -62,6 +62,41 @@ export function getTrace(rows, traceKey, targetTraceOrderValue) {
     return trace;
 }
 
+export function getTraceRow(rows, traceKey, targetTraceOrderValue) {
+    for (let row of rows) {
+        const traceOrderValue = row[traceKey];
+        if (traceOrderValue === targetTraceOrderValue) {
+            return row;
+        }
+    }
+}
+
+export function createZeroLine(lineColour, lineWidth) {
+    return {
+        type: "line",
+        layer: "below",
+        x0: 0,
+        x1: 0,
+        y0: 0,
+        y1: 1,
+        xref: "x",
+        yref: "paper",
+        line: {
+            color: lineColour,
+            width: lineWidth
+        }
+    };
+}
+
+export function getChartHeight(baseHeight, numRows, rowHeight) {
+    return baseHeight + (numRows * rowHeight);
+}
+    // }// CHART_3_DIMENSIONS.baseHeight + (shortTermRows.length * CHART_3_DIMENSIONS.rowHeight)
+
+    // const layout = {
+        // title: { text: "Short-term and medium-term full-time employment gap shapes" },
+        // height: getChartHeight(CHART_3_DIMENSIONS.baseHeight, rowsLength, CHART_3_DIMENSIONS.rowHeight),
+
 export function getAxisValues(chartData, axisKey) {
     const axisValues = [];
 
@@ -106,6 +141,44 @@ export function createHollowAxisMarker(row, traceNumber, groupColumn, colour) {
     };
 
     return axisMarker;
+}
+
+export function getComparisonLabel(row) {
+    return row["reference_group"] + " vs " + row["comparison_group"];
+}
+
+export function createGapMarker(row, traceNumber, colour) {
+    const comparisonLabel = getComparisonLabel(row);
+
+    return {
+        x: [row["signed_gap_pp"]],
+        y: [traceNumber],
+        mode: "markers",
+        marker: {
+            size: 10,
+            color: colour
+        },
+        hovertemplate: `${row["subgroup_dimension"]}: ${comparisonLabel}<br>` +
+            `Signed gap: %{x} pp<br>` +
+            `${row["reference_group"]}: ${row["reference_group_pct"]}%<br>` +
+            `${row["comparison_group"]}: ${row["comparison_group_pct"]}%` +
+            `<extra></extra>`,
+        hoverlabel: {
+            font: { color: "#FFF" },
+            bordercolor: colour,
+        }
+    };
+}
+
+export function getGapShapeYTickLabels(chartData) {
+    const yTickLabels = [];
+
+    for (let row of chartData) {
+        const yTickLabel = `<b>${row["subgroup_dimension"]}</b><br>${getComparisonLabel(row)}`;
+        yTickLabels.push(yTickLabel);
+    }
+
+    return yTickLabels;
 }
 
 export function addDumbbellChartLegend(marker, name, group, showLegend) {

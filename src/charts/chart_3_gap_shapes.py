@@ -6,7 +6,6 @@ import pandas as pd
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from src.preparation.series import is_missing_value
 from src.charts.constants import (
     AXIS_GRID_LINEWIDTH,
     CATCH_UP_MEDIUM_TERM_LABEL,
@@ -43,6 +42,7 @@ def create_chart_3(chart_table: pd.DataFrame) -> Figure:
     available_mask = short_gaps.notna() & medium_gaps.notna()
 
     figure, axis = plt.subplots(figsize=(8.2, 5.2))
+    axis.axvline(0, color=TEXT_COLOR, linewidth=1.0, alpha=0.6, zorder=0)
     axis.hlines(
         row_positions[available_mask],
         short_gaps[available_mask],
@@ -70,16 +70,23 @@ def create_chart_3(chart_table: pd.DataFrame) -> Figure:
         zorder=DUMBBELL_RIGHT_POINT_ZORDER,
     )
 
-    _draw_behind_y_labels(axis, row_positions, plot_table)
+    _draw_pair_y_labels(axis, row_positions, plot_table)
     axis.set_title(
         CHART_3_TITLE,
         loc="left",
         fontsize=SUBGROUP_CHART_TITLE_FONT_SIZE,
         color=TEXT_COLOR,
     )
-    axis.set_xlabel("Full-time employment gap width (percentage points)")
+    axis.set_xlabel("Signed full-time employment gap (percentage points)")
     axis.set_xlim(*CHART_3_X_AXIS.limits)
-    axis.set_xticks(CHART_3_X_AXIS.ticks)
+    axis.set_xticks(
+        np.array(
+            [
+                CHART_3_X_AXIS.minimum,
+                *np.arange(0, CHART_3_X_AXIS.maximum + 1, CHART_3_X_AXIS.tick_step),
+            ]
+        )
+    )
     axis.grid(
         axis="x",
         color=GRID_COLOR,
@@ -96,38 +103,21 @@ def create_chart_3(chart_table: pd.DataFrame) -> Figure:
     return draw_figure(figure)
 
 
-def _draw_behind_y_labels(
+def _draw_pair_y_labels(
     axis: Axes,
     row_positions: np.ndarray,
     plot_table: pd.DataFrame,
 ) -> None:
-    behind_labels = [
-        _build_behind_label(short_group, medium_group)
-        for short_group, medium_group in zip(
-            plot_table[f"{SHORT_TERM_TIME_WINDOW}_lower_group"],
-            plot_table[f"{MEDIUM_TERM_TIME_WINDOW}_lower_group"],
+    pair_labels = [
+        f"{reference_group} vs {comparison_group}"
+        for reference_group, comparison_group in zip(
+            plot_table["reference_group"],
+            plot_table["comparison_group"],
         )
     ]
     draw_group_pair_y_labels(
         axis,
         row_positions,
         plot_table["subgroup_dimension"],
-        behind_labels,
+        pair_labels,
     )
-
-
-def _build_behind_label(short_group: object, medium_group: object) -> str:
-    short_group_label = _format_group_label(short_group)
-    medium_group_label = _format_group_label(medium_group)
-
-    if short_group_label == medium_group_label:
-        return f"Behind: {short_group_label}"
-
-    return f"Behind: {short_group_label} (short); {medium_group_label} (medium)"
-
-
-def _format_group_label(group_label: object) -> str:
-    if is_missing_value(group_label):
-        return "Unavailable"
-
-    return str(group_label)

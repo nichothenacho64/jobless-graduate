@@ -86,9 +86,9 @@ METRIC_LABELS_BY_CHART_ID = {
         "higher_group_pct": "Higher group full-time employment",
     },
     CHART_3_ID: {
-        "gap_pp": "Employment gap",
-        "lower_group_pct": "Lower group full-time employment",
-        "higher_group_pct": "Higher group full-time employment",
+        "signed_gap_pp": "Signed employment gap",
+        "reference_group_pct": "Reference group full-time employment",
+        "comparison_group_pct": "Comparison group full-time employment",
     },
     CHART_4_ID: {
         "short_term_fte_pct": "Short-term full-time employment",
@@ -406,6 +406,14 @@ def build_chart_details(chart_metadata: Mapping[str, object]) -> dict[str, objec
     if group_role_semantics:
         details["group_role_semantics"] = group_role_semantics
 
+    signed_gap_direction = chart_metadata.get("signed_gap_direction")
+    if signed_gap_direction:
+        details["signed_gap_direction"] = signed_gap_direction
+
+    reference_group_rule = chart_metadata.get("reference_group_rule")
+    if reference_group_rule:
+        details["reference_group_rule"] = reference_group_rule
+
     return _drop_empty_metadata(details)
 
 
@@ -431,6 +439,8 @@ def _raise_for_unhandled_chart_specific_metadata(
     handled_keys = {
         "year_semantics",
         "group_role_semantics",
+        "signed_gap_direction",
+        "reference_group_rule",
         "excluded_rows",
         *FIT_METRIC_DETAIL_KEYS,
         *INDEX_DERIVATION_DETAIL_KEYS,

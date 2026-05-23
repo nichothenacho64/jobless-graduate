@@ -47,17 +47,28 @@ export const THEME_COLOURS = {
 
 export const CHART_1_TRACE_COLOURS = [THEME_COLOURS.amber500, THEME_COLOURS.blue500, THEME_COLOURS.amber700];
 
+const DUMBBELL_BASE_HEIGHT = 60;
+const DUMBBELL_ROW_HEIGHT = 60;
+
 export const CHART_2_DIMENSIONS = {
-    baseHeight: 180,
-    rowHeight: 50,
+    baseHeight: DUMBBELL_BASE_HEIGHT,
+    rowHeight: DUMBBELL_ROW_HEIGHT,
     leftMargin: 220,
     rightMargin: 150,
+};
+
+export const CHART_3_DIMENSIONS = {
+    baseHeight: DUMBBELL_BASE_HEIGHT,
+    rowHeight: DUMBBELL_ROW_HEIGHT,
+    leftMargin: 280,
+    rightMargin: 20,
 };
 
 export const CHART_AXES = {
     chart1XAxis: "Graduation year",
     chart1YAxis: "Full-time employment (%)",
     chart2XAxis: "2024 short-term full-time employment (%)",
+    chart3XAxis: "Signed full-time employment gap (percentage points)",
 };
 
 export const DUMBBELL_LINE = {
