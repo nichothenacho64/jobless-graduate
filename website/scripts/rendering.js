@@ -81,12 +81,12 @@ export function getChartElementId(chartId) {
     return chartElementId;
 }
 
-export function createReferenceLine(axis, value, lineColour, lineWidth) {
+export function createReferenceLine(axis, value, lineColour, lineWidth, layer = "below") {
     const isXAxis = axis === "x";
 
     return {
         type: "line",
-        layer: "below",
+        layer,
         x0: isXAxis ? value : 0,
         x1: isXAxis ? value : 1,
         y0: isXAxis ? 0 : value,

@@ -5,10 +5,7 @@ import {
     loadChartData,
 } from "../data.js";
 import { getWorkFitColour } from "../chart-helpers.js";
-import {
-    createReferenceLine,
-    renderChart,
-} from "../rendering.js";
+import { createReferenceLine, renderChart } from "../rendering.js";
 import { calculateMedian } from "../utils.js";
 
 export async function renderChart5(chartId) {
@@ -33,8 +30,8 @@ export async function renderChart5(chartId) {
     };
 
     const medianLines = [];
-    const xMedianLine = createReferenceLine("x", medianEmploymentGain, THEME_COLOURS.textColour, 2);
-    const yMedianLine = createReferenceLine("y", medianWorkFitImprovement, THEME_COLOURS.textColour, 2);
+    const xMedianLine = createReferenceLine("x", medianEmploymentGain, THEME_COLOURS.textColour, 2, "above");
+    const yMedianLine = createReferenceLine("y", medianWorkFitImprovement, THEME_COLOURS.textColour, 2, "above");
 
     medianLines.push(xMedianLine);
     medianLines.push(yMedianLine);
@@ -42,8 +39,6 @@ export async function renderChart5(chartId) {
     const data = [];
 
     for (let row of chartData) {
-        console.log(row);
-
         const trace = {
             x: [row[xKey]],
             y: [row[yKey]],

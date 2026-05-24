@@ -34,7 +34,7 @@ export async function renderChart4(chartId) {
     }
 
     for (let row of chartData) {
-        const employmentGain = row[xKey] - row[yKey];
+        const employmentGain = row[yKey] - row[xKey];
 
         const trace = {
             x: [row[xKey]],

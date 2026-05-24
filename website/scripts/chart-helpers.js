@@ -178,13 +178,9 @@ export function getFieldConversionColour(row, gainValues) {
 
     if (gain >= gainValues.high) {
         return THEME_COLOURS.amber700;
-    }
-
-    if (gain >= gainValues.medium) {
+    } else if (gain >= gainValues.medium) {
         return THEME_COLOURS.amber500;
-    }
-
-    if (gain >= gainValues.low) {
+    } else if (gain >= gainValues.low) {
         return THEME_COLOURS.blue500;
     }
 
