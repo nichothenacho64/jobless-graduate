@@ -1,4 +1,8 @@
-import { CHART_4_GAINS } from "../config.js";
+import {
+    CHART_4_GAIN_VALUES,
+    CHART_TITLES,
+    MARKER_SIZE
+} from "../config.js";
 import {
     getAxisLabel,
     loadChartData,
@@ -23,7 +27,7 @@ export async function renderChart4(chartId) {
 
     const data = [];
     const equalityLineTrace = createEqualityLineTrace(50, 100);
-    const gainLegendTraces = createChart4GainLegend(CHART_4_GAINS);
+    const gainLegendTraces = createChart4GainLegend(CHART_4_GAIN_VALUES);
 
     equalityLineTrace.showlegend = false;
     
@@ -44,8 +48,8 @@ export async function renderChart4(chartId) {
             type: "scatter",
             showlegend: false,
             marker: {
-                size: 8,
-                color: getFieldConversionColour(row, CHART_4_GAINS),
+                size: MARKER_SIZE.small,
+                color: getFieldConversionColour(row, CHART_4_GAIN_VALUES),
             },
             hovertemplate: `<b>%{fullData.name}</b><br>` +
                 `${xLabel}: %{x}%<br>` +
@@ -58,7 +62,7 @@ export async function renderChart4(chartId) {
     }
 
     const layout = {
-        title: { text: "Chart 4" },
+        title: { text: CHART_TITLES.chart4 },
         showlegend: true,
         legend: {
             title: { text: "Medium-term gain over short-term FTE" },
@@ -69,7 +73,7 @@ export async function renderChart4(chartId) {
             range: [55, 100],
         },
         yaxis: {
-            title: { text: getAxisLabel(chartMetadata, xKey, true) },
+            title: { text: getAxisLabel(chartMetadata, yKey, true) },
             range: [55, 100],
         },
     };

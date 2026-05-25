@@ -1,16 +1,7 @@
 export const DATA_DIR = "../data/processed/";
 
-const REMOVED_MODE_BAR_BUTTONS = [
-    "select2d", "lasso2d",
-    "zoomIn2d", "zoomOut2d",
-    "autoScale2d",
-    "hoverCompareCartesian", "hoverClosestCartesian",
-    "toggleSpikelines"
-];
 
-const TO_IMAGE_BUTTON_OPTIONS = { format: "png" };
-const TRANSPARENT_BACKGROUND = "rgba(0, 0, 0, 0)";
-
+// chart IDs
 export const CHART_1_ID = "chart_1_transition_window";
 export const CHART_2_ID = "chart_2_subgroup_bottleneck";
 export const CHART_3_ID = "chart_3_gap_shapes";
@@ -21,31 +12,18 @@ export const CHART_6B_ID = "chart_6b_degree_supply";
 export const CHART_7_ID = "chart_7_subgroup_comparator";
 export const CHART_METADATA_ID = "chart_metadata";
 
-export const GLOBAL_TRACES = {
-    hoverlabel: {
-        align: "left",
-        font: { size: 11 }
-    },
-    marker: {
-        line: {
-            width: 1.5
-        }
-    }
+export const CHART_TITLES = {
+    chart1: "The first year is the weak point",
+    chart2: "The bottleneck is uneven",
+    chart3: "Not every gap closes",
+    chart4: "Some fields convert later",
+    chart5: "A job is not always a fit",
+    chart6a: "High-skill work is age-sorted",
+    chart6b: "Degrees are becoming more common"
 };
 
-export const GLOBAL_LAYOUT = {
-    paper_bgcolor: TRANSPARENT_BACKGROUND,
-    plot_bgcolor: TRANSPARENT_BACKGROUND
-};
 
-export const GLOBAL_CONFIG = {
-    responsive: true,
-    displayModeBar: "hover",
-    displaylogo: false,
-    modeBarButtonsToRemove: REMOVED_MODE_BAR_BUTTONS,
-    toImageButtonOptions: TO_IMAGE_BUTTON_OPTIONS
-};
-
+// theme colours
 export const THEME_COLOURS = {
     amber700: "#A55A1f",
     blue700: "#2F5D7E",
@@ -65,25 +43,83 @@ export const HOVERLABEL_BORDER_COLOURS = {
     [THEME_COLOURS.blue700]: THEME_COLOURS.blue500,
     [THEME_COLOURS.blue500]: THEME_COLOURS.blue300,
     [THEME_COLOURS.blue300]: THEME_COLOURS.blue700,
-    "#FFF": THEME_COLOURS.amber500
+    [THEME_COLOURS.backgroundColour]: THEME_COLOURS.amber500
+};
+
+// global Plotly settings
+const TRANSPARENT_BACKGROUND = THEME_COLOURS.textColour + "00";
+const TO_IMAGE_BUTTON_OPTIONS = { format: "png" };
+const REMOVED_MODE_BAR_BUTTONS = [
+    "select2d", "lasso2d",
+    "zoomIn2d", "zoomOut2d",
+    "autoScale2d",
+    "hoverCompareCartesian", "hoverClosestCartesian",
+    "toggleSpikelines"
+];
+
+export const GLOBAL_LAYOUT = {
+    paper_bgcolor: TRANSPARENT_BACKGROUND,
+    plot_bgcolor: TRANSPARENT_BACKGROUND
+};
+
+export const GLOBAL_CONFIG = {
+    responsive: true,
+    displayModeBar: "hover",
+    displaylogo: false,
+    modeBarButtonsToRemove: REMOVED_MODE_BAR_BUTTONS,
+    toImageButtonOptions: TO_IMAGE_BUTTON_OPTIONS
+};
+
+export const GLOBAL_TRACES = {
+    hoverlabel: {
+        align: "left",
+        font: { size: 11 }
+    },
+    marker: { line: { width: 1.5 } }
 };
 
 
+// shared chart labels
+export const UNITS_TO_LABELS = {
+    "percentage_point": " (pp)",
+    "percent": " (%)"
+};
 
+export const CHART_AXES = {
+    chart1XAxis: "Graduation year",
+    chart1YAxis: "Full-time employment",
+    chart2XAxis: "2024 short-term full-time employment (%)",
+    chart3XAxis: "Signed full-time employment gap (percentage points)",
+};
+
+
+// shared chart styling
+export const MARKER_SIZE = {
+    small: 8,
+    large: 10
+};
+
+export const DUMBBELL_LINE = {
+    width: 2.5,
+    color: THEME_COLOURS.grey500
+};
+
+export const DIAGONAL_LINE = {
+    color: THEME_COLOURS.textColour,
+    width: 2,
+    dash: "dash"
+};
+
+
+// chart 1
 export const CHART_1_TRACE_COLOURS = [
     THEME_COLOURS.amber500, 
     THEME_COLOURS.blue500, 
     THEME_COLOURS.amber700
 ];
 
-export const CHART_6A_TRACE_COLOURS = [
-    THEME_COLOURS.blue700,
-    THEME_COLOURS.blue500,
-    THEME_COLOURS.blue300,
-    THEME_COLOURS.amber300,
-    THEME_COLOURS.amber700
-];
 
+// chart 2 and chart 3
 const DUMBBELL_BASE_HEIGHT = 60;
 const DUMBBELL_ROW_HEIGHT = 60;
 
@@ -101,31 +137,20 @@ export const CHART_3_DIMENSIONS = {
     rightMargin: 20,
 };
 
-export const UNITS_TO_LABELS = {
-    "percentage_point": " (pp)",
-    "percent": " (%)"
-};
 
-export const CHART_AXES = {
-    chart1XAxis: "Graduation year",
-    chart1YAxis: "Full-time employment",
-    chart2XAxis: "2024 short-term full-time employment (%)",
-    chart3XAxis: "Signed full-time employment gap (percentage points)",
-};
-
-export const DUMBBELL_LINE = {
-    width: 2.5,
-    color: THEME_COLOURS.grey500
-};
-
-export const DIAGONAL_LINE = {
-    color: THEME_COLOURS.textColour,
-    width: 2,
-    dash: "dash"
-};
-
-export const CHART_4_GAINS = {
+// chart 4
+export const CHART_4_GAIN_VALUES = {
     high: 25,
     medium: 15,
     low: 8,
 };
+
+
+// chart 6a
+export const CHART_6A_TRACE_COLOURS = [
+    THEME_COLOURS.blue700,
+    THEME_COLOURS.blue500,
+    THEME_COLOURS.blue300,
+    THEME_COLOURS.amber300,
+    THEME_COLOURS.amber700
+];

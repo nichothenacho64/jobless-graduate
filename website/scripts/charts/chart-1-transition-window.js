@@ -8,6 +8,7 @@ import { renderChart } from "../rendering.js";
 import {
     CHART_1_TRACE_COLOURS,
     CHART_AXES,
+    CHART_TITLES,
 } from "../config.js";
 
 // chart 1: gradually built up from basic examples featured here: https://plotly.com/javascript/line-charts/
@@ -40,7 +41,7 @@ export async function renderChart1(chartId) {
     }
 
     const layout = {
-        title: { text: "Chart 1" },
+        title: { text: CHART_TITLES.chart1 },
         xaxis: {
             title: { text: CHART_AXES.chart1XAxis },
             showgrid: false,

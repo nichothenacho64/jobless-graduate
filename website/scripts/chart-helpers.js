@@ -1,5 +1,6 @@
 import {
     DIAGONAL_LINE,
+    MARKER_SIZE,
     THEME_COLOURS
 } from "./config.js";
 import { getAxisValues, getChartPoints } from "./data.js";
@@ -14,7 +15,7 @@ export function createAxisMarker(row, traceNumber, groupColumn, colour) {
         y: [traceNumber],
         mode: "markers",
         marker: {
-            size: 10,
+            size: MARKER_SIZE.large,
             color: colour
         },
         hovertemplate: `${row["subgroup_dimension"]}: ${group}<br>` +
@@ -26,7 +27,7 @@ export function createAxisMarker(row, traceNumber, groupColumn, colour) {
 export function createHollowAxisMarker(row, traceNumber, groupColumn, colour) {
     const axisMarker = createAxisMarker(row, traceNumber, groupColumn, colour);
 
-    axisMarker.marker.color = "#FFF";
+    axisMarker.marker.color = THEME_COLOURS.backgroundColour;
     axisMarker.marker.line = {
         color: colour,
         width: 2
@@ -47,7 +48,7 @@ export function createGapMarker(row, traceNumber, colour) {
         y: [traceNumber],
         mode: "markers",
         marker: {
-            size: 10,
+            size: MARKER_SIZE.large,
             color: colour
         },
         hovertemplate: `<b>${row["subgroup_dimension"]} gap: %{x} pp</b><br>` +
@@ -210,7 +211,7 @@ export function createChart4GainLegendTrace(gainTrace) {
         mode: "markers",
         type: "scatter",
         marker: {
-            size: 8,
+            size: MARKER_SIZE.small,
             color: getFieldConversionColour(legendRow, gainTrace.thresholds)
         },
         hoverinfo: "skip",
@@ -241,4 +242,41 @@ export function createChart4GainLegend(gainValues) {
     });
 
     return [gain4Trace, gain3Trace, gain2Trace, gain1Trace];
+}
+
+export function getChart5WorkFitQuadrants(chartData, medianQuadrants) {
+    const workFitQuadrants = [
+        {
+            name: "High gain / high fit improvement",
+            colour: THEME_COLOURS.blue700,
+            rows: []
+        },
+        {
+            name: "High gain / low fit improvement",
+            colour: THEME_COLOURS.amber700,
+            rows: []
+        },
+        {
+            name: "Low gain / high fit improvement",
+            colour: THEME_COLOURS.blue500,
+            rows: []
+        },
+        {
+            name: "Low gain / low fit improvement",
+            colour: THEME_COLOURS.grey500,
+            rows: []
+        },
+    ];
+
+    for (let row of chartData) {
+        const quadrantColour = getWorkFitColour(row, medianQuadrants);
+
+        for (let workFitQuadrant of workFitQuadrants) {
+            if (workFitQuadrant.colour === quadrantColour) {
+                workFitQuadrant.rows.push(row);
+            }
+        }
+    }
+
+    return workFitQuadrants;
 }

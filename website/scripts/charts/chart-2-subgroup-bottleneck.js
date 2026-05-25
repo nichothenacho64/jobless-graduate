@@ -12,6 +12,7 @@ import {
 import {
     CHART_2_DIMENSIONS,
     CHART_AXES,
+    CHART_TITLES,
     DUMBBELL_LINE,
     THEME_COLOURS
 } from "../config.js";
@@ -49,7 +50,7 @@ export async function renderChart2(chartId) {
     }
 
     const layout = {
-        title: { text: "Chart 2" },
+        title: { text: CHART_TITLES.chart2 },
         height: getChartHeight(CHART_2_DIMENSIONS.baseHeight, chartData.length, CHART_2_DIMENSIONS.rowHeight),
         showlegend: true,
         xaxis: {

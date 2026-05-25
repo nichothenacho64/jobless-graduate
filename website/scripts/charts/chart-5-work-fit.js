@@ -1,12 +1,16 @@
-import { THEME_COLOURS } from "../config.js";
+import {
+    CHART_TITLES,
+    MARKER_SIZE,
+    THEME_COLOURS
+} from "../config.js";
 import {
     getAxisLabel,
     getAxisValues,
     loadChartData,
 } from "../data.js";
-import { getWorkFitColour } from "../chart-helpers.js";
+import { getWorkFitColour, getChart5WorkFitQuadrants } from "../chart-helpers.js";
 import { createReferenceLine, renderChart } from "../rendering.js";
-import { calculateMedian } from "../utils.js";
+import { calculateMedian, unpack } from "../utils.js";
 
 export async function renderChart5(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
@@ -35,20 +39,26 @@ export async function renderChart5(chartId) {
     medianLines.push(yMedianLine);
 
     const data = [];
+    const workFitQuadrants = getChart5WorkFitQuadrants(chartData, medianQuadrants);
 
-    for (let row of chartData) {
+    for (let workFitQuadrant of workFitQuadrants) {
+        if (workFitQuadrant.rows.length === 0) {
+            continue;
+        }
+
         const trace = {
-            x: [row[xKey]],
-            y: [row[yKey]],
-            name: row["study_area"],
+            x: unpack(workFitQuadrant.rows, xKey),
+            y: unpack(workFitQuadrant.rows, yKey),
+            text: unpack(workFitQuadrant.rows, "study_area"),
+            name: workFitQuadrant.name,
             mode: "markers",
             type: "scatter",
-            showlegend: false,
+            showlegend: true,
             marker: {
-                size: 8,
-                color: getWorkFitColour(row, medianQuadrants),
+                size: MARKER_SIZE.small,
+                color: workFitQuadrant.colour,
             },
-            hovertemplate: `<b>%{fullData.name}</b><br>` +
+            hovertemplate: `<b>%{text}</b><br>` +
                 `${xLabel}: %{x} pp<br>` +
                 `${yLabel}: %{y} pp<br>` +
                 `<extra></extra>`
@@ -58,19 +68,20 @@ export async function renderChart5(chartId) {
     }
 
     const layout = {
-        title: { text: "Chart 5" },
+        title: { text: CHART_TITLES.chart5 },
         showlegend: true,
         legend: {
-            title: { text: "Legend title" },
+            title: { text: "Employment gain / work fit" },
             traceorder: "normal"
         },
         xaxis: {
             title: { text: getAxisLabel(chartMetadata, xKey, true) },
-            zeroline: false
+            zeroline: false,
+            range: [0, medianEmploymentGain * 2]
         },
         yaxis: {
             title: { text: getAxisLabel(chartMetadata, yKey, true) },
-            zeroline: false
+            zeroline: false,
         },
         shapes: medianLines,
     };

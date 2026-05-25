@@ -17,6 +17,7 @@ import {
 import {
     CHART_3_DIMENSIONS,
     CHART_AXES,
+    CHART_TITLES,
     DUMBBELL_LINE,
     THEME_COLOURS
 } from "../config.js";
@@ -58,7 +59,7 @@ export async function renderChart3(chartId) {
     }
 
     const layout = {
-        title: { text: "Chart 3" }, // short-term and medium-term full-time employment gap shapes
+        title: { text: CHART_TITLES.chart3 }, // short-term and medium-term full-time employment gap shapes
         height: getChartHeight(CHART_3_DIMENSIONS.baseHeight, shortTermRows.length, CHART_3_DIMENSIONS.rowHeight),
         showlegend: true,
         xaxis: {

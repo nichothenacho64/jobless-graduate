@@ -1,4 +1,8 @@
-import { THEME_COLOURS } from "../config.js";
+import {
+    CHART_TITLES,
+    MARKER_SIZE,
+    THEME_COLOURS
+} from "../config.js";
 import {
     getAxisLabel,
     getAxisValues,
@@ -13,18 +17,13 @@ export async function renderChart6b(chartId) {
     const yKey = "bachelor_degree_or_above_holders_increase_pct";
 
     const baselineYear = chartData[0][xKey];
-    const yValues = getAxisValues(chartData, yKey);
-
     const finalRow = chartData[chartData.length - 1];
-
-    const yLabel = getAxisLabel(chartMetadata, yKey);
-    const yAxisTitle = getAxisLabel(chartMetadata, yKey, true);
 
     const data = [];
 
     const lineTrace = {
         x: getAxisValues(chartData, xKey),
-        y: yValues,
+        y: getAxisValues(chartData, yKey),
         type: "scatter",
         mode: "lines+markers",
         showlegend: false,
@@ -35,7 +34,7 @@ export async function renderChart6b(chartId) {
             width: 2
         },
         marker: {
-            size: 8,
+            size: MARKER_SIZE.small,
             color: THEME_COLOURS.amber500,
         },
         hovertemplate: `Year: %{x}<br>` +
@@ -50,7 +49,7 @@ export async function renderChart6b(chartId) {
         mode: "markers",
         showlegend: false,
         marker: {
-            size: 10,
+            size: MARKER_SIZE.large,
             color: THEME_COLOURS.amber700,
         },
         hovertemplate: `Year: %{x}<br>` +
@@ -61,7 +60,7 @@ export async function renderChart6b(chartId) {
     data.push(lineTrace, finalPointTrace);
 
     const layout = {
-        title: { text: "Chart 6b" },
+        title: { text: CHART_TITLES.chart6b },
         xaxis: {
             title: { text: "Year" },
             range: [2016, 2025.1],
@@ -69,7 +68,7 @@ export async function renderChart6b(chartId) {
             zeroline: false
         },
         yaxis: {
-            title: { text: yAxisTitle },
+            title: { text: getAxisLabel(chartMetadata, yKey, true) },
             range: [0, 51],
             zeroline: false
         },
