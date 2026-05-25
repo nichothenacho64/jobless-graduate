@@ -1,7 +1,9 @@
 import {
     GLOBAL_TRACES,
     GLOBAL_CONFIG,
-    GLOBAL_LAYOUT
+    GLOBAL_LAYOUT,
+    THEME_COLOURS,
+    HOVERLABEL_BORDER_COLOURS
 } from "./config.js";
 import { capitaliseWord } from "./utils.js";
 
@@ -41,14 +43,31 @@ function applyMarkerDefaults(marker) {
     };
 }
 
-function applyHoverlabelDefaults(hoverlabel, traceColour) {
+function getHoverlabelColours(traceColour) {
+    let textColour = "#FFF";
+    const amberTrace = traceColour === THEME_COLOURS.amber300;
+    const blueTrace = traceColour === THEME_COLOURS.blue300;
+    const whiteTrace = traceColour === "#FFF";
+
+    if (amberTrace || blueTrace || whiteTrace) {
+        textColour = THEME_COLOURS.textColour;
+    }
+
+    return {
+        borderColour: HOVERLABEL_BORDER_COLOURS[traceColour],
+        textColour
+    };
+}
+
+function applyHoverlabelDefaults(traceColour) {
+    const hoverlabelColours = getHoverlabelColours(traceColour);
+
     return {
         ...GLOBAL_TRACES.hoverlabel,
-        ...(traceColour ? { bordercolor: traceColour } : {}),
-        ...hoverlabel,
+        ...(hoverlabelColours.borderColour ? { bordercolor: hoverlabelColours.borderColour } : {}),
         font: {
             ...GLOBAL_TRACES.hoverlabel.font,
-            ...hoverlabel?.font
+            color: hoverlabelColours.textColour
         }
     };
 }
@@ -56,12 +75,12 @@ function applyHoverlabelDefaults(hoverlabel, traceColour) {
 export function addGlobalTraceDefaults(data) {
     return data.map((trace) => {
         const marker = applyMarkerDefaults(trace.marker);
-        const traceColour = marker?.line?.color ?? marker?.color ?? trace.line?.color;
+        const traceColour = marker?.color ?? marker?.line?.color ?? trace.line?.color;
 
         return {
             ...trace,
             ...(marker ? { marker } : {}),
-            hoverlabel: applyHoverlabelDefaults(trace.hoverlabel, traceColour)
+            hoverlabel: applyHoverlabelDefaults(traceColour)
         };
     });
 }

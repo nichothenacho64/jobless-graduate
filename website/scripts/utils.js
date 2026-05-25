@@ -13,6 +13,10 @@ export function capitaliseWord(word) {
     return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
+export function unpack(data, key) {
+    return data.map(row => row[key]);
+}
+
 function createNumberArray(values) {
     const numericValues = [];
 

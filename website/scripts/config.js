@@ -58,12 +58,31 @@ export const THEME_COLOURS = {
     backgroundColour: "#FFFDF9"
 };
 
-export const UNITS_TO_LABELS = {
-    "percentage_point": " (pp)",
-    "percent": " (%)"
+export const HOVERLABEL_BORDER_COLOURS = {
+    [THEME_COLOURS.amber700]: THEME_COLOURS.amber500,
+    [THEME_COLOURS.amber500]: THEME_COLOURS.amber300,
+    [THEME_COLOURS.amber300]: THEME_COLOURS.amber700,
+    [THEME_COLOURS.blue700]: THEME_COLOURS.blue500,
+    [THEME_COLOURS.blue500]: THEME_COLOURS.blue300,
+    [THEME_COLOURS.blue300]: THEME_COLOURS.blue700,
+    "#FFF": THEME_COLOURS.amber500
 };
 
-export const CHART_1_TRACE_COLOURS = [THEME_COLOURS.amber500, THEME_COLOURS.blue500, THEME_COLOURS.amber700];
+
+
+export const CHART_1_TRACE_COLOURS = [
+    THEME_COLOURS.amber500, 
+    THEME_COLOURS.blue500, 
+    THEME_COLOURS.amber700
+];
+
+export const CHART_6A_TRACE_COLOURS = [
+    THEME_COLOURS.blue700,
+    THEME_COLOURS.blue500,
+    THEME_COLOURS.blue300,
+    THEME_COLOURS.amber300,
+    THEME_COLOURS.amber700
+];
 
 const DUMBBELL_BASE_HEIGHT = 60;
 const DUMBBELL_ROW_HEIGHT = 60;
@@ -80,6 +99,11 @@ export const CHART_3_DIMENSIONS = {
     rowHeight: DUMBBELL_ROW_HEIGHT,
     leftMargin: 280,
     rightMargin: 20,
+};
+
+export const UNITS_TO_LABELS = {
+    "percentage_point": " (pp)",
+    "percent": " (%)"
 };
 
 export const CHART_AXES = {

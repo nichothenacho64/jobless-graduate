@@ -19,11 +19,7 @@ export function createAxisMarker(row, traceNumber, groupColumn, colour) {
         },
         hovertemplate: `${row["subgroup_dimension"]}: ${group}<br>` +
             `Full-time employment: %{x}%` +
-            `<extra></extra>`,
-        hoverlabel: {
-            font: { color: "#FFF" },
-            bordercolor: colour,
-        }
+            `<extra></extra>`
     };
 }
 
@@ -31,7 +27,6 @@ export function createHollowAxisMarker(row, traceNumber, groupColumn, colour) {
     const axisMarker = createAxisMarker(row, traceNumber, groupColumn, colour);
 
     axisMarker.marker.color = "#FFF";
-    axisMarker.hoverlabel.font.color = "#000";
     axisMarker.marker.line = {
         color: colour,
         width: 2
@@ -58,11 +53,7 @@ export function createGapMarker(row, traceNumber, colour) {
         hovertemplate: `<b>${row["subgroup_dimension"]} gap: %{x} pp</b><br>` +
             `${row["reference_group"]}: ${row["reference_group_pct"]}%<br>` +
             `${row["comparison_group"]}: ${row["comparison_group_pct"]}%<br>` +
-            `<extra></extra>`,
-        hoverlabel: {
-            font: { color: "#FFF" },
-            bordercolor: colour,
-        }
+            `<extra></extra>`
     };
 }
 

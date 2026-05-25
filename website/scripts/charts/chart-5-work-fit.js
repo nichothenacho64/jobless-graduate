@@ -10,8 +10,6 @@ import { calculateMedian } from "../utils.js";
 
 export async function renderChart5(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
-    const metadataMetricLabels = chartMetadata.labels.metrics;
-    console.log(metadataMetricLabels);
 
     const xKey = "fte_gain_pp";
     const yKey = "underutilisation_reduction_pp";
@@ -53,10 +51,7 @@ export async function renderChart5(chartId) {
             hovertemplate: `<b>%{fullData.name}</b><br>` +
                 `${xLabel}: %{x} pp<br>` +
                 `${yLabel}: %{y} pp<br>` +
-                `<extra></extra>`,
-            hoverlabel: {
-                font: { color: "#FFF" },
-            }
+                `<extra></extra>`
         };
 
         data.push(trace);

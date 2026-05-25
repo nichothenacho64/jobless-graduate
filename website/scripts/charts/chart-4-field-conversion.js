@@ -51,10 +51,7 @@ export async function renderChart4(chartId) {
                 `${xLabel}: %{x}%<br>` +
                 `${yLabel}: %{y}%<br>` +
                 `${"Change"}: ${employmentGain.toFixed(1)} pp` +
-                `<extra></extra>`,
-            hoverlabel: {
-                font: { color: "#FFF" },
-            }
+                `<extra></extra>`
         };
 
         data.push(trace);

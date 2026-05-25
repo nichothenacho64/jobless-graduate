@@ -33,12 +33,7 @@ export async function renderChart1(chartId) {
             },
             hovertemplate: `${CHART_AXES.chart1XAxis}: %{x}<br>` +
                 `${CHART_AXES.chart1YAxis}: %{y}%` +
-                `<extra></extra>`,
-            hoverlabel: {
-                font: { color: "#FFF" },
-                bordercolor: CHART_1_TRACE_COLOURS[seriesOrder],
-            }
-
+                `<extra></extra>`
         };
 
         data.push(trace);
