@@ -1,0 +1,19 @@
+subgroup_dimension,time_window,time_window_order,reference_group,reference_group_pct,comparison_group,comparison_group_pct,signed_gap_pp,source_key,sort_order
+Home language,short_term,0,Other,58.1,English,74.5,16.4,gos_8,0
+Home language,medium_term,1,Other,90.3,English,91.1,0.8,gos_l_160,0
+Study mode,short_term,0,Internal/Mixed,71.9,External,81.2,9.3,gos_8,1
+Study mode,medium_term,1,Internal/Mixed,91.0,External,91.5,0.5,gos_l_160,1
+Locality,short_term,0,Metro,71.7,Regional/Remote,80.6,8.9,gos_8,2
+Locality,medium_term,1,Metro,91.0,Regional/Remote,91.5,0.5,gos_l_160,2
+Indigenous,short_term,0,Non-Indigenous,73.9,Indigenous,82.7,8.8,gos_8,3
+Indigenous,medium_term,1,Non-Indigenous,91.1,Indigenous,90.9,-0.2,gos_l_160,3
+Disability,short_term,0,Disability reported,66.8,No disability reported,75.0,8.2,gos_8,4
+Disability,medium_term,1,Disability reported,86.3,No disability reported,91.6,5.3,gos_l_160,4
+Age group,short_term,0,30 and under,72.4,Over 30,80.1,7.7,gos_8,5
+Age group,medium_term,1,30 and under,91.3,Over 30,90.4,-0.9,gos_l_160,5
+Gender,short_term,0,Male,72.7,Female,74.9,2.2,gos_8,6
+Gender,medium_term,1,Male,90.9,Female,91.2,0.3,gos_l_160,6
+First in family,short_term,0,Not first in family,73.4,First in family,75.1,1.7,gos_8,7
+First in family,medium_term,1,Not first in family,88.0,First in family,88.6,0.6,gos_l_160,7
+Socio-economic status,short_term,0,High,73.5,Low,73.8,0.3,gos_8,8
+Socio-economic status,medium_term,1,High,91.5,Low,90.5,-1.0,gos_l_160,8

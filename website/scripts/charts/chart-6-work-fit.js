@@ -8,7 +8,7 @@ import {
     getAxisValues,
     loadChartData,
 } from "../data.js";
-import { getWorkFitColour, getChart6WorkFitQuadrants } from "../chart-helpers.js";
+import { getChart6MarkerColour, getChart6WorkFitQuadrants } from "../chart-helpers.js";
 import { createReferenceLine, renderChart } from "../rendering.js";
 import { calculateMedian, unpack } from "../utils.js";
 

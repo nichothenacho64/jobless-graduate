@@ -1,0 +1,373 @@
+{
+  "chart_1a_degree_supply": {
+    "chart_id": "chart_1a_degree_supply",
+    "data_file": "chart_1a_degree_supply.csv",
+    "sources": {
+      "sew_35": {
+        "source_system": "ABS",
+        "dataset": "SEW",
+        "source_file": "SEW25DC10 T33_T35.xlsx",
+        "sheet_name": "Table 35",
+        "table_number": 35,
+        "sheet_title": "Highest non-school qualification at bachelor degree level or above, by age and sex, 2016 to 2025, Persons aged 15–74 years"
+      }
+    },
+    "labels": {
+      "sources": {
+        "sew_35": "SEW #35"
+      },
+      "metrics": {
+        "bachelor_degree_or_above_holders_increase_pct": {
+          "label": "Increase in bachelor-degree-or-above holders since 2016",
+          "unit": "percent"
+        }
+      }
+    },
+    "details": {
+      "increase_derivation": {
+        "base_year": 2016,
+        "base_value": 4585.9,
+        "base_unit": "thousands of persons",
+        "selected_measurement": "Estimate ('000)",
+        "selected_population_group": "Persons",
+        "selected_row_label": "Total",
+        "qualification_filter": "highest non-school qualification at bachelor degree level or above",
+        "formula": "(value - base_value) / base_value * 100"
+      }
+    }
+  },
+  "chart_1b_skill_by_age": {
+    "chart_id": "chart_1b_skill_by_age",
+    "data_file": "chart_1b_skill_by_age.csv",
+    "sources": {
+      "sew_32": {
+        "source_system": "ABS",
+        "dataset": "SEW",
+        "source_file": "SEW25DC09 T28_T32.xlsx",
+        "sheet_name": "Table 32",
+        "table_number": 32,
+        "sheet_title": "Employed persons skill level of occupation in current job, by selected characteristics, Persons aged 15–74 years(a)"
+      }
+    },
+    "labels": {
+      "sources": {
+        "sew_32": "SEW #32"
+      },
+      "metrics": {
+        "share_pct": {
+          "label": "Share",
+          "unit": "percent"
+        }
+      }
+    }
+  },
+  "chart_2_transition_window": {
+    "chart_id": "chart_2_transition_window",
+    "data_file": "chart_2_transition_window.csv",
+    "sources": {
+      "gos_l_1": {
+        "source_system": "QILT",
+        "dataset": "GOS-L",
+        "source_file": "2024_GOS-L_National_Report_Tables.xlsx",
+        "sheet_name": "FTE_UG_ALL_5Y",
+        "sheet_number": 1,
+        "sheet_title": "Short-term and medium-term domestic full-time employment outcomes among undergraduates from all provider types by all years"
+      },
+      "gos_21": {
+        "source_system": "QILT",
+        "dataset": "GOS",
+        "source_file": "2024_GOS_National_Report_Tables.xlsx",
+        "sheet_name": "EMP_UG_ALL_3Y_PERIOD",
+        "sheet_number": 21,
+        "sheet_title": "Employment outcomes (FTE, OE, LF, SAL) among undergraduates from all provider types by survey round, 2022-2024"
+      }
+    },
+    "labels": {
+      "sources": {
+        "gos_l_1": "GOS-L #1",
+        "gos_21": "GOS #21"
+      },
+      "time_windows": {
+        "short_term": "Short term",
+        "medium_term": "Medium term"
+      },
+      "series": {
+        "gos_l_short_term_fte": "GOS-L short term",
+        "gos_l_medium_term_fte": "GOS-L medium term",
+        "gos_short_term_fte": "GOS short term"
+      },
+      "metrics": {
+        "value_pct": {
+          "label": "Full-time employment",
+          "unit": "percent"
+        }
+      }
+    },
+    "details": {
+      "year_semantics": {
+        "display_year": "terminal_year_extracted_from_source_year_or_period_label"
+      }
+    }
+  },
+  "chart_3_subgroup_bottleneck": {
+    "chart_id": "chart_3_subgroup_bottleneck",
+    "data_file": "chart_3_subgroup_bottleneck.csv",
+    "sources": {
+      "gos_8": {
+        "source_system": "QILT",
+        "dataset": "GOS",
+        "source_file": "2024_GOS_National_Report_Tables.xlsx",
+        "sheet_name": "EMP_UG_ALL_2Y_DG",
+        "sheet_number": 8,
+        "sheet_title": "Employment outcomes (FTE, OE, LF), 2023-2024 among undergraduates from all provider types by demographic group"
+      },
+      "gos_5": {
+        "source_system": "QILT",
+        "dataset": "GOS",
+        "source_file": "2024_GOS_National_Report_Tables.xlsx",
+        "sheet_name": "EMP_UG_ALL_2Y_E315",
+        "sheet_number": 5,
+        "sheet_title": "Employment outcomes (FTE, OE, LF) among undergraduates and all provider types by gender, 2023-2024"
+      }
+    },
+    "labels": {
+      "sources": {
+        "gos_8": "GOS #8",
+        "gos_5": "GOS #5"
+      },
+      "metrics": {
+        "gap_pp": {
+          "label": "Employment gap",
+          "unit": "percentage_point"
+        },
+        "lower_group_pct": {
+          "label": "Lower group full-time employment",
+          "unit": "percent"
+        },
+        "higher_group_pct": {
+          "label": "Higher group full-time employment",
+          "unit": "percent"
+        }
+      }
+    }
+  },
+  "chart_4_gap_shapes": {
+    "chart_id": "chart_4_gap_shapes",
+    "data_file": "chart_4_gap_shapes.csv",
+    "sources": {
+      "gos_8": {
+        "source_system": "QILT",
+        "dataset": "GOS",
+        "source_file": "2024_GOS_National_Report_Tables.xlsx",
+        "sheet_name": "EMP_UG_ALL_2Y_DG",
+        "sheet_number": 8,
+        "sheet_title": "Employment outcomes (FTE, OE, LF), 2023-2024 among undergraduates from all provider types by demographic group"
+      },
+      "gos_l_160": {
+        "source_system": "QILT",
+        "dataset": "GOS-L",
+        "source_file": "2024_GOS-L_National_Report_Tables.xlsx",
+        "sheet_name": "STMT_UG_ALL_1Y_SG",
+        "sheet_number": 160,
+        "sheet_title": "Short-term and medium-term domestic employment outcomes (FTE, OE, LF, SAL), 2024, among undergraduates from all provider types by demographic group"
+      }
+    },
+    "labels": {
+      "sources": {
+        "gos_8": "GOS #8",
+        "gos_l_160": "GOS-L #160"
+      },
+      "time_windows": {
+        "short_term": "Short term",
+        "medium_term": "Medium term"
+      },
+      "metrics": {
+        "signed_gap_pp": {
+          "label": "Signed employment gap",
+          "unit": "percentage_point"
+        },
+        "reference_group_pct": {
+          "label": "Reference group full-time employment",
+          "unit": "percent"
+        },
+        "comparison_group_pct": {
+          "label": "Comparison group full-time employment",
+          "unit": "percent"
+        }
+      }
+    },
+    "details": {
+      "signed_gap_direction": "comparison_group_pct - reference_group_pct",
+      "reference_group_rule": "group_with_lower_short_term_full_time_employment"
+    }
+  },
+  "chart_5_field_conversion": {
+    "chart_id": "chart_5_field_conversion",
+    "data_file": "chart_5_field_conversion.csv",
+    "sources": {
+      "gos_l_6": {
+        "source_system": "QILT",
+        "dataset": "GOS-L",
+        "source_file": "2024_GOS-L_National_Report_Tables.xlsx",
+        "sheet_name": "STMT_UG_ALL_1Y_AREA",
+        "sheet_number": 6,
+        "sheet_title": "Short-term and medium-term domestic employment outcomes (FTE, OE, LF, SAL), 2024, among undergraduates from all provider types by study area"
+      }
+    },
+    "labels": {
+      "sources": {
+        "gos_l_6": "GOS-L #6"
+      },
+      "metrics": {
+        "short_term_fte_pct": {
+          "label": "Short-term full-time employment",
+          "unit": "percent"
+        },
+        "medium_term_fte_pct": {
+          "label": "Medium-term full-time employment",
+          "unit": "percent"
+        }
+      }
+    },
+    "caveats": {
+      "excluded_rows": [
+        {
+          "row_label": "Total",
+          "reason": "non-study-area summary row",
+          "source_key": "gos_l_6"
+        },
+        {
+          "row_label": "Standard deviation",
+          "reason": "non-study-area summary/statistical row",
+          "source_key": "gos_l_6"
+        }
+      ]
+    }
+  },
+  "chart_6_work_fit": {
+    "chart_id": "chart_6_work_fit",
+    "data_file": "chart_6_work_fit.csv",
+    "sources": {
+      "gos_l_6": {
+        "source_system": "QILT",
+        "dataset": "GOS-L",
+        "source_file": "2024_GOS-L_National_Report_Tables.xlsx",
+        "sheet_name": "STMT_UG_ALL_1Y_AREA",
+        "sheet_number": 6,
+        "sheet_title": "Short-term and medium-term domestic employment outcomes (FTE, OE, LF, SAL), 2024, among undergraduates from all provider types by study area"
+      },
+      "gos_l_26": {
+        "source_system": "QILT",
+        "dataset": "GOS-L",
+        "source_file": "2024_GOS-L_National_Report_Tables.xlsx",
+        "sheet_name": "RSOVRQ_UG_ALL_1Y_AREA",
+        "sheet_number": 26,
+        "sheet_title": "Main reason for working in a job that doesn’t fully use skills and education, domestic, 2024, among undergraduates from all provider types by study area"
+      }
+    },
+    "labels": {
+      "sources": {
+        "gos_l_6": "GOS-L #6",
+        "gos_l_26": "GOS-L #26"
+      },
+      "metrics": {
+        "fte_gain_pp": {
+          "label": "Full-time employment gain",
+          "unit": "percentage_point"
+        },
+        "underutilisation_reduction_pp": {
+          "label": "Underutilisation reduction",
+          "unit": "percentage_point"
+        }
+      },
+      "fit_metrics": {
+        "skills_education_utilisation": "Skills and education not fully utilised"
+      }
+    },
+    "details": {
+      "fit_metric": {
+        "fit_metric_key": "skills_education_utilisation",
+        "employment_source_key": "gos_l_6",
+        "fit_metric_source_key": "gos_l_26",
+        "fit_metric_direction": "lower_underutilisation_is_better",
+        "fit_change_formula": "short_term_underutilisation_pct - medium_term_underutilisation_pct",
+        "fit_metric_source_columns": {
+          "short_term_underutilisation_pct": "extent_to_which_skills_and_education_not_fully_utilised_short_term_fte",
+          "medium_term_underutilisation_pct": "extent_to_which_skills_and_education_not_fully_utilised_medium_term_fte"
+        }
+      }
+    },
+    "caveats": {
+      "excluded_rows": [
+        {
+          "row_label": "Tourism, hospitality, personal services, sport and recreation",
+          "reason": "source_underutilisation_values_missing",
+          "columns": [
+            "underutilisation_reduction_pp"
+          ],
+          "source_key": "gos_l_26",
+          "source_columns": [
+            "extent_to_which_skills_and_education_not_fully_utilised_short_term_fte",
+            "extent_to_which_skills_and_education_not_fully_utilised_medium_term_fte"
+          ]
+        },
+        {
+          "row_label": "Total",
+          "reason": "non-study-area summary row",
+          "source_keys": [
+            "gos_l_6",
+            "gos_l_26"
+          ]
+        }
+      ]
+    }
+  },
+  "chart_7_subgroup_comparator": {
+    "chart_id": "chart_7_subgroup_comparator",
+    "data_file": "chart_7_subgroup_comparator.csv",
+    "sources": {
+      "gos_8": {
+        "source_system": "QILT",
+        "dataset": "GOS",
+        "source_file": "2024_GOS_National_Report_Tables.xlsx",
+        "sheet_name": "EMP_UG_ALL_2Y_DG",
+        "sheet_number": 8,
+        "sheet_title": "Employment outcomes (FTE, OE, LF), 2023-2024 among undergraduates from all provider types by demographic group"
+      },
+      "gos_l_160": {
+        "source_system": "QILT",
+        "dataset": "GOS-L",
+        "source_file": "2024_GOS-L_National_Report_Tables.xlsx",
+        "sheet_name": "STMT_UG_ALL_1Y_SG",
+        "sheet_number": 160,
+        "sheet_title": "Short-term and medium-term domestic employment outcomes (FTE, OE, LF, SAL), 2024, among undergraduates from all provider types by demographic group"
+      }
+    },
+    "labels": {
+      "sources": {
+        "gos_8": "GOS #8",
+        "gos_l_160": "GOS-L #160"
+      },
+      "time_windows": {
+        "short_term": "Short term",
+        "medium_term": "Medium term"
+      },
+      "metrics": {
+        "full_time_employment_pct": {
+          "label": "Full-time employment",
+          "unit": "percent"
+        }
+      },
+      "group_roles": {
+        "group_a": "Group A",
+        "group_b": "Group B"
+      }
+    },
+    "details": {
+      "group_role_semantics": {
+        "group_a": "first_group_in_comparison_label",
+        "group_b": "second_group_in_comparison_label"
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+display_year,series_key,value_pct,source_key,series_order
+2020,gos_l_short_term_fte,73.0,gos_l_1,0
+2020,gos_l_medium_term_fte,90.1,gos_l_1,1
+2021,gos_l_short_term_fte,74.3,gos_l_1,0
+2021,gos_l_medium_term_fte,88.9,gos_l_1,1
+2022,gos_l_short_term_fte,73.6,gos_l_1,0
+2022,gos_l_medium_term_fte,91.5,gos_l_1,1
+2022,gos_short_term_fte,78.5,gos_21,2
+2023,gos_l_short_term_fte,70.3,gos_l_1,0
+2023,gos_l_medium_term_fte,91.7,gos_l_1,1
+2023,gos_short_term_fte,79.0,gos_21,2
+2024,gos_l_short_term_fte,71.1,gos_l_1,0
+2024,gos_l_medium_term_fte,91.1,gos_l_1,1
+2024,gos_short_term_fte,74.0,gos_21,2

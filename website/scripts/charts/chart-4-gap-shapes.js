@@ -8,10 +8,10 @@ import {
     renderChart,
 } from "../rendering.js";
 import {
-    addDumbbellChartLegend,
-    createGapMarker,
+    createDumbbellChartLegend,
+    createChart4HoverLabels,
     getChartHeight,
-    getGapShapeYTickLabels,
+    getChart4YTickLabels,
     getYTickValues,
 } from "../chart-helpers.js";
 import {
@@ -35,11 +35,11 @@ export async function renderChart4(chartId) {
         const mediumTermRow = getTraceRow(mediumTermRows, "subgroup_dimension", shortTermRow["subgroup_dimension"]);
         const traceNumber = shortTermRows.length - shortTermRow["sort_order"];
 
-        const shortTermMarker = createGapMarker(shortTermRow, traceNumber, THEME_COLOURS.amber700);
-        const mediumTermMarker = createGapMarker(mediumTermRow, traceNumber, THEME_COLOURS.blue700);
+        const shortTermMarker = createChart4HoverLabels(shortTermRow, traceNumber, THEME_COLOURS.amber700);
+        const mediumTermMarker = createChart4HoverLabels(mediumTermRow, traceNumber, THEME_COLOURS.blue700);
 
-        addDumbbellChartLegend(shortTermMarker, "Short-term gap (4 months)", "short_term", showTimeWindowLegend);
-        addDumbbellChartLegend(mediumTermMarker, "Medium-term gap (3 years)", "medium_term", showTimeWindowLegend);
+        createDumbbellChartLegend(shortTermMarker, "Short-term gap (4 months)", "short_term", showTimeWindowLegend);
+        createDumbbellChartLegend(mediumTermMarker, "Medium-term gap (3 years)", "medium_term", showTimeWindowLegend);
 
         showTimeWindowLegend = false;
 
@@ -72,7 +72,7 @@ export async function renderChart4(chartId) {
             showline: true,
             showgrid: false,
             tickvals: getYTickValues(shortTermRows),
-            ticktext: getGapShapeYTickLabels(shortTermRows)
+            ticktext: getChart4YTickLabels(shortTermRows)
         },
         shapes: [createReferenceLine("x", 0, THEME_COLOURS.textColour, 1)],
         margin: {

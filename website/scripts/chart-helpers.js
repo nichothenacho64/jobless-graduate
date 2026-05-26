@@ -36,11 +36,15 @@ export function createHollowAxisMarker(row, traceNumber, groupColumn, colour) {
     return axisMarker;
 }
 
+export function getChartHeight(baseHeight, numRows, rowHeight) {
+    return baseHeight + (numRows * rowHeight);
+}
+
 export function getComparisonLabel(row) {
     return row["reference_group"] + " vs " + row["comparison_group"];
 }
 
-export function createGapMarker(row, traceNumber, colour) {
+export function createChart4HoverLabels(row, traceNumber, colour) {
     const comparisonLabel = getComparisonLabel(row);
 
     return {
@@ -58,7 +62,7 @@ export function createGapMarker(row, traceNumber, colour) {
     };
 }
 
-export function getGapShapeYTickLabels(chartData) {
+export function getChart4YTickLabels(chartData) {
     const yTickLabels = [];
 
     for (let row of chartData) {
@@ -69,7 +73,7 @@ export function getGapShapeYTickLabels(chartData) {
     return yTickLabels;
 }
 
-export function addDumbbellChartLegend(marker, name, group, showLegend) {
+export function createDumbbellChartLegend(marker, name, group, showLegend) {
     marker.name = name;
     marker.legendgroup = group;
     marker.showlegend = showLegend;
@@ -88,7 +92,7 @@ export function getYTickValues(chartData) {
     return yTickValues;
 }
 
-export function getYTickLabels(chartData) {
+export function getChart3YTickLabels(chartData) {
     const yTickLabels = [];
 
     for (let row of chartData) {
@@ -100,7 +104,7 @@ export function getYTickLabels(chartData) {
     return yTickLabels;
 }
 
-export function getGapLabelAnnotations(chartData) {
+export function createChart3Labels(chartData) {
     const gapLabelAnnotations = [];
 
     for (let row of chartData) {
@@ -123,7 +127,7 @@ export function getGapLabelAnnotations(chartData) {
     return gapLabelAnnotations;
 }
 
-export function createEqualityLineTrace(xStart, xEnd) {
+export function createChart5EqualityTrace(xStart, xEnd) {
     return {
         x: [xStart, xEnd],
         y: [xStart, xEnd],
@@ -165,7 +169,7 @@ export function createBestFitLineTrace(chartData, xKey, yKey) {
     };
 }
 
-export function getFieldConversionColour(row, gainValues) {
+export function getChart5MarkerColour(row, gainValues) {
     const gain = row["medium_term_fte_pct"] - row["short_term_fte_pct"];
 
     if (gain >= gainValues.high) {
@@ -179,7 +183,7 @@ export function getFieldConversionColour(row, gainValues) {
     return THEME_COLOURS.blue700;
 }
 
-export function getWorkFitColour(row, quadrantValues) {
+export function getChart6MarkerColour(row, quadrantValues) {
     const highEmploymentGain = row["fte_gain_pp"] >= quadrantValues.highEmploymentGain;
     const highWorkFitImprovement = row["underutilisation_reduction_pp"] >= quadrantValues.highWorkFitImprovement;
 
@@ -192,10 +196,6 @@ export function getWorkFitColour(row, quadrantValues) {
     } 
     
     return THEME_COLOURS.grey500;
-}
-
-export function getChartHeight(baseHeight, numRows, rowHeight) {
-    return baseHeight + (numRows * rowHeight);
 }
 
 export function createChart5GainLegendTrace(gainTrace) {
@@ -212,7 +212,7 @@ export function createChart5GainLegendTrace(gainTrace) {
         type: "scatter",
         marker: {
             size: MARKER_SIZE.small,
-            color: getFieldConversionColour(legendRow, gainTrace.thresholds)
+            color: getChart5MarkerColour(legendRow, gainTrace.thresholds)
         },
         hoverinfo: "skip",
         showlegend: true
@@ -269,7 +269,7 @@ export function getChart6WorkFitQuadrants(chartData, medianQuadrants) {
     ];
 
     for (let row of chartData) {
-        const quadrantColour = getWorkFitColour(row, medianQuadrants);
+        const quadrantColour = getChart6MarkerColour(row, medianQuadrants);
 
         for (let workFitQuadrant of workFitQuadrants) {
             if (workFitQuadrant.colour === quadrantColour) {

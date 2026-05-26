@@ -1,0 +1,10 @@
+subgroup_dimension,gap_pp,lower_group,lower_group_pct,higher_group,higher_group_pct,source_key,sort_order
+Home language,16.4,Other,58.1,English,74.5,gos_8,0
+Study mode,9.3,Internal/Mixed,71.9,External,81.2,gos_8,1
+Locality,8.9,Metro,71.7,Regional/Remote,80.6,gos_8,2
+Indigenous,8.8,Non-Indigenous,73.9,Indigenous,82.7,gos_8,3
+Disability,8.2,Disability reported,66.8,No disability reported,75.0,gos_8,4
+Age group,7.7,30 and under,72.4,Over 30,80.1,gos_8,5
+Gender,2.2,Male,72.7,Female,74.9,gos_5,6
+First in family,1.7,Not first in family,73.4,First in family,75.1,gos_8,7
+Socio-economic status,0.3,High,73.5,Low,73.8,gos_8,8

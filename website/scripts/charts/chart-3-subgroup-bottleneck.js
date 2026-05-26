@@ -1,12 +1,12 @@
 import { loadChartData } from "../data.js";
 import { renderChart } from "../rendering.js";
 import {
-    addDumbbellChartLegend,
+    createDumbbellChartLegend,
     createAxisMarker,
     createHollowAxisMarker,
     getChartHeight,
-    getGapLabelAnnotations,
-    getYTickLabels,
+    createChart3Labels,
+    getChart3YTickLabels,
     getYTickValues,
 } from "../chart-helpers.js";
 import {
@@ -32,8 +32,8 @@ export async function renderChart3(chartId) {
         const lowerGroupMarker = createAxisMarker(row, traceNumber, "lower_group", THEME_COLOURS.amber500);
         const higherGroupMarker = createHollowAxisMarker(row, traceNumber, "higher_group", THEME_COLOURS.amber500);
 
-        addDumbbellChartLegend(lowerGroupMarker, "Lower subgroup", "lower_group", showSubgroupLegend);
-        addDumbbellChartLegend(higherGroupMarker, "Higher subgroup", "higher_group", showSubgroupLegend);
+        createDumbbellChartLegend(lowerGroupMarker, "Lower subgroup", "lower_group", showSubgroupLegend);
+        createDumbbellChartLegend(higherGroupMarker, "Higher subgroup", "higher_group", showSubgroupLegend);
 
         showSubgroupLegend = false;
 
@@ -64,9 +64,9 @@ export async function renderChart3(chartId) {
             showgrid: false,
             nticks: 18,
             tickvals: getYTickValues(chartData),
-            ticktext: getYTickLabels(chartData)
+            ticktext: getChart3YTickLabels(chartData)
         },
-        annotations: getGapLabelAnnotations(chartData),
+        annotations: createChart3Labels(chartData),
         margin: {
             l: CHART_3_DIMENSIONS.leftMargin,
             r: CHART_3_DIMENSIONS.rightMargin,

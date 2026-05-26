@@ -9,8 +9,8 @@ import {
 } from "../data.js";
 import {
     createChart5GainLegend,
-    createEqualityLineTrace,
-    getFieldConversionColour,
+    createChart5EqualityTrace,
+    getChart5MarkerColour,
 } from "../chart-helpers.js";
 import {
     renderChart,
@@ -26,7 +26,7 @@ export async function renderChart5(chartId) {
     const yLabel = getAxisLabel(chartMetadata, yKey);
 
     const data = [];
-    const equalityLineTrace = createEqualityLineTrace(50, 100);
+    const equalityLineTrace = createChart5EqualityTrace(50, 100);
     const gainLegendTraces = createChart5GainLegend(CHART_5_GAIN_VALUES);
 
     equalityLineTrace.showlegend = false;
@@ -49,7 +49,7 @@ export async function renderChart5(chartId) {
             showlegend: false,
             marker: {
                 size: MARKER_SIZE.small,
-                color: getFieldConversionColour(row, CHART_5_GAIN_VALUES),
+                color: getChart5MarkerColour(row, CHART_5_GAIN_VALUES),
             },
             hovertemplate: `<b>%{fullData.name}</b><br>` +
                 `${xLabel}: %{x}%<br>` +

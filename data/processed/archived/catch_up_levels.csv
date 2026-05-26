@@ -1,0 +1,20 @@
+row_group,row_label,short_term_full_time_employment,medium_term_full_time_employment,full_time_employment_change,short_term_overall_employment,medium_term_overall_employment,overall_employment_change,short_term_labour_force_participation,medium_term_labour_force_participation,labour_force_participation_change
+Gender,Male,72.7,90.9,18.2,84.7,92.5,7.8,92.0,92.7,0.7
+Gender,Female,74.9,91.2,16.3,88.0,93.7,5.7,92.9,92.6,-0.3
+Age group,30 years or under,72.4,91.3,18.9,86.5,93.4,6.9,93.3,93.4,0.1
+Age group,Over 30 years,80.1,90.4,10.3,88.4,93.0,4.6,90.4,91.0,0.6
+Indigenous,Indigenous,82.7,90.9,8.2,88.8,91.7,2.9,91.5,92.9,1.4
+Indigenous,Non-Indigenous,73.9,91.1,17.2,86.9,93.3,6.4,92.6,92.7,0.1
+Home language,English,74.5,91.1,16.6,87.3,93.3,6.0,92.7,92.7,0.0
+Home language,Language other than English,58.1,90.3,32.2,73.6,91.2,17.6,88.5,88.3,-0.2
+Disability,Disability reported,66.8,86.3,19.5,82.9,90.5,7.6,89.8,88.7,-1.1
+Disability,No disability reported,75.0,91.6,16.6,87.4,93.6,6.2,93.0,93.2,0.2
+Study mode,Internal/Mixed study mode,71.9,91.0,19.1,86.2,93.1,6.9,92.8,92.9,0.1
+Study mode,External study mode,81.2,91.5,10.3,89.5,94.1,4.6,92.0,91.2,-0.8
+First in family,First in family,75.1,88.6,13.5,87.9,90.7,2.8,93.4,90.9,-2.5
+First in family,Not first in family,73.4,88.0,14.6,86.7,91.3,4.6,92.8,91.4,-1.4
+Socio-economic status,High,73.5,91.5,18.0,86.7,93.1,6.4,92.2,92.5,0.3
+Socio-economic status,Medium,73.8,91.1,17.3,87.2,93.5,6.3,93.0,92.8,-0.2
+Socio-economic status,Low,73.8,90.5,16.7,86.4,92.8,6.4,93.1,92.9,-0.2
+Locality,Metro,71.7,91.0,19.3,86.1,93.1,7.0,92.7,92.9,0.2
+Locality,Regional/Remote,80.6,91.5,10.9,89.9,93.8,3.9,93.2,92.3,-0.9

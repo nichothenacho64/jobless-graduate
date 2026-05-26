@@ -1,0 +1,37 @@
+selector_id,selector_label,subgroup_dimension,comparison_label,group_role,group_label,time_window,time_window_order,full_time_employment_pct,source_key,sort_order
+home_language,Home language,Home language,Other vs English,group_a,Other,short_term,0,58.1,gos_8,0
+home_language,Home language,Home language,Other vs English,group_b,English,short_term,0,74.5,gos_8,0
+home_language,Home language,Home language,Other vs English,group_a,Other,medium_term,1,90.3,gos_l_160,0
+home_language,Home language,Home language,Other vs English,group_b,English,medium_term,1,91.1,gos_l_160,0
+study_mode,Study mode,Study mode,Internal/Mixed vs External,group_a,Internal/Mixed,short_term,0,71.9,gos_8,1
+study_mode,Study mode,Study mode,Internal/Mixed vs External,group_b,External,short_term,0,81.2,gos_8,1
+study_mode,Study mode,Study mode,Internal/Mixed vs External,group_a,Internal/Mixed,medium_term,1,91.0,gos_l_160,1
+study_mode,Study mode,Study mode,Internal/Mixed vs External,group_b,External,medium_term,1,91.5,gos_l_160,1
+locality,Locality,Locality,Metro vs Regional/Remote,group_a,Metro,short_term,0,71.7,gos_8,2
+locality,Locality,Locality,Metro vs Regional/Remote,group_b,Regional/Remote,short_term,0,80.6,gos_8,2
+locality,Locality,Locality,Metro vs Regional/Remote,group_a,Metro,medium_term,1,91.0,gos_l_160,2
+locality,Locality,Locality,Metro vs Regional/Remote,group_b,Regional/Remote,medium_term,1,91.5,gos_l_160,2
+indigenous,Indigenous,Indigenous,Non-Indigenous vs Indigenous,group_a,Non-Indigenous,short_term,0,73.9,gos_8,3
+indigenous,Indigenous,Indigenous,Non-Indigenous vs Indigenous,group_b,Indigenous,short_term,0,82.7,gos_8,3
+indigenous,Indigenous,Indigenous,Non-Indigenous vs Indigenous,group_a,Non-Indigenous,medium_term,1,91.1,gos_l_160,3
+indigenous,Indigenous,Indigenous,Non-Indigenous vs Indigenous,group_b,Indigenous,medium_term,1,90.9,gos_l_160,3
+disability,Disability,Disability,Disability reported vs No disability reported,group_a,Disability reported,short_term,0,66.8,gos_8,4
+disability,Disability,Disability,Disability reported vs No disability reported,group_b,No disability reported,short_term,0,75.0,gos_8,4
+disability,Disability,Disability,Disability reported vs No disability reported,group_a,Disability reported,medium_term,1,86.3,gos_l_160,4
+disability,Disability,Disability,Disability reported vs No disability reported,group_b,No disability reported,medium_term,1,91.6,gos_l_160,4
+age_group,Age group,Age group,30 and under vs Over 30,group_a,30 and under,short_term,0,72.4,gos_8,5
+age_group,Age group,Age group,30 and under vs Over 30,group_b,Over 30,short_term,0,80.1,gos_8,5
+age_group,Age group,Age group,30 and under vs Over 30,group_a,30 and under,medium_term,1,91.3,gos_l_160,5
+age_group,Age group,Age group,30 and under vs Over 30,group_b,Over 30,medium_term,1,90.4,gos_l_160,5
+gender,Gender,Gender,Male vs Female,group_a,Male,short_term,0,72.7,gos_8,6
+gender,Gender,Gender,Male vs Female,group_b,Female,short_term,0,74.9,gos_8,6
+gender,Gender,Gender,Male vs Female,group_a,Male,medium_term,1,90.9,gos_l_160,6
+gender,Gender,Gender,Male vs Female,group_b,Female,medium_term,1,91.2,gos_l_160,6
+first_in_family,First in family,First in family,Not first in family vs First in family,group_a,Not first in family,short_term,0,73.4,gos_8,7
+first_in_family,First in family,First in family,Not first in family vs First in family,group_b,First in family,short_term,0,75.1,gos_8,7
+first_in_family,First in family,First in family,Not first in family vs First in family,group_a,Not first in family,medium_term,1,88.0,gos_l_160,7
+first_in_family,First in family,First in family,Not first in family vs First in family,group_b,First in family,medium_term,1,88.6,gos_l_160,7
+socio_economic_status,Socio-economic status,Socio-economic status,High vs Low,group_a,High,short_term,0,73.5,gos_8,8
+socio_economic_status,Socio-economic status,Socio-economic status,High vs Low,group_b,Low,short_term,0,73.8,gos_8,8
+socio_economic_status,Socio-economic status,Socio-economic status,High vs Low,group_a,High,medium_term,1,91.5,gos_l_160,8
+socio_economic_status,Socio-economic status,Socio-economic status,High vs Low,group_b,Low,medium_term,1,90.5,gos_l_160,8
