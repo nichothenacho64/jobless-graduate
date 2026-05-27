@@ -19,7 +19,8 @@ export const CHART_TITLES = {
     chart3: "The bottleneck is uneven",
     chart4: "Not every gap closes",
     chart5: "Some fields convert later",
-    chart6: "A job is not always a fit"
+    chart6: "A job is not always a fit",
+    chart7: "Inspect one subgroup comparison"
 };
 
 
@@ -82,7 +83,8 @@ export const GLOBAL_TRACES = {
 // shared chart labels
 export const UNITS_TO_LABELS = {
     "percentage_point": " (pp)",
-    "percent": " (%)"
+    "percent": " (%)",
+    "people": " (people)"
 };
 
 export const CHART_AXES = {
@@ -109,6 +111,22 @@ export const DIAGONAL_LINE = {
     width: 2,
     dash: "dash"
 };
+
+
+// chart 1a
+export const CHART_1A_HOVER_TEMPLATE = `<b>Year: %{x}</b><br>` +
+    `Population with degree: %{y:,.0f} people<br>` +
+    `Increase since 2016: %{customdata:.1f}%` +
+    `<extra></extra>`;
+
+// chart 1b
+export const CHART_1B_TRACE_COLOURS = [
+    THEME_COLOURS.blue700,
+    THEME_COLOURS.blue500,
+    THEME_COLOURS.blue300,
+    THEME_COLOURS.amber300,
+    THEME_COLOURS.amber700
+];
 
 
 // chart 2
@@ -146,11 +164,74 @@ export const CHART_5_GAIN_VALUES = {
 };
 
 
-// chart 1b
-export const CHART_1B_TRACE_COLOURS = [
-    THEME_COLOURS.blue700,
-    THEME_COLOURS.blue500,
-    THEME_COLOURS.blue300,
-    THEME_COLOURS.amber300,
-    THEME_COLOURS.amber700
-];
+// chart 7
+export const CHART_7_ELEMENT_IDS = {
+    dropdownButton: "chart7DropdownButton",
+    dropdownMenu: "chart7DropdownMenu",
+    selectorLabel: "chart7SelectorLabel",
+    explanationCard: "chart7ExplanationCard"
+};
+
+export const CHART_7_AXIS_LABELS = {
+    y: "Full-time employment gap (percentage points)"
+};
+
+export const CHART_7_CARD_LABELS = {
+    selector: "Choose a subgroup comparison",
+    shortTermGap: "Short-term gap",
+    mediumTermGap: "Medium-term gap",
+    change: "Change"
+};
+
+export const CHART_7_DIMENSIONS = {
+    height: 360,
+    leftMargin: 70,
+    rightMargin: 20,
+    topMargin: 60,
+    bottomMargin: 50
+};
+
+export const CHART_7_GAP_PATTERN_THRESHOLDS = {
+    nearZero: 1,
+    meaningful: 3,
+    substantialShrinkRatio: 0.5
+};
+
+export const CHART_7_GAP_PATTERNS = {
+    persists: {
+        label: "Persists",
+        colour: THEME_COLOURS.amber700,
+        sentence: "This gap persists into the medium term."
+    },
+    mostlyCloses: {
+        label: "Mostly closes",
+        colour: THEME_COLOURS.blue500,
+        sentence: "This gap mostly closes by the medium term."
+    },
+    reverses: {
+        label: "Reverses",
+        colour: THEME_COLOURS.blue700,
+        dash: "dash",
+        sentence: "This gap reverses by the medium term."
+    },
+    smallThroughout: {
+        label: "Small throughout",
+        colour: THEME_COLOURS.grey500,
+        sentence: "This comparison is small throughout."
+    }
+};
+
+export const CHART_7_SIGN_DIRECTIONS = {
+    comparisonMinusReference: "comparison_group_pct - reference_group_pct",
+    referenceMinusComparison: "reference_group_pct - comparison_group_pct"
+};
+
+export const CHART_7_SIGN_CAPTIONS = {
+    comparisonMinusReference: "Positive values mean the comparison group has a higher full-time employment rate than the reference group. Negative values mean the gap reverses.",
+    referenceMinusComparison: "Positive values mean the reference group has a higher full-time employment rate than the comparison group. Negative values mean the gap reverses."
+};
+
+export const CHART_7_Y_AXIS_PADDING = {
+    lower: 4,
+    upper: 1
+};

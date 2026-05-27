@@ -22,7 +22,8 @@ SEW_35_QUALIFICATION_FILTER = (
 SEW_35_SUBJECT = f"People with a {SEW_35_QUALIFICATION_FILTER}"
 SEW_35_POPULATION_GROUP = "Persons"
 SEW_35_ROW_LABEL = "Total"
-SEW_DEGREE_SUPPLY_BASE_UNIT = "thousands of persons"
+SEW_DEGREE_SUPPLY_SOURCE_UNIT = "thousands of persons"
+SEW_DEGREE_SUPPLY_BASE_UNIT = "persons"
 SEW_DEGREE_SUPPLY_INCREASE_FORMULA = "(value - base_value) / base_value * 100"
 
 
@@ -33,16 +34,19 @@ def build_chart_1a_table(sew_table_35_sheet: ABSPreparedSheet) -> pd.DataFrame:
     prepared_rows: PreparedRows = []
 
     for _, row in source_rows.iterrows():
-        value = row["estimate_count"]
+        source_value = row["estimate_count"]
 
-        if is_missing_value(value):
+        if is_missing_value(source_value):
             continue
+
+        population = float(source_value) * 1000
 
         prepared_rows.append(
             {
                 "year": int(row["_year"]),
+                "bachelor_degree_or_above_holders_population": round(population),
                 "bachelor_degree_or_above_holders_increase_pct": round(
-                    (float(value) - base_value) / base_value * 100,
+                    (float(source_value) - base_value) / base_value * 100,
                     1,
                 ),
                 "source_key": SEW_35_SOURCE_KEY,
@@ -71,9 +75,10 @@ def build_chart_1a_derivation_metadata(
 
     return {
         "base_year": SEW_DEGREE_SUPPLY_BASE_YEAR,
-        "base_value": round(base_value, 1),
+        "base_value": round(base_value * 1000),
         "base_unit": SEW_DEGREE_SUPPLY_BASE_UNIT,
         "selected_measurement": SEW_35_MEASUREMENT_LABEL,
+        "source_measurement_unit": SEW_DEGREE_SUPPLY_SOURCE_UNIT,
         "selected_population_group": SEW_35_POPULATION_GROUP,
         "selected_row_label": SEW_35_ROW_LABEL,
         "qualification_filter": SEW_35_QUALIFICATION_FILTER,

@@ -1,13 +1,9 @@
 from __future__ import annotations
 
-from typing import Optional
-
 import pandas as pd
 
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
-    CHART_7_GROUP_A_ROLE,
-    CHART_7_GROUP_B_ROLE,
     CHART_7_METADATA,
     CHART_7_TABLE_COLUMNS,
     GOS_8_SOURCE_KEY,
@@ -18,7 +14,6 @@ from src.transform.constants import (
 from src.transform.qilt import (
     QILT_MEDIUM_TERM_VALUE_COLUMN,
     QILT_SHORT_TERM_VALUE_COLUMN,
-    build_qilt_comparison_label,
     build_qilt_full_time_employment_comparison_table,
     build_qilt_subgroup_gap_sort_order,
     build_qilt_subgroup_id,
@@ -46,17 +41,10 @@ def build_chart_7_table(
         for _, group_table in comparison_table.groupby("subgroup_dimension", sort=False)
     ]
     chart_table = pd.DataFrame(row for group_rows in summary_rows for row in group_rows)
-    group_role_order = {
-        CHART_7_GROUP_A_ROLE: 0,
-        CHART_7_GROUP_B_ROLE: 1,
-    }
-    chart_table["_group_role_order"] = [
-        group_role_order[group_role] for group_role in chart_table["group_role"]
-    ]
     chart_table = chart_table.sort_values(
-        ["sort_order", "time_window_order", "_group_role_order"],
+        ["sort_order", "time_window_order"],
         kind="mergesort",
-    ).drop(columns="_group_role_order")
+    )
     chart_table = select_chart_table_schema(chart_table, CHART_7_TABLE_COLUMNS)
     chart_table.attrs["chart_metadata"] = CHART_7_METADATA
     return chart_table
@@ -75,65 +63,57 @@ def _build_comparator_rows(group_table: pd.DataFrame) -> PreparedRows:
         return []
 
     low_row, high_row = selected_pair
-    comparison_label = build_qilt_comparison_label(
-        low_row["row_label"],
-        high_row["row_label"],
-    )
     return [
-        *_build_group_rows(
+        _build_comparator_row(
             low_row,
-            selector_id=selector_id,
-            selector_label=subgroup_dimension,
-            comparison_label=comparison_label,
-            group_role=CHART_7_GROUP_A_ROLE,
-            sort_order=sort_order,
-        ),
-        *_build_group_rows(
             high_row,
             selector_id=selector_id,
-            selector_label=subgroup_dimension,
-            comparison_label=comparison_label,
-            group_role=CHART_7_GROUP_B_ROLE,
+            subgroup_dimension=subgroup_dimension,
+            value_column=QILT_SHORT_TERM_VALUE_COLUMN,
+            time_window=SHORT_TERM_TIME_WINDOW,
+            time_window_order=0,
+            source_key=GOS_8_SOURCE_KEY,
+            sort_order=sort_order,
+        ),
+        _build_comparator_row(
+            low_row,
+            high_row,
+            selector_id=selector_id,
+            subgroup_dimension=subgroup_dimension,
+            value_column=QILT_MEDIUM_TERM_VALUE_COLUMN,
+            time_window=MEDIUM_TERM_TIME_WINDOW,
+            time_window_order=1,
+            source_key=GOS_L_160_SOURCE_KEY,
             sort_order=sort_order,
         ),
     ]
 
 
-def _build_group_rows(
-    row: pd.Series,
+def _build_comparator_row(
+    reference_row: pd.Series,
+    comparison_row: pd.Series,
     *,
     selector_id: str,
-    selector_label: str,
-    comparison_label: Optional[str],
-    group_role: str,
+    subgroup_dimension: str,
+    value_column: str,
+    time_window: str,
+    time_window_order: int,
+    source_key: str,
     sort_order: object,
-) -> PreparedRows:
-    group_label = format_qilt_subgroup_label(row["row_label"])
-    return [
-        {
-            "selector_id": selector_id,
-            "selector_label": selector_label,
-            "subgroup_dimension": selector_label,
-            "comparison_label": comparison_label,
-            "group_role": group_role,
-            "group_label": group_label,
-            "time_window": SHORT_TERM_TIME_WINDOW,
-            "time_window_order": 0,
-            "full_time_employment_pct": row[QILT_SHORT_TERM_VALUE_COLUMN],
-            "source_key": GOS_8_SOURCE_KEY,
-            "sort_order": sort_order,
-        },
-        {
-            "selector_id": selector_id,
-            "selector_label": selector_label,
-            "subgroup_dimension": selector_label,
-            "comparison_label": comparison_label,
-            "group_role": group_role,
-            "group_label": group_label,
-            "time_window": MEDIUM_TERM_TIME_WINDOW,
-            "time_window_order": 1,
-            "full_time_employment_pct": row[QILT_MEDIUM_TERM_VALUE_COLUMN],
-            "source_key": GOS_L_160_SOURCE_KEY,
-            "sort_order": sort_order,
-        },
-    ]
+) -> dict[str, object]:
+    reference_value = reference_row[value_column]
+    comparison_value = comparison_row[value_column]
+
+    return {
+        "selector_id": selector_id,
+        "subgroup_dimension": subgroup_dimension,
+        "time_window": time_window,
+        "time_window_order": time_window_order,
+        "reference_group": format_qilt_subgroup_label(reference_row["row_label"]),
+        "reference_group_pct": reference_value,
+        "comparison_group": format_qilt_subgroup_label(comparison_row["row_label"]),
+        "comparison_group_pct": comparison_value,
+        "signed_gap_pp": round(float(comparison_value - reference_value), 1),
+        "source_key": source_key,
+        "sort_order": sort_order,
+    }

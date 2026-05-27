@@ -5,6 +5,7 @@
     --blue-500: #5E88A8;
     --amber-300: #E7C48B;
     --blue-300: #AFC6D8;
+    --grey-500: #a0a0a0;
     --text-colour: #1F2328;
     --background-colour: #FFFDF9;
 }
@@ -21,4 +22,48 @@ body {
 
 .chart {
     width: 75%;
+}
+
+.chart-7-panel {
+    width: 75%;
+}
+
+.chart-7-chart {
+    width: 100%;
+}
+
+.chart-7-dropdown-toggle {
+    --bs-btn-color: var(--background-colour);
+    --bs-btn-bg: var(--amber-500);
+    --bs-btn-border-color: var(--amber-500);
+    --bs-btn-hover-color: var(--background-colour);
+    --bs-btn-hover-bg: var(--amber-700);
+    --bs-btn-hover-border-color: var(--amber-700);
+    --bs-btn-active-color: var(--background-colour);
+    --bs-btn-active-bg: var(--amber-700);
+    --bs-btn-active-border-color: var(--amber-700);
+}
+
+.chart-7-dropdown-menu {
+    --bs-dropdown-bg: var(--background-colour);
+    --bs-dropdown-link-color: var(--text-colour);
+    --bs-dropdown-link-hover-bg: var(--amber-300);
+    --bs-dropdown-link-active-color: var(--background-colour);
+    --bs-dropdown-link-active-bg: var(--amber-500);
+}
+
+.chart-7-card {
+    color: var(--text-colour);
+    background-color: var(--background-colour);
+    border-color: var(--grey-500);
+}
+
+.chart-7-caption {
+    color: var(--text-colour);
+}
+
+@media (max-width: 900px) {
+    .chart-7-panel {
+        width: 90%;
+    }
 }

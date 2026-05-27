@@ -5,3 +5,4 @@ export { renderChart3 } from "./chart-3-subgroup-bottleneck.js";
 export { renderChart4 } from "./chart-4-gap-shapes.js";
 export { renderChart5 } from "./chart-5-field-conversion.js";
 export { renderChart6 } from "./chart-6-work-fit.js";
+export { renderChart7 } from "./chart-7-subgroup-comparator.js";

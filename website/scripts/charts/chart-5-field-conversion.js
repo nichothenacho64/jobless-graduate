@@ -1,20 +1,22 @@
 import {
     CHART_5_GAIN_VALUES,
     CHART_TITLES,
-    MARKER_SIZE
+    MARKER_SIZE,
+    THEME_COLOURS
 } from "../config.js";
 import {
     getAxisLabel,
     loadChartData,
 } from "../data.js";
 import {
-    createChart5GainLegend,
     createChart5EqualityTrace,
     getChart5MarkerColour,
+    groupRowsByMarkerColour,
 } from "../chart-helpers.js";
 import {
     renderChart,
 } from "../rendering.js";
+import { unpack } from "../utils.js";
 
 export async function renderChart5(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
@@ -27,34 +29,53 @@ export async function renderChart5(chartId) {
 
     const data = [];
     const equalityLineTrace = createChart5EqualityTrace(50, 100);
-    const gainLegendTraces = createChart5GainLegend(CHART_5_GAIN_VALUES);
+    const gainGroups = [
+        {
+            name: `${CHART_5_GAIN_VALUES.high}+ pp`,
+            colour: THEME_COLOURS.amber700,
+            rows: []
+        },
+        {
+            name: `${CHART_5_GAIN_VALUES.medium}-${CHART_5_GAIN_VALUES.high - 1} pp`,
+            colour: THEME_COLOURS.amber500,
+            rows: []
+        },
+        {
+            name: `${CHART_5_GAIN_VALUES.low}-${CHART_5_GAIN_VALUES.medium - 1} pp`,
+            colour: THEME_COLOURS.blue500,
+            rows: []
+        },
+        {
+            name: `<${CHART_5_GAIN_VALUES.low} pp`,
+            colour: THEME_COLOURS.blue700,
+            rows: []
+        },
+    ];
+
+    groupRowsByMarkerColour(gainGroups, chartData, getChart5MarkerColour, CHART_5_GAIN_VALUES);
 
     equalityLineTrace.showlegend = false;
     
     data.push(equalityLineTrace);
 
-    for (let gainLegendTrace of gainLegendTraces) {
-        data.push(gainLegendTrace);
-    }
-
-    for (let row of chartData) {
-        const employmentGain = row[yKey] - row[xKey];
-
+    for (let gainGroup of gainGroups) {
         const trace = {
-            x: [row[xKey]],
-            y: [row[yKey]],
-            name: row["study_area"],
+            x: unpack(gainGroup.rows, xKey),
+            y: unpack(gainGroup.rows, yKey),
+            text: unpack(gainGroup.rows, "study_area"),
+            customdata: gainGroup.rows.map(row => row[yKey] - row[xKey]),
+            name: gainGroup.name,
             mode: "markers",
             type: "scatter",
-            showlegend: false,
+            showlegend: true,
             marker: {
                 size: MARKER_SIZE.small,
-                color: getChart5MarkerColour(row, CHART_5_GAIN_VALUES),
+                color: gainGroup.colour,
             },
-            hovertemplate: `<b>%{fullData.name}</b><br>` +
+            hovertemplate: `<b>%{text}</b><br>` +
                 `${xLabel}: %{x}%<br>` +
                 `${yLabel}: %{y}%<br>` +
-                `${"Change"}: ${employmentGain.toFixed(1)} pp` +
+                `Change: %{customdata:.1f} pp` +
                 `<extra></extra>`
         };
 

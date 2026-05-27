@@ -33,6 +33,7 @@ CHART_TABLE_IDS_BY_NUMBER = {
 CHART_TABLE_SCHEMAS = {
     CHART_1A_ID: [
         "year",
+        "bachelor_degree_or_above_holders_population",
         "bachelor_degree_or_above_holders_increase_pct",
         "source_key",
     ],
@@ -89,14 +90,14 @@ CHART_TABLE_SCHEMAS = {
     ],
     CHART_7_ID: [
         "selector_id",
-        "selector_label",
         "subgroup_dimension",
-        "comparison_label",
-        "group_role",
-        "group_label",
         "time_window",
         "time_window_order",
-        "full_time_employment_pct",
+        "reference_group",
+        "reference_group_pct",
+        "comparison_group",
+        "comparison_group_pct",
+        "signed_gap_pp",
         "source_key",
         "sort_order",
     ],
@@ -236,15 +237,14 @@ SEW_DEGREE_SUPPLY_BASE_YEAR = 2016
 SEW_DEGREE_SUPPLY_YEARS = tuple(range(2016, 2026))
 
 
-# Chart 7 — subgroup comparator
-CHART_7_GROUP_A_ROLE = "group_a"
-CHART_7_GROUP_B_ROLE = "group_b"
-
-
 # Chart metadata additions
 CHART_1A_METADATA = {
     "labels": {
         "metrics": {
+            "bachelor_degree_or_above_holders_population": {
+                "label": "Population with bachelor degree or above",
+                "unit": "people",
+            },
             "bachelor_degree_or_above_holders_increase_pct": {
                 "label": "Increase in bachelor-degree-or-above holders since 2016",
                 "unit": "percent",
@@ -394,20 +394,22 @@ CHART_7_METADATA = {
             MEDIUM_TERM_TIME_WINDOW: "Medium term",
         },
         "metrics": {
-            "full_time_employment_pct": {
-                "label": "Full-time employment",
+            "signed_gap_pp": {
+                "label": "Signed employment gap",
+                "unit": "percentage_point",
+            },
+            "reference_group_pct": {
+                "label": "Reference group full-time employment",
+                "unit": "percent",
+            },
+            "comparison_group_pct": {
+                "label": "Comparison group full-time employment",
                 "unit": "percent",
             },
         },
-        "group_roles": {
-            CHART_7_GROUP_A_ROLE: "Group A",
-            CHART_7_GROUP_B_ROLE: "Group B",
-        },
     },
     "details": {
-        "group_role_semantics": {
-            CHART_7_GROUP_A_ROLE: "first_group_in_comparison_label",
-            CHART_7_GROUP_B_ROLE: "second_group_in_comparison_label",
-        },
+        "signed_gap_direction": "comparison_group_pct - reference_group_pct",
+        "reference_group_rule": "group_with_lower_short_term_full_time_employment",
     },
 }

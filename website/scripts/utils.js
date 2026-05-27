@@ -17,6 +17,16 @@ export function unpack(data, key) {
     return data.map(row => row[key]);
 }
 
+export function sortAscending(a, b) {
+    return a - b;
+}
+
+export function sortByKeyAscending(key) {
+    return function compareByKey(a, b) {
+        return sortAscending(a[key], b[key]);
+    };
+}
+
 function createNumberArray(values) {
     const numericValues = [];
 
@@ -38,7 +48,7 @@ export function calculateMean(values) {
 export function calculateMedian(values) {
     const numericValues = createNumberArray(values);
 
-    numericValues.sort((a, b) => a - b);
+    numericValues.sort(sortAscending);
 
     const middleIndex = Math.floor(numericValues.length / 2);
 

@@ -8,7 +8,7 @@ import {
     getAxisValues,
     loadChartData,
 } from "../data.js";
-import { getChart6MarkerColour, getChart6WorkFitQuadrants } from "../chart-helpers.js";
+import { getChart6MarkerColour, groupRowsByMarkerColour } from "../chart-helpers.js";
 import { createReferenceLine, renderChart } from "../rendering.js";
 import { calculateMedian, unpack } from "../utils.js";
 
@@ -39,13 +39,32 @@ export async function renderChart6(chartId) {
     medianLines.push(yMedianLine);
 
     const data = [];
-    const workFitQuadrants = getChart6WorkFitQuadrants(chartData, medianQuadrants);
+    const workFitQuadrants = [
+        {
+            name: "High gain/high fit improvement",
+            colour: THEME_COLOURS.blue700,
+            rows: []
+        },
+        {
+            name: "High gain/low fit improvement",
+            colour: THEME_COLOURS.amber700,
+            rows: []
+        },
+        {
+            name: "Low gain/high fit improvement",
+            colour: THEME_COLOURS.blue500,
+            rows: []
+        },
+        {
+            name: "Low gain/low fit improvement",
+            colour: THEME_COLOURS.grey500,
+            rows: []
+        },
+    ];
+
+    groupRowsByMarkerColour(workFitQuadrants, chartData, getChart6MarkerColour, medianQuadrants);
 
     for (let workFitQuadrant of workFitQuadrants) {
-        if (workFitQuadrant.rows.length === 0) {
-            continue;
-        }
-
         const trace = {
             x: unpack(workFitQuadrant.rows, xKey),
             y: unpack(workFitQuadrant.rows, yKey),
@@ -71,7 +90,7 @@ export async function renderChart6(chartId) {
         title: { text: CHART_TITLES.chart6 },
         showlegend: true,
         legend: {
-            title: { text: "Employment gain / work fit" },
+            title: { text: "Employment gain/work fit" },
             traceorder: "normal"
         },
         xaxis: {
@@ -82,6 +101,7 @@ export async function renderChart6(chartId) {
         yaxis: {
             title: { text: getAxisLabel(chartMetadata, yKey, true) },
             zeroline: false,
+            range: [-8, 17]
         },
         shapes: medianLines,
     };

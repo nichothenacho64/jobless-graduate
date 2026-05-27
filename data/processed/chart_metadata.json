@@ -17,6 +17,10 @@
         "sew_35": "SEW #35"
       },
       "metrics": {
+        "bachelor_degree_or_above_holders_population": {
+          "label": "Population with bachelor degree or above",
+          "unit": "people"
+        },
         "bachelor_degree_or_above_holders_increase_pct": {
           "label": "Increase in bachelor-degree-or-above holders since 2016",
           "unit": "percent"
@@ -26,9 +30,10 @@
     "details": {
       "increase_derivation": {
         "base_year": 2016,
-        "base_value": 4585.9,
-        "base_unit": "thousands of persons",
+        "base_value": 4585900,
+        "base_unit": "persons",
         "selected_measurement": "Estimate ('000)",
+        "source_measurement_unit": "thousands of persons",
         "selected_population_group": "Persons",
         "selected_row_label": "Total",
         "qualification_filter": "highest non-school qualification at bachelor degree level or above",
@@ -353,21 +358,23 @@
         "medium_term": "Medium term"
       },
       "metrics": {
-        "full_time_employment_pct": {
-          "label": "Full-time employment",
+        "signed_gap_pp": {
+          "label": "Signed employment gap",
+          "unit": "percentage_point"
+        },
+        "reference_group_pct": {
+          "label": "Reference group full-time employment",
+          "unit": "percent"
+        },
+        "comparison_group_pct": {
+          "label": "Comparison group full-time employment",
           "unit": "percent"
         }
-      },
-      "group_roles": {
-        "group_a": "Group A",
-        "group_b": "Group B"
       }
     },
     "details": {
-      "group_role_semantics": {
-        "group_a": "first_group_in_comparison_label",
-        "group_b": "second_group_in_comparison_label"
-      }
+      "signed_gap_direction": "comparison_group_pct - reference_group_pct",
+      "reference_group_rule": "group_with_lower_short_term_full_time_employment"
     }
   }
 }

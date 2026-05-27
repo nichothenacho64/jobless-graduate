@@ -198,85 +198,16 @@ export function getChart6MarkerColour(row, quadrantValues) {
     return THEME_COLOURS.grey500;
 }
 
-export function createChart5GainLegendTrace(gainTrace) {
-    const legendRow = {
-        short_term_fte_pct: 0,
-        medium_term_fte_pct: gainTrace.gainPp
-    };
-
-    return {
-        x: [null],
-        y: [null],
-        name: gainTrace.name,
-        mode: "markers",
-        type: "scatter",
-        marker: {
-            size: MARKER_SIZE.small,
-            color: getChart5MarkerColour(legendRow, gainTrace.thresholds)
-        },
-        hoverinfo: "skip",
-        showlegend: true
-    };
-}
-
-export function createChart5GainLegend(gainValues) {
-    const gain4Trace = createChart5GainLegendTrace({
-        name: `${gainValues.high}+ pp`,
-        gainPp: gainValues.high,
-        thresholds: gainValues
-    });
-    const gain3Trace = createChart5GainLegendTrace({
-        name: `${gainValues.medium}-${gainValues.high - 1} pp`,
-        gainPp: gainValues.medium,
-        thresholds: gainValues
-    });
-    const gain2Trace = createChart5GainLegendTrace({
-        name: `${gainValues.low}-${gainValues.medium - 1} pp`,
-        gainPp: gainValues.low,
-        thresholds: gainValues
-    });
-    const gain1Trace = createChart5GainLegendTrace({
-        name: `<${gainValues.low} pp`,
-        gainPp: gainValues.low - 1,
-        thresholds: gainValues
-    });
-
-    return [gain4Trace, gain3Trace, gain2Trace, gain1Trace];
-}
-
-export function getChart6WorkFitQuadrants(chartData, medianQuadrants) {
-    const workFitQuadrants = [
-        {
-            name: "High gain/high fit improvement",
-            colour: THEME_COLOURS.blue700,
-            rows: []
-        },
-        {
-            name: "High gain/low fit improvement",
-            colour: THEME_COLOURS.amber700,
-            rows: []
-        },
-        {
-            name: "Low gain/high fit improvement",
-            colour: THEME_COLOURS.blue500,
-            rows: []
-        },
-        {
-            name: "Low gain/low fit improvement",
-            colour: THEME_COLOURS.grey500,
-            rows: []
-        },
-    ];
-
+export function groupRowsByMarkerColour(colourGroups, chartData, getMarkerColour, markerColourValues) {
     for (let row of chartData) {
-        const quadrantColour = getChart6MarkerColour(row, medianQuadrants);
+        const markerColour = getMarkerColour(row, markerColourValues);
 
-        for (let workFitQuadrant of workFitQuadrants) {
-            if (workFitQuadrant.colour === quadrantColour) {
-                workFitQuadrant.rows.push(row);
+        for (let colourGroup of colourGroups) {
+            if (colourGroup.colour === markerColour) {
+                colourGroup.rows.push(row);
             }
         }
     }
 
-    return workFitQuadrants;
+    return colourGroups;
 }
