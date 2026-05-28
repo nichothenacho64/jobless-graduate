@@ -32,8 +32,8 @@ export async function renderChart6(chartId) {
     };
 
     const medianLines = [];
-    const xMedianLine = createReferenceLine("x", medianEmploymentGain, THEME_COLOURS.textColour, 2, "above");
-    const yMedianLine = createReferenceLine("y", medianWorkFitImprovement, THEME_COLOURS.textColour, 2, "above");
+    const xMedianLine = createReferenceLine("x", medianEmploymentGain, THEME_COLOURS.text, 2, "above");
+    const yMedianLine = createReferenceLine("y", medianWorkFitImprovement, THEME_COLOURS.text, 2, "above");
 
     medianLines.push(xMedianLine);
     medianLines.push(yMedianLine);

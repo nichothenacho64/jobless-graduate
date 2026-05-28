@@ -1,4 +1,4 @@
-import { loadChartData } from "../data.js";
+import { getAxisLabel, loadChartData } from "../data.js";
 import { renderChart } from "../rendering.js";
 import {
     createDumbbellChartLegend,
@@ -11,7 +11,6 @@ import {
 } from "../chart-helpers.js";
 import {
     CHART_3_DIMENSIONS,
-    CHART_AXES,
     CHART_TITLES,
     DUMBBELL_LINE,
     THEME_COLOURS
@@ -19,6 +18,8 @@ import {
 
 export async function renderChart3(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
+    const xKey = "lower_group_pct";
+    const xLabel = getAxisLabel(chartMetadata, xKey);
 
     const data = [];
     let showSubgroupLegend = true;
@@ -29,8 +30,20 @@ export async function renderChart3(chartId) {
         const lowerGroupPercentage = row["lower_group_pct"];
         const higherGroupPercentage = row["higher_group_pct"];
 
-        const lowerGroupMarker = createAxisMarker(row, traceNumber, "lower_group", THEME_COLOURS.amber500);
-        const higherGroupMarker = createHollowAxisMarker(row, traceNumber, "higher_group", THEME_COLOURS.amber500);
+        const lowerGroupMarker = createAxisMarker(
+            row,
+            traceNumber,
+            "lower_group",
+            THEME_COLOURS.amber500,
+            xLabel
+        );
+        const higherGroupMarker = createHollowAxisMarker(
+            row,
+            traceNumber,
+            "higher_group",
+            THEME_COLOURS.amber500,
+            xLabel
+        );
 
         createDumbbellChartLegend(lowerGroupMarker, "Lower subgroup", "lower_group", showSubgroupLegend);
         createDumbbellChartLegend(higherGroupMarker, "Higher subgroup", "higher_group", showSubgroupLegend);
@@ -51,11 +64,15 @@ export async function renderChart3(chartId) {
 
     const layout = {
         title: { text: CHART_TITLES.chart3 },
-        height: getChartHeight(CHART_3_DIMENSIONS.baseHeight, chartData.length, CHART_3_DIMENSIONS.rowHeight),
+        height: getChartHeight(
+            CHART_3_DIMENSIONS.baseHeight,
+            chartData.length,
+            CHART_3_DIMENSIONS.rowHeight
+        ),
         showlegend: true,
         xaxis: {
             showline: true,
-            title: { text: CHART_AXES.chart3XAxis },
+            title: { text: getAxisLabel(chartMetadata, xKey, true) },
             range: [55, 86],
             dtick: 5
         },

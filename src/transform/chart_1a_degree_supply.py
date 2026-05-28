@@ -6,25 +6,11 @@ from src.preparation.abs import clean_abs_display_text, parse_abs_number
 from src.preparation.series import is_missing_value
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
-    CHART_1A_METADATA,
-    CHART_1A_TABLE_COLUMNS,
+    CHART_1A_CONSTANTS,
     SEW_35_SOURCE_KEY,
-    SEW_DEGREE_SUPPLY_BASE_YEAR,
-    SEW_DEGREE_SUPPLY_YEARS,
 )
-from src.types import ABSPreparedSheet, ChartMetadata, PreparedRows
-
-SEW_35_TABLE_NUMBER = 35
-SEW_35_MEASUREMENT_LABEL = "Estimate ('000)"
-SEW_35_QUALIFICATION_FILTER = (
-    "highest non-school qualification at bachelor degree level or above"
-)
-SEW_35_SUBJECT = f"People with a {SEW_35_QUALIFICATION_FILTER}"
-SEW_35_POPULATION_GROUP = "Persons"
-SEW_35_ROW_LABEL = "Total"
-SEW_DEGREE_SUPPLY_SOURCE_UNIT = "thousands of persons"
-SEW_DEGREE_SUPPLY_BASE_UNIT = "persons"
-SEW_DEGREE_SUPPLY_INCREASE_FORMULA = "(value - base_value) / base_value * 100"
+from src.transform.metadata import CHART_1A_METADATA
+from src.types import ABSPreparedSheet, PreparedRows
 
 
 def build_chart_1a_table(sew_table_35_sheet: ABSPreparedSheet) -> pd.DataFrame:
@@ -54,40 +40,16 @@ def build_chart_1a_table(sew_table_35_sheet: ABSPreparedSheet) -> pd.DataFrame:
         )
 
     chart_table = pd.DataFrame(prepared_rows).sort_values("year", kind="mergesort")
-    chart_table = select_chart_table_schema(chart_table, CHART_1A_TABLE_COLUMNS)
-    chart_table.attrs["chart_metadata"] = {
-        **CHART_1A_METADATA,
-        "details": {
-            "increase_derivation": build_chart_1a_derivation_metadata(
-                sew_table_35_sheet,
-            ),
-        },
-    }
+    chart_table = select_chart_table_schema(
+        chart_table,
+        CHART_1A_CONSTANTS["table_columns"],
+    )
+    chart_table.attrs["chart_metadata"] = CHART_1A_METADATA
     return chart_table
 
 
-def build_chart_1a_derivation_metadata(
-    sew_table_35_sheet: ABSPreparedSheet,
-) -> ChartMetadata:
-    _require_sew_table_35(sew_table_35_sheet)
-    source_rows = _select_degree_supply_source_rows(sew_table_35_sheet.table)
-    base_value = _select_base_value(source_rows)
-
-    return {
-        "base_year": SEW_DEGREE_SUPPLY_BASE_YEAR,
-        "base_value": round(base_value * 1000),
-        "base_unit": SEW_DEGREE_SUPPLY_BASE_UNIT,
-        "selected_measurement": SEW_35_MEASUREMENT_LABEL,
-        "source_measurement_unit": SEW_DEGREE_SUPPLY_SOURCE_UNIT,
-        "selected_population_group": SEW_35_POPULATION_GROUP,
-        "selected_row_label": SEW_35_ROW_LABEL,
-        "qualification_filter": SEW_35_QUALIFICATION_FILTER,
-        "formula": SEW_DEGREE_SUPPLY_INCREASE_FORMULA,
-    }
-
-
 def _require_sew_table_35(sew_table_35_sheet: ABSPreparedSheet) -> None:
-    if sew_table_35_sheet.table_number != SEW_35_TABLE_NUMBER:
+    if sew_table_35_sheet.table_number != CHART_1A_CONSTANTS["source_table_number"]:
         raise ValueError("Chart 1A requires SEW Table 35.")
 
 
@@ -106,15 +68,17 @@ def _select_degree_supply_source_rows(table: pd.DataFrame) -> pd.DataFrame:
     subject = table["subject"].map(clean_abs_display_text)
     row_group = table["row_group"].map(clean_abs_display_text)
     row_label = table["row_label"].map(clean_abs_display_text)
+    qualification_filter = CHART_1A_CONSTANTS["qualification_filter"]
+    selected_subject = f"People with a {qualification_filter}"
     selected_rows = table.loc[
-        (subject == SEW_35_SUBJECT)
-        & (row_group == SEW_35_POPULATION_GROUP)
-        & (row_label == SEW_35_ROW_LABEL)
+        (subject == selected_subject)
+        & (row_group == CHART_1A_CONSTANTS["population_group"])
+        & (row_label == CHART_1A_CONSTANTS["row_label"])
         & table["estimate_count"].notna()
     ].copy()
     selected_rows["_year"] = selected_rows["column_header"].map(_parse_year)
     selected_rows = selected_rows.loc[
-        selected_rows["_year"].isin(SEW_DEGREE_SUPPLY_YEARS)
+        selected_rows["_year"].isin(CHART_1A_CONSTANTS["years"])
     ].copy()
 
     if selected_rows.empty:
@@ -145,7 +109,7 @@ def _require_expected_years(source_rows: pd.DataFrame) -> None:
             + ", ".join(map(str, duplicate_years))
         )
 
-    missing_years = sorted(set(SEW_DEGREE_SUPPLY_YEARS) - set(years.tolist()))
+    missing_years = sorted(set(CHART_1A_CONSTANTS["years"]) - set(years.tolist()))
     if missing_years:
         raise ValueError(
             "SEW Table 35 is missing selected degree-supply rows for years: "
@@ -154,18 +118,19 @@ def _require_expected_years(source_rows: pd.DataFrame) -> None:
 
 
 def _select_base_value(source_rows: pd.DataFrame) -> float:
-    base_rows = source_rows.loc[source_rows["_year"] == SEW_DEGREE_SUPPLY_BASE_YEAR]
+    base_year = CHART_1A_CONSTANTS["base_year"]
+    base_rows = source_rows.loc[source_rows["_year"] == base_year]
 
     if base_rows.empty:
         raise ValueError(
-            f"SEW Table 35 has no {SEW_DEGREE_SUPPLY_BASE_YEAR} base-year value."
+            f"SEW Table 35 has no {base_year} base-year value."
         )
 
     base_value = base_rows["estimate_count"].iloc[0]
     if is_missing_value(base_value) or float(base_value) == 0:
         raise ValueError(
             "SEW Table 35 "
-            f"{SEW_DEGREE_SUPPLY_BASE_YEAR} base-year value is unavailable."
+            f"{base_year} base-year value is unavailable."
         )
 
     return float(base_value)

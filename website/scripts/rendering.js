@@ -44,13 +44,13 @@ function applyMarkerDefaults(marker) {
 }
 
 function getHoverlabelColours(traceColour) {
-    let textColour = THEME_COLOURS.backgroundColour;
+    let textColour = THEME_COLOURS.background;
     const amberTrace = traceColour === THEME_COLOURS.amber300;
     const blueTrace = traceColour === THEME_COLOURS.blue300;
-    const backgroundTrace = traceColour === THEME_COLOURS.backgroundColour;
+    const backgroundTrace = traceColour === THEME_COLOURS.background;
 
     if (amberTrace || blueTrace || backgroundTrace) {
-        textColour = THEME_COLOURS.textColour;
+        textColour = THEME_COLOURS.text;
     }
 
     return {

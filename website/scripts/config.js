@@ -33,8 +33,8 @@ export const THEME_COLOURS = {
     amber300: "#E7C48B",
     blue300: "#AFC6D8",
     grey500: "#a0a0a0",
-    textColour: "#1F2328",
-    backgroundColour: "#FFFDF9"
+    text: "#1F2328",
+    background: "#FFFDF9"
 };
 
 export const HOVERLABEL_BORDER_COLOURS = {
@@ -44,11 +44,11 @@ export const HOVERLABEL_BORDER_COLOURS = {
     [THEME_COLOURS.blue700]: THEME_COLOURS.blue500,
     [THEME_COLOURS.blue500]: THEME_COLOURS.blue300,
     [THEME_COLOURS.blue300]: THEME_COLOURS.blue700,
-    [THEME_COLOURS.backgroundColour]: THEME_COLOURS.amber500
+    [THEME_COLOURS.background]: THEME_COLOURS.amber500
 };
 
 // global Plotly settings
-const TRANSPARENT_BACKGROUND = THEME_COLOURS.textColour + "00";
+const TRANSPARENT_BACKGROUND = THEME_COLOURS.text + "00";
 const TO_IMAGE_BUTTON_OPTIONS = { format: "png" };
 const REMOVED_MODE_BAR_BUTTONS = [
     "select2d", "lasso2d",
@@ -87,13 +87,6 @@ export const UNITS_TO_LABELS = {
     "people": " (people)"
 };
 
-export const CHART_AXES = {
-    chart2XAxis: "Graduation year",
-    chart2YAxis: "Full-time employment",
-    chart3XAxis: "2024 short-term full-time employment (%)",
-    chart4XAxis: "Signed full-time employment gap (percentage points)",
-};
-
 
 // shared chart styling
 export const MARKER_SIZE = {
@@ -107,17 +100,11 @@ export const DUMBBELL_LINE = {
 };
 
 export const DIAGONAL_LINE = {
-    color: THEME_COLOURS.textColour,
+    color: THEME_COLOURS.text,
     width: 2,
     dash: "dash"
 };
 
-
-// chart 1a
-export const CHART_1A_HOVER_TEMPLATE = `<b>Year: %{x}</b><br>` +
-    `Population with degree: %{y:,.0f} people<br>` +
-    `Increase since 2016: %{customdata:.1f}%` +
-    `<extra></extra>`;
 
 // chart 1b
 export const CHART_1B_TRACE_COLOURS = [
@@ -170,10 +157,6 @@ export const CHART_7_ELEMENT_IDS = {
     dropdownMenu: "chart7DropdownMenu",
     selectorLabel: "chart7SelectorLabel",
     explanationCard: "chart7ExplanationCard"
-};
-
-export const CHART_7_AXIS_LABELS = {
-    y: "Full-time employment gap (percentage points)"
 };
 
 export const CHART_7_CARD_LABELS = {

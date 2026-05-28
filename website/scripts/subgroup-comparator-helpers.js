@@ -1,5 +1,4 @@
 import {
-    CHART_7_AXIS_LABELS,
     CHART_7_CARD_LABELS,
     CHART_7_DIMENSIONS,
     CHART_7_GAP_PATTERNS,
@@ -13,7 +12,7 @@ import {
     THEME_COLOURS
 } from "./config.js";
 import { getComparisonLabel } from "./chart-helpers.js";
-import { getAxisValues } from "./data.js";
+import { getAxisLabel, getAxisValues } from "./data.js";
 import { createReferenceLine, renderChart } from "./rendering.js";
 import { sortByKeyAscending } from "./utils.js";
 
@@ -25,6 +24,9 @@ function createChart7Trace(selectedRows, chartMetadata, gapPattern) {
     const xValues = [];
     const yValues = [];
     const customData = [];
+    const gapLabel = getAxisLabel(chartMetadata, "signed_gap_pp");
+    const referenceLabel = getAxisLabel(chartMetadata, "reference_group_pct");
+    const comparisonLabel = getAxisLabel(chartMetadata, "comparison_group_pct");
 
     const line = {
         color: gapPattern.colour,
@@ -36,7 +38,8 @@ function createChart7Trace(selectedRows, chartMetadata, gapPattern) {
     }
 
     for (let row of selectedRows) {
-        xValues.push(getChart7TimeWindowLabel(row, chartMetadata));
+        const timeWindowLabel = getChart7TimeWindowLabel(row, chartMetadata);
+        xValues.push(timeWindowLabel);
         yValues.push(row["signed_gap_pp"]);
         customData.push([
             row["reference_group"],
@@ -59,16 +62,16 @@ function createChart7Trace(selectedRows, chartMetadata, gapPattern) {
             size: MARKER_SIZE.large,
             color: gapPattern.colour,
         },
-        hovertemplate: `<b>%{x} gap: %{y:.1f} pp</b><br>` +
-            `%{customdata[0]}: %{customdata[1]:.1f}%<br>` +
-            `%{customdata[2]}: %{customdata[3]:.1f}%` +
+        hovertemplate: `<b>%{x}: ${gapLabel} %{y:.1f} pp</b><br>` +
+            `${referenceLabel} (%{customdata[0]}): %{customdata[1]:.1f}%<br>` +
+            `${comparisonLabel} (%{customdata[2]}): %{customdata[3]:.1f}%` +
             `<extra></extra>`
     };
 }
 
 function createChart7Layout(selectedRows, chartMetadata, yAxisRange) {
     const xValues = [];
-    const yAxisLine = createReferenceLine("y", 0, THEME_COLOURS.textColour, 2, "above");
+    const yAxisLine = createReferenceLine("y", 0, THEME_COLOURS.text, 2, "above");
 
     for (let row of selectedRows) {
         const timeWindowLabel = getChart7TimeWindowLabel(row, chartMetadata);
@@ -86,7 +89,7 @@ function createChart7Layout(selectedRows, chartMetadata, yAxisRange) {
             fixedrange: true
         },
         yaxis: {
-            title: { text: CHART_7_AXIS_LABELS.y },
+            title: { text: getAxisLabel(chartMetadata, "signed_gap_pp", true) },
             range: yAxisRange,
             zeroline: false,
             fixedrange: true
@@ -248,7 +251,7 @@ export function getChart7SignCaption(chartMetadata) {
         return CHART_7_SIGN_CAPTIONS.referenceMinusComparison;
     }
 
-    throw new Error("Unknown Chart 7 signed gap direction");
+    return CHART_7_SIGN_CAPTIONS.referenceMinusComparison; // shouldn't get here
 }
 
 export function updateChart7ExplanationCard(explanationCard, gapSummary, gapPattern, signCaption) {

@@ -3,10 +3,10 @@ import {
     MARKER_SIZE,
     THEME_COLOURS
 } from "./config.js";
-import { getAxisValues, getChartPoints } from "./data.js";
+import { getAxisLabel, getAxisValues, getChartPoints } from "./data.js";
 import { calculateMean, getBestFitNumerator, getBestFitDenominator } from "./utils.js";
 
-export function createAxisMarker(row, traceNumber, groupColumn, colour) {
+export function createAxisMarker(row, traceNumber, groupColumn, colour, valueLabel) {
     const group = row[groupColumn];
     const groupPercentage = row[groupColumn + "_pct"];
 
@@ -19,15 +19,27 @@ export function createAxisMarker(row, traceNumber, groupColumn, colour) {
             color: colour
         },
         hovertemplate: `${row["subgroup_dimension"]}: ${group}<br>` +
-            `Full-time employment: %{x}%` +
+            `${valueLabel}: %{x}%` +
             `<extra></extra>`
     };
 }
 
-export function createHollowAxisMarker(row, traceNumber, groupColumn, colour) {
-    const axisMarker = createAxisMarker(row, traceNumber, groupColumn, colour);
+export function createHollowAxisMarker(
+    row,
+    traceNumber,
+    groupColumn,
+    colour,
+    valueLabel
+) {
+    const axisMarker = createAxisMarker(
+        row,
+        traceNumber,
+        groupColumn,
+        colour,
+        valueLabel
+    );
 
-    axisMarker.marker.color = THEME_COLOURS.backgroundColour;
+    axisMarker.marker.color = THEME_COLOURS.background;
     axisMarker.marker.line = {
         color: colour,
         width: 2
@@ -44,8 +56,17 @@ export function getComparisonLabel(row) {
     return row["reference_group"] + " vs " + row["comparison_group"];
 }
 
-export function createChart4HoverLabels(row, traceNumber, colour) {
-    const comparisonLabel = getComparisonLabel(row);
+export function createChart4HoverLabels(row, traceNumber, colour, chartMetadata) {
+    const gapLabel = getAxisLabel(chartMetadata, "signed_gap_pp");
+    const referenceLabel = getAxisLabel(chartMetadata, "reference_group_pct");
+    const comparisonLabelText = getAxisLabel(
+        chartMetadata,
+        "comparison_group_pct"
+    );
+    const hoverTemplate = `<b>${row["subgroup_dimension"]}: ${gapLabel} %{x} pp</b><br>` +
+        `${referenceLabel} (${row["reference_group"]}): ${row["reference_group_pct"]}%<br>` +
+        `${comparisonLabelText} (${row["comparison_group"]}): ${row["comparison_group_pct"]}%<br>` +
+        `<extra></extra>`;
 
     return {
         x: [row["signed_gap_pp"]],
@@ -55,10 +76,7 @@ export function createChart4HoverLabels(row, traceNumber, colour) {
             size: MARKER_SIZE.large,
             color: colour
         },
-        hovertemplate: `<b>${row["subgroup_dimension"]} gap: %{x} pp</b><br>` +
-            `${row["reference_group"]}: ${row["reference_group_pct"]}%<br>` +
-            `${row["comparison_group"]}: ${row["comparison_group_pct"]}%<br>` +
-            `<extra></extra>`
+        hovertemplate: hoverTemplate
     };
 }
 

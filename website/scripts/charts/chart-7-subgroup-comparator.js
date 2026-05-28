@@ -22,10 +22,6 @@ export async function renderChart7(chartId) {
     const defaultSelectorId = selectors[0].selectorId;
     const selectorId = updateChart7DropdownSelection(dropdownButton, dropdownMenu, selectors, defaultSelectorId);
 
-    console.log(selectors);
-    console.log(selectors[0].selectorId);
-    console.log(selectorId);
-
     renderChart7SelectedComparison(chartId, chartData, chartMetadata, selectorId, explanationCard);
 
     dropdownMenu.addEventListener("click", (event) => {

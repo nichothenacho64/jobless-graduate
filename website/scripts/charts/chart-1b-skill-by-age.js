@@ -12,6 +12,9 @@ import { unpack } from "../utils.js";
 
 export async function renderChart1b(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
+    const ageGroupLabel = getAxisLabel(chartMetadata, "age_group");
+    const skillLevelLabel = getAxisLabel(chartMetadata, "skill_level");
+    const shareLabel = getAxisLabel(chartMetadata, "share_pct");
 
     const data = [];
 
@@ -28,8 +31,8 @@ export async function renderChart1b(chartId) {
                 color: CHART_1B_TRACE_COLOURS[seriesOrder],
             },
             hovertemplate: `<b>%{fullData.name}</b><br>` +
-                `Age group: %{x}<br>` +
-                `Share percentage: %{y}%<br>` +
+                `${ageGroupLabel}: %{x}<br>` +
+                `${shareLabel}: %{y}%<br>` +
                 `<extra></extra>`,
         };
 
@@ -40,11 +43,11 @@ export async function renderChart1b(chartId) {
         title: { text: CHART_TITLES.chart1b },
         showlegend: true,
         legend: {
-            title: { text: "Skill levels" },
+            title: { text: skillLevelLabel },
         },
         barmode: "stack",
         xaxis: {
-            title: { text: "Age group" },
+            title: { text: ageGroupLabel },
         },
         yaxis: {
             title: { text: getAxisLabel(chartMetadata, "share_pct", true) },

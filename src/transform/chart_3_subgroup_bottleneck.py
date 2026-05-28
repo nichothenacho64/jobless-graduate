@@ -7,14 +7,14 @@ import pandas as pd
 from src.preparation.qilt import clean_qilt_display_text
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
-    CHART_3_METADATA,
-    CHART_3_TABLE_COLUMNS,
+    CHART_3_CONSTANTS,
     GOS_5_SOURCE_KEY,
     GOS_8_SOURCE_KEY,
     GOS_GENDER_SHORT_TERM_COLUMNS_BY_ROW_LABEL,
     GOS_SHORT_TERM_COMPARISON_COLUMNS,
     TOTAL_ROW_GROUP,
 )
+from src.transform.metadata import CHART_3_METADATA
 from src.transform.qilt import build_qilt_subgroup_pair_summary
 from src.types import PreparedRows, QILTPreparedSheet
 
@@ -56,7 +56,10 @@ def build_chart_3_table(
         ["sort_order", "subgroup_dimension"],
         kind="mergesort",
     ).reset_index(drop=True)
-    chart_table = select_chart_table_schema(chart_table, CHART_3_TABLE_COLUMNS)
+    chart_table = select_chart_table_schema(
+        chart_table,
+        CHART_3_CONSTANTS["table_columns"],
+    )
     chart_table.attrs["chart_metadata"] = CHART_3_METADATA
     return chart_table
 

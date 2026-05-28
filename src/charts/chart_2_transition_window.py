@@ -19,7 +19,7 @@ from src.charts.constants import (
     TEXT_COLOR,
 )
 from src.charts.style import add_figure_legend, apply_chart_style, draw_figure
-from src.transform.constants import CHART_2_SERIES_ORDER
+from src.transform.constants import CHART_2_CONSTANTS
 
 
 def create_chart_2(chart_table: pd.DataFrame) -> Figure:
@@ -27,7 +27,7 @@ def create_chart_2(chart_table: pd.DataFrame) -> Figure:
     ordered_table = chart_table.copy()
     if "series_order" not in ordered_table.columns:
         ordered_table["series_order"] = ordered_table["series_key"].map(
-            CHART_2_SERIES_ORDER
+            CHART_2_CONSTANTS["series_order"]
         )
     x_column = "display_year" if "display_year" in ordered_table.columns else "year"
     ordered_table = ordered_table.sort_values(

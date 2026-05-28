@@ -6,15 +6,11 @@ from src.parsers.constants import QILT_YEAR_PATTERN
 from src.preparation.qilt import clean_qilt_display_text
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
-    CHART_2_GOS_L_MEDIUM_TERM_FTE_SERIES_KEY,
-    CHART_2_GOS_L_SHORT_TERM_FTE_SERIES_KEY,
-    CHART_2_GOS_SHORT_TERM_FTE_SERIES_KEY,
-    CHART_2_METADATA,
-    CHART_2_SERIES_ORDER,
-    CHART_2_TABLE_COLUMNS,
+    CHART_2_CONSTANTS,
     GOS_21_SOURCE_KEY,
     GOS_L_1_SOURCE_KEY,
 )
+from src.transform.metadata import CHART_2_METADATA
 from src.types import PreparedRows, QILTPreparedSheet
 
 
@@ -27,12 +23,17 @@ def build_chart_2_table(
         *_build_gos_l_full_time_rows(gos_l_sheet.table),
     ]
     chart_table = pd.DataFrame(rows)
-    chart_table["series_order"] = chart_table["series_key"].map(CHART_2_SERIES_ORDER)
+    chart_table["series_order"] = chart_table["series_key"].map(
+        CHART_2_CONSTANTS["series_order"],
+    )
     chart_table = chart_table.sort_values(
         ["display_year", "series_order"],
         kind="mergesort",
     )
-    chart_table = select_chart_table_schema(chart_table, CHART_2_TABLE_COLUMNS)
+    chart_table = select_chart_table_schema(
+        chart_table,
+        CHART_2_CONSTANTS["table_columns"],
+    )
     chart_table.attrs["chart_metadata"] = CHART_2_METADATA
     return chart_table
 
@@ -47,7 +48,7 @@ def _build_gos_short_term_full_time_rows(gos_table: pd.DataFrame) -> PreparedRow
         prepared_rows.append(
             {
                 "display_year": _extract_terminal_year(row["row_group"]),
-                "series_key": CHART_2_GOS_SHORT_TERM_FTE_SERIES_KEY,
+                "series_key": CHART_2_CONSTANTS["series_keys"]["gos_short_term"],
                 "value_pct": row["full_time_employment"],
                 "source_key": GOS_21_SOURCE_KEY,
             }
@@ -65,13 +66,17 @@ def _build_gos_l_full_time_rows(gos_l_table: pd.DataFrame) -> PreparedRows:
             [
                 {
                     "display_year": display_year,
-                    "series_key": CHART_2_GOS_L_SHORT_TERM_FTE_SERIES_KEY,
+                    "series_key": CHART_2_CONSTANTS["series_keys"][
+                        "gos_l_short_term"
+                    ],
                     "value_pct": row["short_term_fte"],
                     "source_key": GOS_L_1_SOURCE_KEY,
                 },
                 {
                     "display_year": display_year,
-                    "series_key": CHART_2_GOS_L_MEDIUM_TERM_FTE_SERIES_KEY,
+                    "series_key": CHART_2_CONSTANTS["series_keys"][
+                        "gos_l_medium_term"
+                    ],
                     "value_pct": row["medium_term_fte"],
                     "source_key": GOS_L_1_SOURCE_KEY,
                 },

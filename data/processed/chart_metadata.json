@@ -16,6 +16,11 @@
       "sources": {
         "sew_35": "SEW #35"
       },
+      "dimensions": {
+        "year": {
+          "label": "Year"
+        }
+      },
       "metrics": {
         "bachelor_degree_or_above_holders_population": {
           "label": "Population with bachelor degree or above",
@@ -25,19 +30,6 @@
           "label": "Increase in bachelor-degree-or-above holders since 2016",
           "unit": "percent"
         }
-      }
-    },
-    "details": {
-      "increase_derivation": {
-        "base_year": 2016,
-        "base_value": 4585900,
-        "base_unit": "persons",
-        "selected_measurement": "Estimate ('000)",
-        "source_measurement_unit": "thousands of persons",
-        "selected_population_group": "Persons",
-        "selected_row_label": "Total",
-        "qualification_filter": "highest non-school qualification at bachelor degree level or above",
-        "formula": "(value - base_value) / base_value * 100"
       }
     }
   },
@@ -57,6 +49,14 @@
     "labels": {
       "sources": {
         "sew_32": "SEW #32"
+      },
+      "dimensions": {
+        "age_group": {
+          "label": "Age group"
+        },
+        "skill_level": {
+          "label": "Skill levels"
+        }
       },
       "metrics": {
         "share_pct": {
@@ -92,9 +92,10 @@
         "gos_l_1": "GOS-L #1",
         "gos_21": "GOS #21"
       },
-      "time_windows": {
-        "short_term": "Short term",
-        "medium_term": "Medium term"
+      "dimensions": {
+        "display_year": {
+          "label": "Graduation year"
+        }
       },
       "series": {
         "gos_l_short_term_fte": "GOS-L short term",
@@ -106,11 +107,6 @@
           "label": "Full-time employment",
           "unit": "percent"
         }
-      }
-    },
-    "details": {
-      "year_semantics": {
-        "display_year": "terminal_year_extracted_from_source_year_or_period_label"
       }
     }
   },
@@ -140,17 +136,22 @@
         "gos_8": "GOS #8",
         "gos_5": "GOS #5"
       },
+      "dimensions": {
+        "subgroup_dimension": {
+          "label": "Subgroup dimension"
+        }
+      },
       "metrics": {
         "gap_pp": {
-          "label": "Employment gap",
+          "label": "2024 short-term full-time employment gap",
           "unit": "percentage_point"
         },
         "lower_group_pct": {
-          "label": "Lower group full-time employment",
+          "label": "2024 short-term full-time employment",
           "unit": "percent"
         },
         "higher_group_pct": {
-          "label": "Higher group full-time employment",
+          "label": "2024 short-term full-time employment",
           "unit": "percent"
         }
       }
@@ -188,7 +189,7 @@
       },
       "metrics": {
         "signed_gap_pp": {
-          "label": "Signed employment gap",
+          "label": "Signed full-time employment gap",
           "unit": "percentage_point"
         },
         "reference_group_pct": {
@@ -200,10 +201,6 @@
           "unit": "percent"
         }
       }
-    },
-    "details": {
-      "signed_gap_direction": "comparison_group_pct - reference_group_pct",
-      "reference_group_rule": "group_with_lower_short_term_full_time_employment"
     }
   },
   "chart_5_field_conversion": {
@@ -223,6 +220,11 @@
       "sources": {
         "gos_l_6": "GOS-L #6"
       },
+      "dimensions": {
+        "study_area": {
+          "label": "Study area"
+        }
+      },
       "metrics": {
         "short_term_fte_pct": {
           "label": "Short-term full-time employment",
@@ -233,20 +235,6 @@
           "unit": "percent"
         }
       }
-    },
-    "caveats": {
-      "excluded_rows": [
-        {
-          "row_label": "Total",
-          "reason": "non-study-area summary row",
-          "source_key": "gos_l_6"
-        },
-        {
-          "row_label": "Standard deviation",
-          "reason": "non-study-area summary/statistical row",
-          "source_key": "gos_l_6"
-        }
-      ]
     }
   },
   "chart_6_work_fit": {
@@ -275,6 +263,14 @@
         "gos_l_6": "GOS-L #6",
         "gos_l_26": "GOS-L #26"
       },
+      "dimensions": {
+        "study_area": {
+          "label": "Study area"
+        }
+      },
+      "fit_metrics": {
+        "skills_education_utilisation": "Skills and education not fully utilised"
+      },
       "metrics": {
         "fte_gain_pp": {
           "label": "Full-time employment gain",
@@ -284,47 +280,7 @@
           "label": "Underutilisation reduction",
           "unit": "percentage_point"
         }
-      },
-      "fit_metrics": {
-        "skills_education_utilisation": "Skills and education not fully utilised"
       }
-    },
-    "details": {
-      "fit_metric": {
-        "fit_metric_key": "skills_education_utilisation",
-        "employment_source_key": "gos_l_6",
-        "fit_metric_source_key": "gos_l_26",
-        "fit_metric_direction": "lower_underutilisation_is_better",
-        "fit_change_formula": "short_term_underutilisation_pct - medium_term_underutilisation_pct",
-        "fit_metric_source_columns": {
-          "short_term_underutilisation_pct": "extent_to_which_skills_and_education_not_fully_utilised_short_term_fte",
-          "medium_term_underutilisation_pct": "extent_to_which_skills_and_education_not_fully_utilised_medium_term_fte"
-        }
-      }
-    },
-    "caveats": {
-      "excluded_rows": [
-        {
-          "row_label": "Tourism, hospitality, personal services, sport and recreation",
-          "reason": "source_underutilisation_values_missing",
-          "columns": [
-            "underutilisation_reduction_pp"
-          ],
-          "source_key": "gos_l_26",
-          "source_columns": [
-            "extent_to_which_skills_and_education_not_fully_utilised_short_term_fte",
-            "extent_to_which_skills_and_education_not_fully_utilised_medium_term_fte"
-          ]
-        },
-        {
-          "row_label": "Total",
-          "reason": "non-study-area summary row",
-          "source_keys": [
-            "gos_l_6",
-            "gos_l_26"
-          ]
-        }
-      ]
     }
   },
   "chart_7_subgroup_comparator": {
@@ -359,7 +315,7 @@
       },
       "metrics": {
         "signed_gap_pp": {
-          "label": "Signed employment gap",
+          "label": "Full-time employment gap",
           "unit": "percentage_point"
         },
         "reference_group_pct": {
@@ -373,8 +329,7 @@
       }
     },
     "details": {
-      "signed_gap_direction": "comparison_group_pct - reference_group_pct",
-      "reference_group_rule": "group_with_lower_short_term_full_time_employment"
+      "signed_gap_direction": "comparison_group_pct - reference_group_pct"
     }
   }
 }

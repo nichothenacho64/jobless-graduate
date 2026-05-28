@@ -1,4 +1,5 @@
 import {
+    getAxisLabel,
     getAxisValues,
     getSeriesValue,
     getTrace,
@@ -7,7 +8,6 @@ import {
 import { renderChart } from "../rendering.js";
 import {
     CHART_2_TRACE_COLOURS,
-    CHART_AXES,
     CHART_TITLES,
 } from "../config.js";
 
@@ -16,6 +16,10 @@ import {
 export async function renderChart2(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
     const metadataSeriesLabels = chartMetadata.labels.series;
+    const xKey = "display_year";
+    const yKey = "value_pct";
+    const xLabel = getAxisLabel(chartMetadata, xKey);
+    const yLabel = getAxisLabel(chartMetadata, yKey);
 
     const data = [];
 
@@ -24,16 +28,16 @@ export async function renderChart2(chartId) {
         const seriesValue = getSeriesValue(chartTrace, "series_key", metadataSeriesLabels);
 
         const trace = {
-            x: getAxisValues(chartTrace, "display_year"),
-            y: getAxisValues(chartTrace, "value_pct"),
+            x: getAxisValues(chartTrace, xKey),
+            y: getAxisValues(chartTrace, yKey),
             name: seriesValue,
             type: "scatter",
             mode: "lines+markers",
             marker: {
                 color: CHART_2_TRACE_COLOURS[seriesOrder],
             },
-            hovertemplate: `${CHART_AXES.chart2XAxis}: %{x}<br>` +
-                `${CHART_AXES.chart2YAxis}: %{y}%` +
+            hovertemplate: `${xLabel}: %{x}<br>` +
+                `${yLabel}: %{y}%` +
                 `<extra></extra>`
         };
 
@@ -43,12 +47,12 @@ export async function renderChart2(chartId) {
     const layout = {
         title: { text: CHART_TITLES.chart2 },
         xaxis: {
-            title: { text: CHART_AXES.chart2XAxis },
+            title: { text: xLabel },
             showgrid: false,
             dtick: 1, // the increment step
         },
         yaxis: {
-            title: { text: CHART_AXES.chart2YAxis + " (%)" },
+            title: { text: getAxisLabel(chartMetadata, yKey, true) },
             showline: false,
             range: [69, 96]
         },

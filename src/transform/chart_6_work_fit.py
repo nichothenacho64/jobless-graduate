@@ -8,15 +8,11 @@ from src.preparation.series import is_missing_value
 from src.preparation.qilt import clean_qilt_display_text
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
-    CHART_6_EXCLUDED_STUDY_AREAS,
-    CHART_6_MEDIUM_TERM_UNDERUTILISATION_COLUMN,
-    CHART_6_METADATA,
-    CHART_6_SHORT_TERM_UNDERUTILISATION_COLUMN,
-    CHART_6_TABLE_COLUMNS,
-    CHART_6_WORK_FIT_METRIC_KEY,
+    CHART_6_CONSTANTS,
     GOS_L_6_SOURCE_KEY,
     GOS_L_26_SOURCE_KEY,
 )
+from src.transform.metadata import CHART_6_METADATA
 from src.types import QILTPreparedSheet
 
 
@@ -41,22 +37,20 @@ def build_chart_6_table(
         merged_table["short_term_underutilisation_pct"]
         - merged_table["medium_term_underutilisation_pct"]
     ).round(1)
-    merged_table["fit_metric_key"] = CHART_6_WORK_FIT_METRIC_KEY
+    merged_table["fit_metric_key"] = CHART_6_CONSTANTS["work_fit_metric_key"]
     merged_table["employment_source_key"] = GOS_L_6_SOURCE_KEY
     merged_table["fit_source_key"] = GOS_L_26_SOURCE_KEY
 
-    chart_table, excluded_rows = _exclude_non_plotted_rows(merged_table)
+    chart_table = _exclude_non_plotted_rows(merged_table)
     chart_table = chart_table.loc[
         :,
-        CHART_6_TABLE_COLUMNS,
+        CHART_6_CONSTANTS["table_columns"],
     ].sort_values("study_area", kind="mergesort")
-    chart_table = select_chart_table_schema(chart_table, CHART_6_TABLE_COLUMNS)
-    chart_table.attrs["chart_metadata"] = {
-        **CHART_6_METADATA,
-        "caveats": {
-            "excluded_rows": excluded_rows,
-        },
-    }
+    chart_table = select_chart_table_schema(
+        chart_table,
+        CHART_6_CONSTANTS["table_columns"],
+    )
+    chart_table.attrs["chart_metadata"] = CHART_6_METADATA
     return chart_table
 
 
@@ -75,10 +69,10 @@ def _normalise_fit_table(table: pd.DataFrame) -> pd.DataFrame:
         {
             "study_area": table["area"].map(clean_qilt_display_text),
             "short_term_underutilisation_pct": table[
-                CHART_6_SHORT_TERM_UNDERUTILISATION_COLUMN
+                CHART_6_CONSTANTS["underutilisation_columns"]["short_term"]
             ],
             "medium_term_underutilisation_pct": table[
-                CHART_6_MEDIUM_TERM_UNDERUTILISATION_COLUMN
+                CHART_6_CONSTANTS["underutilisation_columns"]["medium_term"]
             ],
         }
     )
@@ -86,36 +80,17 @@ def _normalise_fit_table(table: pd.DataFrame) -> pd.DataFrame:
 
 def _exclude_non_plotted_rows(
     table: pd.DataFrame,
-) -> tuple[pd.DataFrame, list[dict[str, object]]]:
-    excluded_rows: list[dict[str, object]] = []
+) -> pd.DataFrame:
     excluded_index_labels: list[Hashable] = []
+    excluded_study_areas = CHART_6_CONSTANTS["excluded_study_areas"]
 
     for row_index, row in table.iterrows():
         study_area = str(row["study_area"])
-        if study_area in CHART_6_EXCLUDED_STUDY_AREAS:
-            excluded_rows.append(
-                {
-                    "row_label": study_area,
-                    "reason": CHART_6_EXCLUDED_STUDY_AREAS[study_area],
-                    "source_keys": [GOS_L_6_SOURCE_KEY, GOS_L_26_SOURCE_KEY],
-                }
-            )
+        if study_area in excluded_study_areas:
             excluded_index_labels.append(row_index)
             continue
 
         if is_missing_value(row["underutilisation_reduction_pp"]):
-            excluded_rows.append(
-                {
-                    "row_label": study_area,
-                    "reason": "source_underutilisation_values_missing",
-                    "columns": ["underutilisation_reduction_pp"],
-                    "source_key": GOS_L_26_SOURCE_KEY,
-                    "source_columns": [
-                        CHART_6_SHORT_TERM_UNDERUTILISATION_COLUMN,
-                        CHART_6_MEDIUM_TERM_UNDERUTILISATION_COLUMN,
-                    ],
-                }
-            )
             excluded_index_labels.append(row_index)
 
-    return table.drop(index=excluded_index_labels).copy(), excluded_rows
+    return table.drop(index=excluded_index_labels).copy()

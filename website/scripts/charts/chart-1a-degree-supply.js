@@ -1,8 +1,7 @@
 import {
     CHART_TITLES,
     MARKER_SIZE,
-    THEME_COLOURS,
-    CHART_1A_HOVER_TEMPLATE
+    THEME_COLOURS
 } from "../config.js";
 import {
     getAxisLabel,
@@ -17,6 +16,14 @@ export async function renderChart1a(chartId) {
     const xKey = "year";
     const yKey = "bachelor_degree_or_above_holders_population";
     const increaseKey = "bachelor_degree_or_above_holders_increase_pct";
+
+    const xLabel = getAxisLabel(chartMetadata, xKey);
+    const yLabel = getAxisLabel(chartMetadata, yKey);
+    const increaseLabel = getAxisLabel(chartMetadata, increaseKey);
+    const hoverTemplate = `<b>${xLabel}: %{x}</b><br>` +
+        `${yLabel}: %{y:,.0f} people<br>` +
+        `${increaseLabel}: %{customdata:.1f}%` +
+        `<extra></extra>`;
 
     const finalRow = chartData[chartData.length - 1];
 
@@ -39,7 +46,7 @@ export async function renderChart1a(chartId) {
             size: MARKER_SIZE.small,
             color: THEME_COLOURS.amber500,
         },
-        hovertemplate: CHART_1A_HOVER_TEMPLATE
+        hovertemplate: hoverTemplate
     };
 
     const finalPointTrace = {
@@ -53,7 +60,7 @@ export async function renderChart1a(chartId) {
             size: MARKER_SIZE.large,
             color: THEME_COLOURS.amber700,
         },
-        hovertemplate: CHART_1A_HOVER_TEMPLATE
+        hovertemplate: hoverTemplate
     };
 
     data.push(lineTrace, finalPointTrace);
@@ -61,7 +68,7 @@ export async function renderChart1a(chartId) {
     const layout = {
         title: { text: CHART_TITLES.chart1a },
         xaxis: {
-            title: { text: "Year" },
+            title: { text: xLabel },
             range: [2016, 2025.1],
             nticks: 12,
             zeroline: false

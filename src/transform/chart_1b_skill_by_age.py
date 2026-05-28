@@ -5,12 +5,12 @@ import pandas as pd
 from src.preparation.abs import clean_abs_display_text, format_abs_column_label
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
-    CHART_1B_METADATA,
-    CHART_1B_TABLE_COLUMNS,
+    CHART_1B_CONSTANTS,
     SEW_32_SOURCE_KEY,
     SEW_AGE_GROUP_ORDER,
     SEW_SKILL_LEVEL_ORDER,
 )
+from src.transform.metadata import CHART_1B_METADATA
 from src.types import ABSPreparedSheet, PreparedRows
 
 
@@ -43,6 +43,9 @@ def build_chart_1b_table(sew_table_32_sheet: ABSPreparedSheet) -> pd.DataFrame:
         ["age_order", "skill_order"],
         kind="mergesort",
     )
-    chart_table = select_chart_table_schema(chart_table, CHART_1B_TABLE_COLUMNS)
+    chart_table = select_chart_table_schema(
+        chart_table,
+        CHART_1B_CONSTANTS["table_columns"],
+    )
     chart_table.attrs["chart_metadata"] = CHART_1B_METADATA
     return chart_table

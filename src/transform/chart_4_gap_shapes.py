@@ -4,13 +4,13 @@ import pandas as pd
 
 from src.transform.chart_helpers import select_chart_table_schema
 from src.transform.constants import (
-    CHART_4_METADATA,
-    CHART_4_TABLE_COLUMNS,
+    CHART_4_CONSTANTS,
     GOS_8_SOURCE_KEY,
     GOS_L_160_SOURCE_KEY,
     MEDIUM_TERM_TIME_WINDOW,
     SHORT_TERM_TIME_WINDOW,
 )
+from src.transform.metadata import CHART_4_METADATA
 from src.transform.qilt import (
     QILT_MEDIUM_TERM_VALUE_COLUMN,
     QILT_SHORT_TERM_VALUE_COLUMN,
@@ -51,7 +51,10 @@ def build_chart_4_table(
         ["sort_order", "time_window_order"],
         kind="mergesort",
     ).reset_index(drop=True)
-    chart_table = select_chart_table_schema(chart_table, CHART_4_TABLE_COLUMNS)
+    chart_table = select_chart_table_schema(
+        chart_table,
+        CHART_4_CONSTANTS["table_columns"],
+    )
     chart_table.attrs["chart_metadata"] = CHART_4_METADATA
     return chart_table
 

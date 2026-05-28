@@ -51,15 +51,41 @@ export function getTraceRow(rows, traceKey, targetTraceOrderValue) {
     }
 }
 
-export function getAxisLabel(chartMetadata, key, useUnit = false) {
-    const metadataMetricLabels = chartMetadata.labels.metrics;
-    const axisLabel = metadataMetricLabels[key].label;
+function getLabelDefinition(chartMetadata, key) {
+    const metadataLabels = chartMetadata.labels ?? {};
+    const labelSections = [
+        metadataLabels.metrics,
+        metadataLabels.dimensions,
+        metadataLabels.axes
+    ];
 
-    if (!useUnit) {
-        return axisLabel;
+    for (let labelDefinitions of labelSections) {
+        if (labelDefinitions === undefined) {
+            continue;
+        }
+
+        const labelDefinition = labelDefinitions[key];
+
+        if (labelDefinition === undefined) {
+            continue;
+        }
+
+        if (typeof labelDefinition === "string") {
+            return { label: labelDefinition };
+        }
+
+        return labelDefinition;
     }
+}
 
-    const axisUnit = metadataMetricLabels[key].unit;
+export function getAxisLabel(chartMetadata, key, useUnit = false) {
+    const labelDefinition = getLabelDefinition(chartMetadata, key);
+    const axisLabel = labelDefinition.label;
+
+    if (!useUnit) return axisLabel;
+
+    const axisUnit = labelDefinition.unit;
+    if (!axisUnit) return axisLabel;
 
     return axisLabel + UNITS_TO_LABELS[axisUnit];
 }
