@@ -55,3 +55,6 @@ pnpm-debug.log*
 
 # Misc
 docs/
+notebooks/05_extra_charts.ipynb
+notebooks/04_primary_charts.ipynb
+src/charts
