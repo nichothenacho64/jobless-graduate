@@ -13,14 +13,14 @@ export const CHART_7_ID = "chart_7_subgroup_comparator";
 export const CHART_METADATA_ID = "chart_metadata";
 
 export const CHART_TITLES = {
-    chart1a: "More Australians now have degrees",
+    chart1a: "More Australians now hold degrees",
     chart1b: "High-skill work is age-sorted",
     chart2: "The first year is the weak point",
     chart3: "The bottleneck is uneven",
-    chart4: "Not every gap closes",
-    chart5: "Some fields convert later",
-    chart6: "A job is not always a fit",
-    chart7: "Inspect one subgroup comparison"
+    chart4: "Some gaps close while others persist",
+    chart5: "Some fields recover after the first graduate year",
+    chart6: "More work does not always mean better fit",
+    chart7: "Inspect one subgroup gap"
 };
 
 
@@ -214,9 +214,9 @@ export const CHART_7_VALUES = {
 export const CHART_7_TEXT = {
     cardLabels: {
         selector: "Choose a subgroup comparison",
-        shortTermGap: "Short-term gap",
-        mediumTermGap: "Medium-term gap",
-        change: "Change"
+        referenceGroup: "Reference group",
+        comparisonGroup: "Comparison group",
+        gapChange: "Gap change"
     },
     signCaptions: {
         comparisonMinusReference: "Positive values mean the comparison group has a higher full-time employment rate than the reference group. Negative values mean the gap reverses.",

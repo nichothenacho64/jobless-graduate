@@ -18,10 +18,9 @@ export async function renderChart1a(chartId) {
     const increaseKey = "bachelor_degree_or_above_holders_increase_pct";
 
     const xLabel = getAxisLabel(chartMetadata, xKey);
-    const yLabel = getAxisLabel(chartMetadata, yKey);
     const increaseLabel = getAxisLabel(chartMetadata, increaseKey);
     const hoverTemplate = `<b>${xLabel}: %{x}</b><br>` +
-        `${yLabel}: %{y:,.0f} people<br>` +
+        `Bachelor degree+ population: ~%{y:,.0f} people<br>` +
         `${increaseLabel}: %{customdata:.1f}%` +
         `<extra></extra>`;
 

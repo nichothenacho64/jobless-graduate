@@ -4,7 +4,17 @@ import {
     THEME_COLOURS
 } from "./config.js";
 import { getAxisLabel, getAxisValues, getChartPoints } from "./data.js";
-import { calculateMean, getBestFitNumerator, getBestFitDenominator } from "./utils.js";
+import { calculateMean, getBestFitNumerator, getBestFitDenominator, formatOneDecimal } from "./utils.js";
+
+const CHART_3_SHORT_LABELS = {
+    "Socio-economic status": "Socio-economic",
+    "Disability reported": "Disability",
+    "No disability reported": "No disability"
+};
+
+function getChart3ShortLabel(label) {
+    return CHART_3_SHORT_LABELS[label] ?? label;
+}
 
 export function createAxisMarker(row, traceNumber, groupColumn, colour, valueLabel) {
     const group = row[groupColumn];
@@ -56,16 +66,40 @@ export function getComparisonLabel(row) {
     return row["reference_group"] + " vs " + row["comparison_group"];
 }
 
+export function getGapSentence(row) {
+    const gap = Number(row["signed_gap_pp"]);
+    const absoluteGap = Math.abs(gap);
+    const referenceGroup = row["reference_group"];
+    const comparisonGroup = row["comparison_group"];
+
+    if (absoluteGap <= 0.1) {
+        return `${referenceGroup} and ${comparisonGroup} are about equal`;
+    }
+
+    const formattedGap = formatOneDecimal(absoluteGap);
+
+    if (gap > 0) {
+        return `${comparisonGroup} is ${formattedGap} pp higher than ${referenceGroup}`;
+    }
+
+    return `${referenceGroup} is ${formattedGap} pp higher than ${comparisonGroup}`;
+}
+
 export function createChart4HoverLabels(row, traceNumber, colour, chartMetadata) {
-    const gapLabel = getAxisLabel(chartMetadata, "signed_gap_pp");
     const referenceLabel = getAxisLabel(chartMetadata, "reference_group_pct");
-    const comparisonLabelText = getAxisLabel(
-        chartMetadata,
-        "comparison_group_pct"
-    );
-    const hoverTemplate = `<b>${row["subgroup_dimension"]}: ${gapLabel} %{x} pp</b><br>` +
-        `${referenceLabel} (${row["reference_group"]}): ${row["reference_group_pct"]}%<br>` +
-        `${comparisonLabelText} (${row["comparison_group"]}): ${row["comparison_group_pct"]}%<br>` +
+    const comparisonLabel = getAxisLabel(chartMetadata, "comparison_group_pct");
+    const timeWindowLabel = chartMetadata.labels.time_windows[row["time_window"]];
+
+    const referenceGroup = row["reference_group"];
+    const comparisonGroup = row["comparison_group"];
+
+    const referenceGroupPercentage = formatOneDecimal(row["reference_group_pct"]);
+    const comparisonGroupPercentage = formatOneDecimal(row["comparison_group_pct"]);
+
+    const hoverTemplate = `<b>${row["subgroup_dimension"]} (${timeWindowLabel} gap)</b><br>` +
+        `${getGapSentence(row)}<br>` +
+        `${referenceGroup}: ${referenceGroupPercentage}% ${referenceLabel}<br>` +
+        `${comparisonGroup}: ${comparisonGroupPercentage}% ${comparisonLabel}<br>` +
         `<extra></extra>`;
 
     return {
@@ -114,8 +148,11 @@ export function getChart3YTickLabels(chartData) {
     const yTickLabels = [];
 
     for (let row of chartData) {
-        const subgroupComparison = row["lower_group"] + " vs " + row["higher_group"];
-        const yTickLabel = `<b>${row["subgroup_dimension"]}</b><br>${subgroupComparison}`;
+        const subgroupComparison = getChart3ShortLabel(row["lower_group"]) +
+            " vs " +
+            getChart3ShortLabel(row["higher_group"]);
+        const yTickLabel = `<b>${getChart3ShortLabel(row["subgroup_dimension"])}</b><br>` +
+            subgroupComparison;
         yTickLabels.push(yTickLabel);
     }
 

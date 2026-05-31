@@ -7,10 +7,10 @@ import {
     MARKER_SIZE,
     THEME_COLOURS
 } from "./config.js";
-import { getComparisonLabel } from "./chart-helpers.js";
+import { getComparisonLabel, getGapSentence } from "./chart-helpers.js";
 import { getAxisLabel, getAxisValues } from "./data.js";
 import { createReferenceLine, renderChart } from "./rendering.js";
-import { sortByKeyAscending } from "./utils.js";
+import { formatOneDecimal, sortByKeyAscending } from "./utils.js";
 
 function getChart7TimeWindowLabel(row, chartMetadata) {
     return chartMetadata.labels.time_windows[row["time_window"]];
@@ -20,7 +20,6 @@ function createChart7Trace(selectedRows, chartMetadata, gapPattern) {
     const xValues = [];
     const yValues = [];
     const customData = [];
-    const gapLabel = getAxisLabel(chartMetadata, "signed_gap_pp");
     const referenceLabel = getAxisLabel(chartMetadata, "reference_group_pct");
     const comparisonLabel = getAxisLabel(chartMetadata, "comparison_group_pct");
 
@@ -38,6 +37,9 @@ function createChart7Trace(selectedRows, chartMetadata, gapPattern) {
         xValues.push(timeWindowLabel);
         yValues.push(row["signed_gap_pp"]);
         customData.push([
+            row["subgroup_dimension"],
+            row["time_window"].replace("_", "-"),
+            getGapSentence(row),
             row["reference_group"],
             row["reference_group_pct"],
             row["comparison_group"],
@@ -58,9 +60,10 @@ function createChart7Trace(selectedRows, chartMetadata, gapPattern) {
             size: MARKER_SIZE.large,
             color: gapPattern.colour,
         },
-        hovertemplate: `<b>%{x}: ${gapLabel} %{y:.1f} pp</b><br>` +
-            `${referenceLabel} (%{customdata[0]}): %{customdata[1]:.1f}%<br>` +
-            `${comparisonLabel} (%{customdata[2]}): %{customdata[3]:.1f}%` +
+        hovertemplate: `<b>%{customdata[0]} (%{customdata[1]} gap)</b><br>` +
+            `%{customdata[2]}<br>` +
+            `%{customdata[3]}: %{customdata[4]:.1f}% ${referenceLabel}<br>` +
+            `%{customdata[5]}: %{customdata[6]:.1f}% ${comparisonLabel}` +
             `<extra></extra>`
     };
 }
@@ -75,7 +78,7 @@ function createChart7Layout(selectedRows, chartMetadata, yAxisRange) {
     }
 
     return {
-        title: { text: CHART_TITLES.chart7 },
+        // title: { text: CHART_TITLES.chart7 },
         height: CHART_7_RENDERING.dimensions.height,
         showlegend: false,
         xaxis: {
@@ -110,10 +113,61 @@ function appendChart7CardValue(cardList, label, value) {
 
     const valueElement = document.createElement("dd");
     valueElement.className = "mb-0";
-    valueElement.textContent = `${value.toFixed(1)} pp`;
+    valueElement.textContent = value;
 
     row.append(labelElement, valueElement);
     cardList.appendChild(row);
+}
+
+function getChart7SentenceGroupLabel(label) {
+    if (label === "Other") {
+        return "other";
+    }
+
+    return label;
+}
+
+function getChart7PanelGapSentence(row) {
+    const gap = Number(row["signed_gap_pp"]);
+    const absoluteGap = Math.abs(gap);
+    const referenceGroup = getChart7SentenceGroupLabel(row["reference_group"]);
+    const comparisonGroup = getChart7SentenceGroupLabel(row["comparison_group"]);
+
+    if (absoluteGap <= 0.1) {
+        return `${referenceGroup} and ${comparisonGroup} are about equal`;
+    }
+
+    const formattedGap = formatOneDecimal(absoluteGap);
+
+    if (gap > 0) {
+        return `${comparisonGroup} is ${formattedGap} pp higher than ${referenceGroup}`;
+    }
+
+    return `${referenceGroup} is ${formattedGap} pp higher than ${comparisonGroup}`;
+}
+
+function appendChart7PeriodSummary(cardBody, leadText, row, suffixText = "") {
+    const sentenceText = `${leadText}, ${getChart7PanelGapSentence(row)}${suffixText}.`;
+
+    const sentence = document.createElement("p");
+    sentence.className = "mb-1";
+    sentence.textContent = sentenceText;
+
+    const values = document.createElement("dl");
+    values.className = "mb-3";
+
+    appendChart7CardValue(
+        values,
+        row["reference_group"],
+        `${formatOneDecimal(row["reference_group_pct"])}%`
+    );
+    appendChart7CardValue(
+        values,
+        row["comparison_group"],
+        `${formatOneDecimal(row["comparison_group_pct"])}%`
+    );
+
+    cardBody.append(sentence, values);
 }
 
 export function getChart7Selectors(chartData) {
@@ -199,6 +253,9 @@ export function getChart7GapSummary(selectedRows) {
     const mediumTermGap = selectedRows[1]["signed_gap_pp"];
 
     return {
+        subgroupDimension: selectedRows[0]["subgroup_dimension"],
+        referenceGroup: selectedRows[0]["reference_group"],
+        comparisonGroup: selectedRows[0]["comparison_group"],
         shortTermGap,
         mediumTermGap,
         change: mediumTermGap - shortTermGap
@@ -208,8 +265,10 @@ export function getChart7GapSummary(selectedRows) {
 export function getChart7GapPattern(gapSummary) {
     const shortTermGapSize = Math.abs(gapSummary.shortTermGap);
     const mediumTermGapSize = Math.abs(gapSummary.mediumTermGap);
+
     const nearZeroGap = CHART_7_VALUES.gapPatternThresholds.nearZero;
     const meaningfulGap = CHART_7_VALUES.gapPatternThresholds.meaningful;
+    
     const substantialShrinkRatio = CHART_7_VALUES.gapPatternThresholds.substantialShrinkRatio;
     const signChanged = gapSummary.shortTermGap * gapSummary.mediumTermGap < 0;
     const substantiallyShrunk = mediumTermGapSize <= shortTermGapSize * substantialShrinkRatio;
@@ -250,28 +309,25 @@ export function getChart7SignCaption(chartMetadata) {
     return CHART_7_TEXT.signCaptions.referenceMinusComparison; // shouldn't get here
 }
 
-export function updateChart7ExplanationCard(explanationCard, gapSummary, gapPattern, signCaption) {
+export function updateChart7ExplanationCard(explanationCard, selectedRows, gapSummary, gapPattern) {
     explanationCard.replaceChildren();
 
     const cardBody = document.createElement("div");
     cardBody.className = "card-body";
 
-    const cardList = document.createElement("dl");
-    cardList.className = "mb-0";
-
-    appendChart7CardValue(cardList, CHART_7_TEXT.cardLabels.shortTermGap, gapSummary.shortTermGap);
-    appendChart7CardValue(cardList, CHART_7_TEXT.cardLabels.mediumTermGap, gapSummary.mediumTermGap);
-    appendChart7CardValue(cardList, CHART_7_TEXT.cardLabels.change, gapSummary.change);
+    const title = document.createElement("p");
+    title.className = "fw-semibold mb-3";
+    title.textContent = `${gapSummary.subgroupDimension}: ` +
+        `${gapSummary.referenceGroup} vs ${gapSummary.comparisonGroup}`;
 
     const sentence = document.createElement("p");
-    sentence.className = "mt-3 mb-0";
+    sentence.className = "mb-0";
     sentence.textContent = gapPattern.sentence;
 
-    const caption = document.createElement("p");
-    caption.className = "chart-7-caption small mt-3 mb-0";
-    caption.textContent = signCaption;
-
-    cardBody.append(cardList, sentence, caption);
+    cardBody.appendChild(title);
+    appendChart7PeriodSummary(cardBody, "4-6 months after graduation", selectedRows[0], " in full-time employment");
+    appendChart7PeriodSummary(cardBody, "3 years later", selectedRows[1]);
+    cardBody.appendChild(sentence);
     explanationCard.appendChild(cardBody);
 }
 
@@ -286,10 +342,9 @@ export function renderChart7SelectedComparison(
     const gapSummary = getChart7GapSummary(selectedRows);
     const gapPattern = getChart7GapPattern(gapSummary);
     const yAxisRange = getChart7YAxisRange(chartData);
-    const signCaption = getChart7SignCaption(chartMetadata);
     const trace = createChart7Trace(selectedRows, chartMetadata, gapPattern);
     const layout = createChart7Layout(selectedRows, chartMetadata, yAxisRange);
 
-    updateChart7ExplanationCard(explanationCard, gapSummary, gapPattern, signCaption);
+    updateChart7ExplanationCard(explanationCard, selectedRows, gapSummary, gapPattern);
     renderChart(chartId, [trace], layout);
 }

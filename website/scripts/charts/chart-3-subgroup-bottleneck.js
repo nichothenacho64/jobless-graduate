@@ -45,8 +45,8 @@ export async function renderChart3(chartId) {
             xLabel
         );
 
-        createDumbbellChartLegend(lowerGroupMarker, "Lower subgroup", "lower_group", showSubgroupLegend);
-        createDumbbellChartLegend(higherGroupMarker, "Higher subgroup", "higher_group", showSubgroupLegend);
+        createDumbbellChartLegend(lowerGroupMarker, "Lower FTE group", "lower_group", showSubgroupLegend);
+        createDumbbellChartLegend(higherGroupMarker, "Higher FTE group", "higher_group", showSubgroupLegend);
 
         showSubgroupLegend = false;
 

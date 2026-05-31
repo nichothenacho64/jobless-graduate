@@ -68,3 +68,7 @@ export function getBestFitDenominator(points, xMean) {
         return sum + ((point.x - xMean) ** 2);
     }, 0);
 }
+
+export function formatOneDecimal(value) {
+    return Number(value).toFixed(1);
+}

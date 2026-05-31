@@ -33,11 +33,7 @@ export async function renderChart4(chartId) {
 
     for (let i = 0; i < shortTermRows.length; i++) {
         const shortTermRow = shortTermRows[i];
-        const mediumTermRow = getTraceRow(
-            mediumTermRows,
-            "subgroup_dimension",
-            shortTermRow["subgroup_dimension"]
-        );
+        const mediumTermRow = getTraceRow(mediumTermRows, "subgroup_dimension", shortTermRow["subgroup_dimension"]);
         const traceNumber = shortTermRows.length - shortTermRow["sort_order"];
 
         const shortTermMarker = createChart4HoverLabels(
@@ -53,8 +49,18 @@ export async function renderChart4(chartId) {
             chartMetadata
         );
 
-        createDumbbellChartLegend(shortTermMarker, "Short-term gap (4 months)", "short_term", showTimeWindowLegend);
-        createDumbbellChartLegend(mediumTermMarker, "Medium-term gap (3 years)", "medium_term", showTimeWindowLegend);
+        createDumbbellChartLegend(
+            shortTermMarker,
+            "4–6 months gap",
+            "short_term",
+            showTimeWindowLegend
+        );
+        createDumbbellChartLegend(
+            mediumTermMarker,
+            "3–4 years gap",
+            "medium_term",
+            showTimeWindowLegend
+        );
 
         showTimeWindowLegend = false;
 

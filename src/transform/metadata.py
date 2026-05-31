@@ -1,12 +1,5 @@
 from __future__ import annotations
 
-from src.transform.constants import (
-    CHART_2_CONSTANTS,
-    CHART_6_CONSTANTS,
-    MEDIUM_TERM_TIME_WINDOW,
-    SHORT_TERM_TIME_WINDOW,
-)
-
 
 CHART_1A_METADATA = {
     "labels": {
@@ -17,11 +10,11 @@ CHART_1A_METADATA = {
         },
         "metrics": {
             "bachelor_degree_or_above_holders_population": {
-                "label": "Population with bachelor degree or above",
+                "label": "Bachelor+ population",
                 "unit": "people",
             },
             "bachelor_degree_or_above_holders_increase_pct": {
-                "label": "Increase in bachelor-degree-or-above holders since 2016",
+                "label": "Increase since 2016",
                 "unit": "percent",
             },
         },
@@ -51,13 +44,13 @@ CHART_2_METADATA = {
     "labels": {
         "dimensions": {
             "display_year": {
-                "label": "Graduation year",
+                "label": "Year",
             },
         },
         "series": {
-            CHART_2_CONSTANTS["series_keys"]["gos_l_short_term"]: "GOS-L short term",
-            CHART_2_CONSTANTS["series_keys"]["gos_l_medium_term"]: "GOS-L medium term",
-            CHART_2_CONSTANTS["series_keys"]["gos_short_term"]: "GOS short term",
+            "gos_l_short_term_fte": "Matched cohort (GOS-L, 4–6 months)",
+            "gos_l_medium_term_fte": "Matched cohort (GOS-L, 3–4 years)",
+            "gos_short_term_fte": "Recent graduates (GOS, 4–6 months)",
         },
         "metrics": {
             "value_pct": {
@@ -77,15 +70,15 @@ CHART_3_METADATA = {
         },
         "metrics": {
             "gap_pp": {
-                "label": "2024 short-term full-time employment gap",
+                "label": "2024 short-term FTE gap",
                 "unit": "percentage_point",
             },
             "lower_group_pct": {
-                "label": "2024 short-term full-time employment",
+                "label": "2024 short-term FTE",
                 "unit": "percent",
             },
             "higher_group_pct": {
-                "label": "2024 short-term full-time employment",
+                "label": "2024 short-term FTE",
                 "unit": "percent",
             },
         },
@@ -95,20 +88,20 @@ CHART_3_METADATA = {
 CHART_4_METADATA = {
     "labels": {
         "time_windows": {
-            SHORT_TERM_TIME_WINDOW: "Short term",
-            MEDIUM_TERM_TIME_WINDOW: "Medium term",
+            "short_term": "short-term",
+            "medium_term": "medium-term",
         },
         "metrics": {
             "signed_gap_pp": {
-                "label": "Signed full-time employment gap",
+                "label": "FTE gap",
                 "unit": "percentage_point",
             },
             "reference_group_pct": {
-                "label": "Reference group full-time employment",
+                "label": "full-time employed",
                 "unit": "percent",
             },
             "comparison_group_pct": {
-                "label": "Comparison group full-time employment",
+                "label": "full-time employed",
                 "unit": "percent",
             },
         },
@@ -124,11 +117,11 @@ CHART_5_METADATA = {
         },
         "metrics": {
             "short_term_fte_pct": {
-                "label": "Short-term full-time employment",
+                "label": "4–6 months FTE",
                 "unit": "percent",
             },
             "medium_term_fte_pct": {
-                "label": "Medium-term full-time employment",
+                "label": "3–4 years FTE",
                 "unit": "percent",
             },
         },
@@ -143,15 +136,15 @@ CHART_6_METADATA = {
             },
         },
         "fit_metrics": {
-            CHART_6_CONSTANTS["work_fit_metric_key"]: "Skills and education not fully utilised",
+            "skills_education_utilisation": "Skills and education not fully utilised",
         },
         "metrics": {
             "fte_gain_pp": {
-                "label": "Full-time employment gain",
+                "label": "FTE gain",
                 "unit": "percentage_point",
             },
             "underutilisation_reduction_pp": {
-                "label": "Underutilisation reduction",
+                "label": "Skills mismatch reduction",
                 "unit": "percentage_point",
             },
         },
@@ -161,20 +154,20 @@ CHART_6_METADATA = {
 CHART_7_METADATA = {
     "labels": {
         "time_windows": {
-            SHORT_TERM_TIME_WINDOW: "Short term",
-            MEDIUM_TERM_TIME_WINDOW: "Medium term",
+            "short_term": "4–6 months",
+            "medium_term": "3–4 years",
         },
         "metrics": {
             "signed_gap_pp": {
-                "label": "Full-time employment gap",
+                "label": "FTE gap",
                 "unit": "percentage_point",
             },
             "reference_group_pct": {
-                "label": "Reference group full-time employment",
+                "label": "full-time employed",
                 "unit": "percent",
             },
             "comparison_group_pct": {
-                "label": "Comparison group full-time employment",
+                "label": "full-time employed",
                 "unit": "percent",
             },
         },

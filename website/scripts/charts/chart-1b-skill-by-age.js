@@ -10,9 +10,17 @@ import {
 import { renderChart } from "../rendering.js";
 import { unpack } from "../utils.js";
 
+const SKILL_LEVEL_LEGEND_LABELS = [
+    "Skill level 1 (highest)",
+    "Skill level 2",
+    "Skill level 3",
+    "Skill level 4",
+    "Skill level 5 (lowest)"
+];
+
 export async function renderChart1b(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
-    const ageGroupLabel = getAxisLabel(chartMetadata, "age_group");
+    const xLabel = getAxisLabel(chartMetadata, "age_group");
     const skillLevelLabel = getAxisLabel(chartMetadata, "skill_level");
     const shareLabel = getAxisLabel(chartMetadata, "share_pct");
 
@@ -20,7 +28,7 @@ export async function renderChart1b(chartId) {
 
     for (let seriesOrder = 0; seriesOrder < 5; seriesOrder++) {
         const chartTrace = getTrace(chartData, "skill_order", seriesOrder);
-        const traceName = chartTrace[0]["skill_level"];
+        const traceName = SKILL_LEVEL_LEGEND_LABELS[seriesOrder] ?? chartTrace[0]["skill_level"];
 
         const trace = {
             x: unpack(chartTrace, "age_group"),
@@ -31,7 +39,7 @@ export async function renderChart1b(chartId) {
                 color: CHART_1B_TRACE_COLOURS[seriesOrder],
             },
             hovertemplate: `<b>%{fullData.name}</b><br>` +
-                `${ageGroupLabel}: %{x}<br>` +
+                `${xLabel}: %{x}<br>` +
                 `${shareLabel}: %{y}%<br>` +
                 `<extra></extra>`,
         };
@@ -44,10 +52,11 @@ export async function renderChart1b(chartId) {
         showlegend: true,
         legend: {
             title: { text: skillLevelLabel },
+            traceorder: "normal", // this is reversed by default
         },
         barmode: "stack",
         xaxis: {
-            title: { text: ageGroupLabel },
+            title: { text: xLabel },
         },
         yaxis: {
             title: { text: getAxisLabel(chartMetadata, "share_pct", true) },
