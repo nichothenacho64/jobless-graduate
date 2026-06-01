@@ -1,4 +1,5 @@
 import {
+    CHART_RANGES,
     CHART_TITLES,
     MARKER_SIZE,
     THEME_COLOURS
@@ -68,13 +69,13 @@ export async function renderChart1a(chartId) {
         title: { text: CHART_TITLES.chart1a },
         xaxis: {
             title: { text: xLabel },
-            range: [2016, 2025.1],
+            range: CHART_RANGES.chart1a.x,
             nticks: 12,
             zeroline: false
         },
         yaxis: {
             title: { text: getAxisLabel(chartMetadata, yKey, true) },
-            range: [4500000, 7000000],
+            range: CHART_RANGES.chart1a.y,
             zeroline: false
         },
     };

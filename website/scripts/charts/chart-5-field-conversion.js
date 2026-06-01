@@ -1,4 +1,5 @@
 import {
+    CHART_RANGES,
     CHART_TITLES,
     MARKER_SIZE
 } from "../config.js";
@@ -10,9 +11,8 @@ import {
     createChart5EqualityTrace,
     getRowsByFamilyColourKey,
 } from "../chart-helpers.js";
-import {
-    renderChart,
-} from "../rendering.js";
+import { createChart5EqualityAnnotation } from "../annotations.js";
+import { renderChart } from "../rendering.js";
 import { unpack } from "../utils.js";
 
 export async function renderChart5(chartId) {
@@ -25,7 +25,7 @@ export async function renderChart5(chartId) {
     const yLabel = getAxisLabel(chartMetadata, yKey);
 
     const data = [];
-    const equalityLineTrace = createChart5EqualityTrace(50, 100);
+    const equalityLineTrace = createChart5EqualityTrace(45, 100);
     const familyColourGroups = getRowsByFamilyColourKey(chartData);
 
     equalityLineTrace.showlegend = false;
@@ -66,6 +66,8 @@ export async function renderChart5(chartId) {
         data.push(trace);
     }
 
+    const equalityLineAnnotation = createChart5EqualityAnnotation(CHART_RANGES.chart5.x, CHART_RANGES.chart5.y, equalityLineTrace.name);
+
     const layout = {
         title: { text: CHART_TITLES.chart5 },
         showlegend: true,
@@ -75,12 +77,13 @@ export async function renderChart5(chartId) {
         },
         xaxis: {
             title: { text: getAxisLabel(chartMetadata, xKey, true) },
-            range: [55, 100],
+            range: CHART_RANGES.chart5.x,
         },
         yaxis: {
             title: { text: getAxisLabel(chartMetadata, yKey, true) },
-            range: [55, 100],
+            range: CHART_RANGES.chart5.y,
         },
+        annotations: [equalityLineAnnotation]
     };
 
     renderChart(chartId, data, layout);

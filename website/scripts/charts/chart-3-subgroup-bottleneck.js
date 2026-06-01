@@ -1,19 +1,20 @@
 import { getAxisLabel, loadChartData } from "../data.js";
 import { renderChart } from "../rendering.js";
+import { createChart3Labels } from "../annotations.js";
 import {
     createDumbbellChartLegend,
     createAxisMarker,
     createHollowAxisMarker,
     getChartHeight,
-    createChart3Labels,
     getChart3YTickLabels,
     getYTickValues,
 } from "../chart-helpers.js";
 import {
     CHART_3_DIMENSIONS,
+    CHART_3_RENDERING,
+    CHART_RANGES,
     CHART_TITLES,
-    DUMBBELL_LINE,
-    THEME_COLOURS
+    DUMBBELL_LINE
 } from "../config.js";
 
 export async function renderChart3(chartId) {
@@ -29,32 +30,36 @@ export async function renderChart3(chartId) {
 
         const lowerGroupPercentage = row["lower_group_pct"];
         const higherGroupPercentage = row["higher_group_pct"];
+        const isHomeLanguage = row["subgroup_dimension"] === CHART_3_RENDERING.homeLanguageDimension;
+        
+        let traceColour = CHART_3_RENDERING.defaultColour;
+        let dumbbellLine = DUMBBELL_LINE;
 
-        const lowerGroupMarker = createAxisMarker(
-            row,
-            traceNumber,
-            "lower_group",
-            THEME_COLOURS.amber500,
-            xLabel
-        );
-        const higherGroupMarker = createHollowAxisMarker(
-            row,
-            traceNumber,
-            "higher_group",
-            THEME_COLOURS.amber500,
-            xLabel
-        );
+        if (isHomeLanguage) {
+            traceColour = CHART_3_RENDERING.homeLanguageColour;
+            dumbbellLine = {
+                width: DUMBBELL_LINE.width,
+                color: CHART_3_RENDERING.homeLanguageColour
+            };
+        }
 
-        createDumbbellChartLegend(lowerGroupMarker, "Lower FTE group", "lower_group", showSubgroupLegend);
-        createDumbbellChartLegend(higherGroupMarker, "Higher FTE group", "higher_group", showSubgroupLegend);
+        const lowerGroupMarker = createAxisMarker(row, traceNumber, "lower_group", traceColour, xLabel);
+        const higherGroupMarker = createHollowAxisMarker(row, traceNumber, "higher_group", traceColour, xLabel);
 
-        showSubgroupLegend = false;
+        const showLegend = showSubgroupLegend && !isHomeLanguage;
+
+        createDumbbellChartLegend(lowerGroupMarker, "Lower FTE group", "lower_group", showLegend);
+        createDumbbellChartLegend(higherGroupMarker, "Higher FTE group", "higher_group", showLegend);
+
+        if (showLegend) {
+            showSubgroupLegend = false;
+        }
 
         const lineTrace = {
             x: [lowerGroupPercentage, higherGroupPercentage],
             y: [traceNumber, traceNumber],
             mode: "lines",
-            line: DUMBBELL_LINE,
+            line: dumbbellLine,
             showlegend: false,
             hoverinfo: "none"
         };
@@ -73,7 +78,7 @@ export async function renderChart3(chartId) {
         xaxis: {
             showline: true,
             title: { text: getAxisLabel(chartMetadata, xKey, true) },
-            range: [55, 86],
+            range: CHART_RANGES.chart3.x,
             dtick: 5
         },
         yaxis: {

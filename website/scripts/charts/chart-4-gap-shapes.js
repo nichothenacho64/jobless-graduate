@@ -17,10 +17,12 @@ import {
 } from "../chart-helpers.js";
 import {
     CHART_4_DIMENSIONS,
+    CHART_RANGES,
     CHART_TITLES,
     DUMBBELL_LINE,
     THEME_COLOURS
 } from "../config.js";
+import { createChart4Annotations } from "../annotations.js";
 
 export async function renderChart4(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
@@ -49,18 +51,8 @@ export async function renderChart4(chartId) {
             chartMetadata
         );
 
-        createDumbbellChartLegend(
-            shortTermMarker,
-            "4–6 months gap",
-            "short_term",
-            showTimeWindowLegend
-        );
-        createDumbbellChartLegend(
-            mediumTermMarker,
-            "3–4 years gap",
-            "medium_term",
-            showTimeWindowLegend
-        );
+        createDumbbellChartLegend(shortTermMarker, "Gap after 4–6 months", "short_term", showTimeWindowLegend);
+        createDumbbellChartLegend(mediumTermMarker, "Gap after 3-4 years", "medium_term", showTimeWindowLegend);
 
         showTimeWindowLegend = false;
 
@@ -90,7 +82,7 @@ export async function renderChart4(chartId) {
         xaxis: {
             showline: true,
             title: { text: getAxisLabel(chartMetadata, xKey, true) },
-            range: [-3, 19],
+            range: CHART_RANGES.chart4.x,
             dtick: 3
         },
         yaxis: {
@@ -100,6 +92,7 @@ export async function renderChart4(chartId) {
             ticktext: getChart4YTickLabels(shortTermRows)
         },
         shapes: [createReferenceLine("x", 0, THEME_COLOURS.text, 1)],
+        annotations: createChart4Annotations(chartData),
         margin: {
             l: CHART_4_DIMENSIONS.leftMargin,
             r: CHART_4_DIMENSIONS.rightMargin,

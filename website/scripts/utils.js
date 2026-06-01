@@ -43,10 +43,6 @@ export function clampValue(value, min, max) {
     return Math.min(Math.max(value, min), max);
 }
 
-export function calculateMean(values) {
-    return values.reduce((sum, value) => sum + value, 0) / values.length;
-}
-
 export function calculateMedian(values) {
     const numericValues = createNumberArray(values);
 
@@ -59,18 +55,6 @@ export function calculateMedian(values) {
     }
 
     return (numericValues[middleIndex - 1] + numericValues[middleIndex]) / 2;
-}
-
-export function getBestFitNumerator(points, xMean, yMean) {
-    return points.reduce((sum, point) => {
-        return sum + ((point.x - xMean) * (point.y - yMean));
-    }, 0);
-}
-
-export function getBestFitDenominator(points, xMean) {
-    return points.reduce((sum, point) => {
-        return sum + ((point.x - xMean) ** 2);
-    }, 0);
 }
 
 export function formatOneDecimal(value) {

@@ -1,4 +1,5 @@
 import {
+    CHART_RANGES,
     CHART_7_TEXT,
     CHART_7_RENDERING,
     CHART_7_VALUES,
@@ -8,7 +9,7 @@ import {
     THEME_COLOURS
 } from "./config.js";
 import { getComparisonLabel, getGapSentence } from "./chart-helpers.js";
-import { getAxisLabel, getAxisValues } from "./data.js";
+import { getAxisLabel } from "./data.js";
 import { createReferenceLine, renderChart } from "./rendering.js";
 import { formatOneDecimal, sortByKeyAscending } from "./utils.js";
 
@@ -286,17 +287,6 @@ export function getChart7GapPattern(gapSummary) {
     return CHART_7_VALUES.gapPatterns.mostlyCloses;
 }
 
-export function getChart7YAxisRange(chartData) {
-    const gapValues = getAxisValues(chartData, "signed_gap_pp");
-    const minGap = Math.min(0, ...gapValues);
-    const maxGap = Math.max(0, ...gapValues);
-
-    return [
-        minGap - CHART_7_RENDERING.yAxisPadding.lower,
-        maxGap + CHART_7_RENDERING.yAxisPadding.upper
-    ];
-}
-
 export function getChart7SignCaption(chartMetadata) {
     const signedGapDirection = chartMetadata.details.signed_gap_direction;
 
@@ -341,9 +331,8 @@ export function renderChart7SelectedComparison(
     const selectedRows = getChart7SelectedRows(chartData, selectorId);
     const gapSummary = getChart7GapSummary(selectedRows);
     const gapPattern = getChart7GapPattern(gapSummary);
-    const yAxisRange = getChart7YAxisRange(chartData);
     const trace = createChart7Trace(selectedRows, chartMetadata, gapPattern);
-    const layout = createChart7Layout(selectedRows, chartMetadata, yAxisRange);
+    const layout = createChart7Layout(selectedRows, chartMetadata, CHART_RANGES.chart7.y);
 
     updateChart7ExplanationCard(explanationCard, selectedRows, gapSummary, gapPattern);
     renderChart(chartId, [trace], layout);

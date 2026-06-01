@@ -8,6 +8,7 @@ import {
 import { renderChart } from "../rendering.js";
 import {
     CHART_2_TRACE_COLOURS,
+    CHART_RANGES,
     CHART_TITLES,
 } from "../config.js";
 
@@ -54,7 +55,7 @@ export async function renderChart2(chartId) {
         yaxis: {
             title: { text: getAxisLabel(chartMetadata, yKey, true) },
             showline: false,
-            range: [69, 96]
+            range: CHART_RANGES.chart2.y
         },
     };
 

@@ -1,4 +1,5 @@
 import {
+    CHART_RANGES,
     CHART_TITLES,
     MARKER_SIZE,
     THEME_COLOURS
@@ -12,7 +13,14 @@ import {
     createChart6QuadrantPanels,
     getRowsByFamilyColourKey
 } from "../chart-helpers.js";
-import { createReferenceLine, renderChart } from "../rendering.js";
+import {
+    createChart6XAnnotation,
+    createChart6YAnnotation
+} from "../annotations.js";
+import {
+    createReferenceLine,
+    renderChart
+} from "../rendering.js";
 import { calculateMedian, unpack } from "../utils.js";
 
 export async function renderChart6(chartId) {
@@ -29,17 +37,19 @@ export async function renderChart6(chartId) {
 
     const medianEmploymentGain = calculateMedian(xValues);
     const medianWorkFitImprovement = calculateMedian(yValues);
-    const xRange = [0, medianEmploymentGain * 2];
-    const yRange = [-8, 17];
 
     const medianLines = [];
     const xMedianLine = createReferenceLine("x", medianEmploymentGain, THEME_COLOURS.text, 2, "above");
     const yMedianLine = createReferenceLine("y", medianWorkFitImprovement, THEME_COLOURS.text, 2, "above");
+
+    const xMedianLineAnnotation = createChart6XAnnotation(medianEmploymentGain, xLabel);
+    const yMedianLineAnnotation = createChart6YAnnotation(medianWorkFitImprovement, yLabel);
+
     const quadrantPanels = createChart6QuadrantPanels(
         medianEmploymentGain,
         medianWorkFitImprovement,
-        xRange,
-        yRange
+        CHART_RANGES.chart6.x,
+        CHART_RANGES.chart6.y
     );
     const shapes = [];
 
@@ -97,14 +107,15 @@ export async function renderChart6(chartId) {
         xaxis: {
             title: { text: getAxisLabel(chartMetadata, xKey, true) },
             zeroline: false,
-            range: xRange
+            range: CHART_RANGES.chart6.x
         },
         yaxis: {
             title: { text: getAxisLabel(chartMetadata, yKey, true) },
             zeroline: false,
-            range: yRange
+            range: CHART_RANGES.chart6.y
         },
         shapes: shapes,
+        annotations: [xMedianLineAnnotation, yMedianLineAnnotation]
     };
 
     renderChart(chartId, data, layout);

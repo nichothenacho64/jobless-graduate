@@ -25,10 +25,6 @@ function transformChartData(chartData) {
     return transformedChartData;
 }
 
-export function getChartPoints(chartData, xKey, yKey) {
-    return chartData.map((row) => ({ x: row[xKey], y: row[yKey] }));
-}
-
 export function getTrace(rows, traceKey, targetTraceOrderValue) {
     const trace = [];
 

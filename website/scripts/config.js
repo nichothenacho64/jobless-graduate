@@ -38,7 +38,8 @@ export const THEME_COLOURS = {
     blue300: "#AFC6D8",
     grey500: "#a0a0a0",
     text: "#1F2328",
-    background: "#FFFDF9"
+    background: "#FFFDF9",
+    label: "#e5e0d7"
 };
 
 export const HOVERLABEL_BORDER_COLOURS = {
@@ -124,6 +125,24 @@ export const DIAGONAL_LINE = {
     dash: "dash"
 };
 
+export const LINE_ANNOTATIONS = {
+    backgroundOpacity: 0.9,
+    diagonalTextAngle: -12,
+    fontSize: 11,
+    offset: 8
+};
+
+export const CHART_RANGES = {
+    chart1a: { x: [2016, 2025.1], y: [4500000, 7000000] },
+    chart1b: { x: null, y: null },
+    chart2: { x: null, y: [69, 96] },
+    chart3: { x: [55, 86], y: null },
+    chart4: { x: [-3, 19], y: null },
+    chart5: { x: [45, 100], y: [45, 100] },
+    chart6: { x: [0, 38.2], y: [-8, 17] }, // x upper bound medianEmploymentGain * 2
+    chart7: { x: null, y: [-5, 17.4] }
+};
+
 
 // chart 1b
 export const CHART_1B_TRACE_COLOURS = [
@@ -154,11 +173,41 @@ export const CHART_3_DIMENSIONS = {
     rightMargin: 150,
 };
 
+export const CHART_3_RENDERING = {
+    defaultColour: THEME_COLOURS.amber500,
+    homeLanguageDimension: "Home language",
+    homeLanguageColour: THEME_COLOURS.amber700
+};
+
 export const CHART_4_DIMENSIONS = {
     baseHeight: DUMBBELL_BASE_HEIGHT,
     rowHeight: DUMBBELL_ROW_HEIGHT,
     leftMargin: 280,
     rightMargin: 20,
+};
+
+export const CHART_4_ANNOTATIONS = {
+    arrowhead: 3,
+    arrowsize: 1,
+    arrowwidth: 1.5,
+    standoff: 7, // how much room is between the arrow and surrounding elements
+    startstandoff: 2, // distance between the text and the arrow
+    xanchor: "right",
+    yanchor: "middle",
+    labels: [
+        {
+            subgroupDimension: "Home language",
+            text: "The home<br> language<br> gap closes",
+            ax: -80,
+            ay: 26
+        },
+        {
+            subgroupDimension: "Disability",
+            text: "The disability gap persists",
+            ax: -80,
+            ay: 26
+        }
+    ]
 };
 
 
@@ -183,10 +232,6 @@ export const CHART_7_RENDERING = {
         rightMargin: 20,
         topMargin: 60,
         bottomMargin: 50
-    },
-    yAxisPadding: {
-        lower: 4,
-        upper: 1
     }
 };
 

@@ -5,9 +5,9 @@ import {
     MARKER_SIZE,
     THEME_COLOURS
 } from "./config.js";
-import { getAxisLabel, getAxisValues, getChartPoints } from "./data.js";
+import { getAxisLabel } from "./data.js";
 import { createTransparentFillColour } from "./rendering.js";
-import { calculateMean, getBestFitNumerator, getBestFitDenominator, formatOneDecimal } from "./utils.js";
+import { formatOneDecimal } from "./utils.js";
 
 const CHART_3_SHORT_LABELS = {
     "Socio-economic status": "Socio-economic",
@@ -162,34 +162,11 @@ export function getChart3YTickLabels(chartData) {
     return yTickLabels;
 }
 
-export function createChart3Labels(chartData) {
-    const gapLabelAnnotations = [];
-
-    for (let row of chartData) {
-        const traceNumber = chartData.length - row["sort_order"];
-        const gapAnnotation = row["gap_pp"] + " pp";
-
-        const gapLabelAnnotation = {
-            x: row["higher_group_pct"],
-            y: traceNumber,
-            text: gapAnnotation,
-            xanchor: "left",
-            xshift: 12,
-            yanchor: "middle",
-            showarrow: false
-        };
-
-        gapLabelAnnotations.push(gapLabelAnnotation);
-    }
-
-    return gapLabelAnnotations;
-}
-
 export function createChart5EqualityTrace(xStart, xEnd) {
     return {
         x: [xStart, xEnd],
         y: [xStart, xEnd],
-        name: "y = x",
+        name: "Same employment rate in both periods",
         mode: "lines",
         type: "scatter",
         line: DIAGONAL_LINE,
@@ -293,35 +270,5 @@ function createChart6QuadrantPanel(x0, x1, y0, y1, colour, opacity) {
         y1,
         line: { width: 0 },
         fillcolor: createTransparentFillColour(colour, opacity)
-    };
-}
-
-export function createBestFitLineTrace(chartData, xKey, yKey) {
-    const xValues = getAxisValues(chartData, xKey);
-    const yValues = getAxisValues(chartData, yKey);
-    const chartPoints = getChartPoints(chartData, xKey, yKey);
-
-    const xMean = calculateMean(xValues);
-    const yMean = calculateMean(yValues);
-
-    const slopeNumerator = getBestFitNumerator(chartPoints, xMean, yMean);
-    const slopeDenominator = getBestFitDenominator(chartPoints, xMean);
-
-    const slope = slopeNumerator / slopeDenominator;
-    const intercept = yMean - (slope * xMean);
-
-    const xStart = Math.min(...xValues);
-    const xEnd = Math.max(...xValues);
-    const yStart = (slope * xStart) + intercept;
-    const yEnd = (slope * xEnd) + intercept;
-
-    return {
-        x: [xStart, xEnd],
-        y: [yStart, yEnd],
-        name: "Line of best fit",
-        mode: "lines",
-        type: "scatter",
-        line: DIAGONAL_LINE,
-        hoverinfo: "skip"
     };
 }
