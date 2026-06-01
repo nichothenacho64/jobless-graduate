@@ -11,7 +11,10 @@ import {
     createChart5EqualityTrace,
     getRowsByFamilyColourKey,
 } from "../plotly/chart-primitives.js";
-import { createChart5EqualityAnnotation } from "../plotly/annotations.js";
+import {
+    createChart5Annotations,
+    createChart5EqualityAnnotation
+} from "../plotly/annotations.js";
 import { renderChart } from "../plotly/rendering.js";
 import { unpack } from "../core/utils.js";
 
@@ -67,6 +70,7 @@ export async function renderChart5(chartId) {
     }
 
     const equalityLineAnnotation = createChart5EqualityAnnotation(CHART_RANGES.chart5.x, CHART_RANGES.chart5.y, equalityLineTrace.name);
+    const chartAnnotations = createChart5Annotations(chartData);
 
     const layout = {
         title: { text: CHART_TITLES.chart5 },
@@ -83,7 +87,7 @@ export async function renderChart5(chartId) {
             title: { text: getAxisLabel(chartMetadata, yKey, true) },
             range: CHART_RANGES.chart5.y,
         },
-        annotations: [equalityLineAnnotation]
+        annotations: [equalityLineAnnotation, ...chartAnnotations]
     };
 
     renderChart(chartId, data, layout, chartMetadata);

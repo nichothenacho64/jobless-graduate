@@ -5,10 +5,12 @@ import {
 } from "../core/data.js";
 import {
     CHART_1B_TRACE_COLOURS,
+    CHART_RANGES,
     CHART_TITLES
 } from "../core/config.js";
 import { renderChart } from "../plotly/rendering.js";
 import { unpack } from "../core/utils.js";
+import { createChart1bAnnotations } from "../plotly/annotations.js";
 
 const SKILL_LEVEL_LEGEND_LABELS = [
     "Skill level 1 (highest)",
@@ -60,7 +62,9 @@ export async function renderChart1b(chartId) {
         },
         yaxis: {
             title: { text: getAxisLabel(chartMetadata, "share_pct", true) },
+            range: CHART_RANGES.chart1b.y
         },
+        annotations: createChart1bAnnotations(chartData)
     };
 
     renderChart(chartId, data, layout, chartMetadata);

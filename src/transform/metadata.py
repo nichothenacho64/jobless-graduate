@@ -170,7 +170,7 @@ CHART_7_METADATA = {
         },
         "metrics": {
             "signed_gap_pp": {
-                "label": "FTE gap",
+                "label": "Full-time employment gap",
                 "unit": "percentage_point",
             },
             "reference_group_pct": {

@@ -17,20 +17,21 @@ function getChart7TimeWindowLabel(row, chartMetadata) {
     return chartMetadata.labels.time_windows[row["time_window"]];
 }
 
-function createChart7Trace(selectedRows, chartMetadata, gapPattern) {
+function createChart7Trace(selectedRows, chartMetadata, gapSummary, gapPattern) {
     const xValues = [];
     const yValues = [];
     const customData = [];
     const referenceLabel = getAxisLabel(chartMetadata, "reference_group_pct");
     const comparisonLabel = getAxisLabel(chartMetadata, "comparison_group_pct");
+    const comparisonReverses = gapSummary.shortTermGap * gapSummary.mediumTermGap < 0;
 
     const line = {
         color: gapPattern.colour,
         width: DUMBBELL_LINE.default.width
     };
 
-    if (gapPattern.dash) {
-        line.dash = gapPattern.dash;
+    if (comparisonReverses) {
+        line.dash = CHART_7_VALUES.gapPatterns.reverses.dash;
     }
 
     for (let row of selectedRows) {
@@ -106,14 +107,14 @@ function createChart7Layout(selectedRows, chartMetadata, yAxisRange) {
 
 function appendChart7CardValue(cardList, label, value) {
     const row = document.createElement("div");
-    row.className = "d-flex justify-content-between gap-3 mb-1";
+    row.className = "mb-1";
 
     const labelElement = document.createElement("dt");
-    labelElement.className = "mb-0";
-    labelElement.textContent = label;
+    labelElement.className = "d-inline mb-0";
+    labelElement.textContent = `${label}: `;
 
     const valueElement = document.createElement("dd");
-    valueElement.className = "mb-0";
+    valueElement.className = "d-inline mb-0";
     valueElement.textContent = value;
 
     row.append(labelElement, valueElement);
@@ -268,13 +269,14 @@ export function getChart7GapPattern(gapSummary) {
     const mediumTermGapSize = Math.abs(gapSummary.mediumTermGap);
 
     const nearZeroGap = CHART_7_VALUES.gapPatternThresholds.nearZero;
+    const smallThroughoutGap = CHART_7_VALUES.gapPatternThresholds.smallThroughout;
     const meaningfulGap = CHART_7_VALUES.gapPatternThresholds.meaningful;
-    
+
     const substantialShrinkRatio = CHART_7_VALUES.gapPatternThresholds.substantialShrinkRatio;
     const signChanged = gapSummary.shortTermGap * gapSummary.mediumTermGap < 0;
     const substantiallyShrunk = mediumTermGapSize <= shortTermGapSize * substantialShrinkRatio;
 
-    if (shortTermGapSize <= nearZeroGap && mediumTermGapSize <= nearZeroGap) {
+    if (shortTermGapSize <= smallThroughoutGap && mediumTermGapSize <= smallThroughoutGap) {
         return CHART_7_VALUES.gapPatterns.smallThroughout;
     } else if (signChanged) {
         return CHART_7_VALUES.gapPatterns.reverses;
@@ -331,7 +333,7 @@ export function renderChart7SelectedComparison(
     const selectedRows = getChart7SelectedRows(chartData, selectorId);
     const gapSummary = getChart7GapSummary(selectedRows);
     const gapPattern = getChart7GapPattern(gapSummary);
-    const trace = createChart7Trace(selectedRows, chartMetadata, gapPattern);
+    const trace = createChart7Trace(selectedRows, chartMetadata, gapSummary, gapPattern);
     const layout = createChart7Layout(selectedRows, chartMetadata, CHART_RANGES.chart7.y);
 
     updateChart7ExplanationCard(explanationCard, selectedRows, gapSummary, gapPattern);

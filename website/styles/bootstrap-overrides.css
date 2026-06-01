@@ -8,6 +8,16 @@
     --bs-btn-active-color: var(--background-colour);
     --bs-btn-active-bg: var(--amber-700);
     --bs-btn-active-border-color: var(--amber-700);
+    font-size: inherit;
+}
+
+#chart7DropdownButton::after {
+    transform: rotate(0deg);
+    transition: transform 0.15s ease-in-out;
+}
+
+#chart7DropdownButton[aria-expanded="true"]::after {
+    transform: rotate(180deg);
 }
 
 #chart7DropdownMenu {
@@ -16,4 +26,5 @@
     --bs-dropdown-link-hover-bg: var(--amber-300);
     --bs-dropdown-link-active-color: var(--background-colour);
     --bs-dropdown-link-active-bg: var(--amber-500);
+    font-size: inherit;
 }

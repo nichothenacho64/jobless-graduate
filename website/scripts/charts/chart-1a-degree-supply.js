@@ -1,4 +1,5 @@
 import {
+    CHART_1A_DIMENSIONS,
     CHART_RANGES,
     CHART_TITLES,
     MARKER_SIZE,
@@ -10,6 +11,7 @@ import {
     loadChartData,
 } from "../core/data.js";
 import { renderChart } from "../plotly/rendering.js";
+import { createChart1aAnnotations } from "../plotly/annotations.js";
 
 export async function renderChart1a(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
@@ -78,6 +80,10 @@ export async function renderChart1a(chartId) {
             range: CHART_RANGES.chart1a.y,
             zeroline: false
         },
+        annotations: createChart1aAnnotations(chartData),
+        margin: {
+            r: CHART_1A_DIMENSIONS.rightMargin
+        }
     };
 
     renderChart(chartId, data, layout, chartMetadata);

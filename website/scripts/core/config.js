@@ -54,14 +54,6 @@ export const HOVERLABEL_BORDER_COLOURS = {
 
 // global Plotly settings
 const TRANSPARENT_BACKGROUND = THEME_COLOURS.text + "00";
-const TO_IMAGE_BUTTON_OPTIONS = { format: "png" };
-const REMOVED_MODE_BAR_BUTTONS = [
-    "select2d", "lasso2d",
-    "zoomIn2d", "zoomOut2d",
-    "autoScale2d",
-    "hoverCompareCartesian", "hoverClosestCartesian",
-    "toggleSpikelines"
-];
 
 export const GLOBAL_LAYOUT = {
     paper_bgcolor: TRANSPARENT_BACKGROUND,
@@ -70,16 +62,13 @@ export const GLOBAL_LAYOUT = {
 
 export const GLOBAL_CONFIG = {
     responsive: true,
-    displayModeBar: "hover",
-    displaylogo: false,
-    modeBarButtonsToRemove: REMOVED_MODE_BAR_BUTTONS,
-    toImageButtonOptions: TO_IMAGE_BUTTON_OPTIONS
+    displayModeBar: false
 };
 
 export const GLOBAL_TRACES = {
     hoverlabel: {
         align: "left",
-        font: { size: 11 }
+        font: { size: 12 }
     },
     marker: { line: { width: 1.5 } }
 };
@@ -136,22 +125,35 @@ export const DIAGONAL_LINE = {
     dash: "dash"
 };
 
+export const ANNOTATION_FONT = {
+    default: {
+        family: FONT_FAMILY,
+        size: 12,
+        color: THEME_COLOURS.text
+    }
+};
+
 export const LINE_ANNOTATIONS = {
     backgroundOpacity: 0.9,
     diagonalTextAngle: -12,
-    fontSize: 11,
     offset: 8
 };
 
 export const CHART_RANGES = {
     chart1a: { x: [2016, 2025.1], y: [4500000, 7000000] },
-    chart1b: { x: null, y: null },
+    chart1b: { x: null, y: [0, 112] },
     chart2: { x: null, y: [59, 96] },
     chart3: { x: [55, 86], y: null },
     chart4: { x: [-3, 19], y: null },
     chart5: { x: [45, 100], y: [45, 100] },
     chart6: { x: [0, 38.2], y: [-8, 17] }, // x upper bound medianEmploymentGain * 2
     chart7: { x: null, y: [-5, 17.4] }
+};
+
+
+// chart 1a
+export const CHART_1A_DIMENSIONS = {
+    rightMargin: 270
 };
 
 
@@ -202,30 +204,6 @@ export const CHART_4_DIMENSIONS = {
     rightMargin: 20,
 };
 
-export const CHART_4_ANNOTATIONS = {
-    arrowhead: 3,
-    arrowsize: 1,
-    arrowwidth: 1.5,
-    standoff: 7, // how much room is between the arrow and surrounding elements
-    startstandoff: 2, // distance between the text and the arrow
-    xanchor: "right",
-    yanchor: "middle",
-    labels: [
-        {
-            subgroupDimension: "Home language",
-            text: "The home<br> language<br> gap closes",
-            ax: -80,
-            ay: 26
-        },
-        {
-            subgroupDimension: "Disability",
-            text: "The disability gap persists",
-            ax: -80,
-            ay: 26
-        }
-    ]
-};
-
 
 // chart 6
 export const CHART_6_RENDERING = {
@@ -254,6 +232,7 @@ export const CHART_7_RENDERING = {
 export const CHART_7_VALUES = {
     gapPatternThresholds: {
         nearZero: 1,
+        smallThroughout: 2,
         meaningful: 3,
         substantialShrinkRatio: 0.5
     },
@@ -288,7 +267,7 @@ export const CHART_7_VALUES = {
 
 export const CHART_7_TEXT = {
     cardLabels: {
-        selector: "Choose a subgroup comparison",
+        selector: "Choose a subgroup comparison:",
         referenceGroup: "Reference group",
         comparisonGroup: "Comparison group",
         gapChange: "Gap change"

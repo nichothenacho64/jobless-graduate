@@ -12,10 +12,13 @@
     --grey-500: #a0a0a0;
     --text-colour: #1F2328;
     --background-colour: #FFFDF9;
+    --background-colour-opaque: #fffdf95e;
+    --label-colour: #e5e0d7;
+    --label-colour-opaque: #e5e0d733;
 }
 
 body {
-    font-family: "Source Sans 3", sans-serif; 
+    font-family: "Source Sans 3", sans-serif;
     background-color: var(--background-colour);
     font-size: 0.85rem;
 }
@@ -25,8 +28,8 @@ main {
 }
 
 .explanatory-modal {
-   border-radius: 15px;
-   padding: 8px;
+    border-radius: 15px;
+    padding: 8px;
 }
 
 .blue-modal {
@@ -63,14 +66,23 @@ main {
     margin-top: 0.25rem;
     margin-bottom: 0.75rem;
     overflow-wrap: anywhere;
-    width: max(
-        0px,
-        calc(100% - var(--chart-source-label-left-inset) - var(--chart-source-label-right-inset))
-    );
+    width: max(0px,
+            calc(100% - var(--chart-source-label-left-inset) - var(--chart-source-label-right-inset)));
+}
+
+#chart7Container {
+    --chart-7-panel-width: 80%;
+}
+
+#chart7Container h1 {
+    width: var(--chart-7-panel-width);
 }
 
 #chart7Panel {
-    width: 75%;
+    padding: 1.5em;
+    border-radius: 25px;
+    width: var(--chart-7-panel-width);
+    background-color: var(--label-colour-opaque);
 }
 
 #chart7SubgroupComparator {
@@ -79,6 +91,6 @@ main {
 
 #chart7ExplanationCard {
     color: var(--text-colour);
-    background-color: var(--background-colour);
+    background-color: var(--background-colour-opaque);
     border-color: var(--grey-500);
 }
