@@ -3,26 +3,26 @@ import {
     getTrace,
     getTraceRow,
     loadChartData,
-} from "../data.js";
+} from "../core/data.js";
 import {
     createReferenceLine,
     renderChart,
-} from "../rendering.js";
+} from "../plotly/rendering.js";
 import {
     createDumbbellChartLegend,
     createChart4HoverLabels,
     getChartHeight,
     getChart4YTickLabels,
     getYTickValues,
-} from "../chart-helpers.js";
+} from "../plotly/chart-primitives.js";
 import {
     CHART_4_DIMENSIONS,
     CHART_RANGES,
     CHART_TITLES,
     DUMBBELL_LINE,
     THEME_COLOURS
-} from "../config.js";
-import { createChart4Annotations } from "../annotations.js";
+} from "../core/config.js";
+import { createChart4Annotations } from "../plotly/annotations.js";
 
 export async function renderChart4(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
@@ -63,7 +63,7 @@ export async function renderChart4(chartId) {
             x: [shortTermGap, mediumTermGap],
             y: [traceNumber, traceNumber],
             mode: "lines",
-            line: DUMBBELL_LINE,
+            line: DUMBBELL_LINE.default,
             showlegend: false,
             hoverinfo: "none"
         };
@@ -99,5 +99,5 @@ export async function renderChart4(chartId) {
         }
     };
 
-    renderChart(chartId, data, layout);
+    renderChart(chartId, data, layout, chartMetadata);
 }

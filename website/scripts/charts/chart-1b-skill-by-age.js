@@ -2,13 +2,13 @@ import {
     getAxisLabel,
     getTrace,
     loadChartData,
-} from "../data.js";
+} from "../core/data.js";
 import {
     CHART_1B_TRACE_COLOURS,
     CHART_TITLES
-} from "../config.js";
-import { renderChart } from "../rendering.js";
-import { unpack } from "../utils.js";
+} from "../core/config.js";
+import { renderChart } from "../plotly/rendering.js";
+import { unpack } from "../core/utils.js";
 
 const SKILL_LEVEL_LEGEND_LABELS = [
     "Skill level 1 (highest)",
@@ -63,5 +63,5 @@ export async function renderChart1b(chartId) {
         },
     };
 
-    renderChart(chartId, data, layout);
+    renderChart(chartId, data, layout, chartMetadata);
 }

@@ -3,8 +3,8 @@ import {
     FONT_FAMILY,
     LINE_ANNOTATIONS,
     THEME_COLOURS
-} from "./config.js";
-import { getTrace, getTraceRow } from "./data.js";
+} from "../core/config.js";
+import { getTrace, getTraceRow } from "../core/data.js";
 import { createTransparentFillColour } from "./rendering.js";
 
 export function createChart3Labels(chartData) {

@@ -4,13 +4,13 @@ import {
     getSeriesValue,
     getTrace,
     loadChartData,
-} from "../data.js";
-import { renderChart } from "../rendering.js";
+} from "../core/data.js";
+import { renderChart } from "../plotly/rendering.js";
 import {
     CHART_2_TRACE_COLOURS,
     CHART_RANGES,
     CHART_TITLES,
-} from "../config.js";
+} from "../core/config.js";
 
 // chart 2: gradually built up from basic examples featured here: https://plotly.com/javascript/line-charts/
 
@@ -59,5 +59,5 @@ export async function renderChart2(chartId) {
         },
     };
 
-    renderChart(chartId, data, layout);
+    renderChart(chartId, data, layout, chartMetadata);
 }

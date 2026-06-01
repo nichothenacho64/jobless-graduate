@@ -1,6 +1,6 @@
-import { getAxisLabel, loadChartData } from "../data.js";
-import { renderChart } from "../rendering.js";
-import { createChart3Labels } from "../annotations.js";
+import { getAxisLabel, loadChartData } from "../core/data.js";
+import { renderChart } from "../plotly/rendering.js";
+import { createChart3Labels } from "../plotly/annotations.js";
 import {
     createDumbbellChartLegend,
     createAxisMarker,
@@ -8,14 +8,14 @@ import {
     getChartHeight,
     getChart3YTickLabels,
     getYTickValues,
-} from "../chart-helpers.js";
+} from "../plotly/chart-primitives.js";
 import {
     CHART_3_DIMENSIONS,
     CHART_3_RENDERING,
     CHART_RANGES,
     CHART_TITLES,
     DUMBBELL_LINE
-} from "../config.js";
+} from "../core/config.js";
 
 export async function renderChart3(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
@@ -31,16 +31,13 @@ export async function renderChart3(chartId) {
         const lowerGroupPercentage = row["lower_group_pct"];
         const higherGroupPercentage = row["higher_group_pct"];
         const isHomeLanguage = row["subgroup_dimension"] === CHART_3_RENDERING.homeLanguageDimension;
-        
+
         let traceColour = CHART_3_RENDERING.defaultColour;
-        let dumbbellLine = DUMBBELL_LINE;
+        let dumbbellLine = DUMBBELL_LINE.default;
 
         if (isHomeLanguage) {
-            traceColour = CHART_3_RENDERING.homeLanguageColour;
-            dumbbellLine = {
-                width: DUMBBELL_LINE.width,
-                color: CHART_3_RENDERING.homeLanguageColour
-            };
+            traceColour = DUMBBELL_LINE.emphasised.color;
+            dumbbellLine = DUMBBELL_LINE.emphasised;
         }
 
         const lowerGroupMarker = createAxisMarker(row, traceNumber, "lower_group", traceColour, xLabel);
@@ -95,5 +92,5 @@ export async function renderChart3(chartId) {
         }
     };
 
-    renderChart(chartId, data, layout);
+    renderChart(chartId, data, layout, chartMetadata);
 }

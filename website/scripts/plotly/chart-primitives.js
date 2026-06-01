@@ -1,23 +1,14 @@
 import {
     CHART_6_RENDERING,
+    CHART_3_SHORT_LABELS,
     DIAGONAL_LINE,
     DISCIPLINE_FAMILY_RENDERING,
     MARKER_SIZE,
     THEME_COLOURS
-} from "./config.js";
-import { getAxisLabel } from "./data.js";
+} from "../core/config.js";
+import { getAxisLabel } from "../core/data.js";
 import { createTransparentFillColour } from "./rendering.js";
-import { formatOneDecimal } from "./utils.js";
-
-const CHART_3_SHORT_LABELS = {
-    "Socio-economic status": "Socio-economic",
-    "Disability reported": "Disability",
-    "No disability reported": "No disability"
-};
-
-function getChart3ShortLabel(label) {
-    return CHART_3_SHORT_LABELS[label] ?? label;
-}
+import { formatOneDecimal } from "../core/utils.js";
 
 export function createAxisMarker(row, traceNumber, groupColumn, colour, valueLabel) {
     const group = row[groupColumn];
@@ -145,6 +136,10 @@ export function getYTickValues(chartData) {
     }
 
     return yTickValues;
+}
+
+function getChart3ShortLabel(label) {
+    return CHART_3_SHORT_LABELS[label] ?? label;
 }
 
 export function getChart3YTickLabels(chartData) {

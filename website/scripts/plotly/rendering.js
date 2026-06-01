@@ -5,8 +5,9 @@ import {
     GLOBAL_LAYOUT,
     THEME_COLOURS,
     HOVERLABEL_BORDER_COLOURS
-} from "./config.js";
-import { capitaliseWord, clampValue } from "./utils.js";
+} from "../core/config.js";
+import { capitaliseWord, clampValue } from "../core/utils.js";
+import { renderChartSourceLabel } from "./source-labels.js";
 
 export function addGlobalLayoutDefaults(layout) {
     return {
@@ -126,9 +127,24 @@ export function createTransparentFillColour(colour, opacity) {
     return colour + alphaHex;
 }
 
-export function renderChart(chartId, data, layout) {
+export async function renderChart(chartId, data, layout, chartMetadata) {
     const chartElementId = getChartElementId(chartId);
     const renderedData = addGlobalTraceDefaults(data);
     const renderedLayout = addGlobalLayoutDefaults(layout);
-    return Plotly.newPlot(chartElementId, renderedData, renderedLayout, GLOBAL_CONFIG);
+
+    const chart = await Plotly.newPlot(chartElementId, renderedData, renderedLayout, GLOBAL_CONFIG);
+
+    if (chart.__sourceLabelAfterPlotHandler) {
+        chart.removeListener("plotly_afterplot", chart.__sourceLabelAfterPlotHandler);
+    }
+
+    const sourceLabelHandler = () => { // when plotly finishes plotting, run the function with the current chart's details
+        renderChartSourceLabel(chartId, chartMetadata, chart);
+    };
+
+    chart.__sourceLabelAfterPlotHandler = sourceLabelHandler;
+    chart.on("plotly_afterplot", sourceLabelHandler);
+    sourceLabelHandler();
+
+    return chart;
 }

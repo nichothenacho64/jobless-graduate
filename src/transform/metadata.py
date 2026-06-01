@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-
 CHART_1A_METADATA = {
     "labels": {
         "dimensions": {
@@ -41,6 +40,18 @@ CHART_1B_METADATA = {
 }
 
 CHART_2_METADATA = {
+    "sources": {
+        "gos_national_report_2024": {
+            "source_system": "QILT",
+            "dataset": "GOS",
+            "source": "2024 GOS National Report",
+            "figure": "Figure 3",
+            "description": (
+                "Domestic graduate full-time employment rate by study level, 2016–24"
+            ),
+            "label": "2024 GOS National Report Figure 3",
+        },
+    },
     "labels": {
         "dimensions": {
             "display_year": {

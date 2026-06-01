@@ -3,13 +3,13 @@ import {
     CHART_TITLES,
     MARKER_SIZE,
     THEME_COLOURS
-} from "../config.js";
+} from "../core/config.js";
 import {
     getAxisLabel,
     getAxisValues,
     loadChartData,
-} from "../data.js";
-import { renderChart } from "../rendering.js";
+} from "../core/data.js";
+import { renderChart } from "../plotly/rendering.js";
 
 export async function renderChart1a(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
@@ -80,5 +80,5 @@ export async function renderChart1a(chartId) {
         },
     };
 
-    renderChart(chartId, data, layout);
+    renderChart(chartId, data, layout, chartMetadata);
 }

@@ -7,11 +7,11 @@ import {
     DUMBBELL_LINE,
     MARKER_SIZE,
     THEME_COLOURS
-} from "./config.js";
-import { getComparisonLabel, getGapSentence } from "./chart-helpers.js";
-import { getAxisLabel } from "./data.js";
-import { createReferenceLine, renderChart } from "./rendering.js";
-import { formatOneDecimal, sortByKeyAscending } from "./utils.js";
+} from "../core/config.js";
+import { getComparisonLabel, getGapSentence } from "../plotly/chart-primitives.js";
+import { getAxisLabel } from "../core/data.js";
+import { createReferenceLine, renderChart } from "../plotly/rendering.js";
+import { formatOneDecimal, sortByKeyAscending } from "../core/utils.js";
 
 function getChart7TimeWindowLabel(row, chartMetadata) {
     return chartMetadata.labels.time_windows[row["time_window"]];
@@ -26,7 +26,7 @@ function createChart7Trace(selectedRows, chartMetadata, gapPattern) {
 
     const line = {
         color: gapPattern.colour,
-        width: DUMBBELL_LINE.width
+        width: DUMBBELL_LINE.default.width
     };
 
     if (gapPattern.dash) {
@@ -335,5 +335,5 @@ export function renderChart7SelectedComparison(
     const layout = createChart7Layout(selectedRows, chartMetadata, CHART_RANGES.chart7.y);
 
     updateChart7ExplanationCard(explanationCard, selectedRows, gapSummary, gapPattern);
-    renderChart(chartId, [trace], layout);
+    renderChart(chartId, [trace], layout, chartMetadata);
 }

@@ -43,6 +43,10 @@ export function clampValue(value, min, max) {
     return Math.min(Math.max(value, min), max);
 }
 
+export function getRoundedNonNegativeValue(value) {
+    return Math.max(0, Math.round(value ?? 0));
+}
+
 export function calculateMedian(values) {
     const numericValues = createNumberArray(values);
 
@@ -59,4 +63,38 @@ export function calculateMedian(values) {
 
 export function formatOneDecimal(value) {
     return Number(value).toFixed(1);
+}
+
+export function objectHasValues(object, keys) {
+    if (!object) return false;
+
+    for (let key of keys) {
+        const value = object[key];
+
+        if (value === undefined || value === null || value === "") {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+export function joinItemsWithAnd(items) {
+    let joinedItems = "";
+
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const isFirstItem = i === 0;
+        const isFinalItem = i === items.length - 1;
+
+        if (isFirstItem) {
+            joinedItems += item;
+        } else if (isFinalItem) {
+            joinedItems += " & " + item;
+        } else {
+            joinedItems += ", " + item;
+        }
+    }
+
+    return joinedItems;
 }

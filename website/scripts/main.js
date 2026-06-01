@@ -17,7 +17,7 @@ import {
     CHART_5_ID,
     CHART_6_ID,
     CHART_7_ID,
-} from "./config.js";
+} from "./core/config.js";
 
 await renderChart1a(CHART_1A_ID);
 await renderChart1b(CHART_1B_ID);

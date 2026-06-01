@@ -3,25 +3,25 @@ import {
     CHART_TITLES,
     MARKER_SIZE,
     THEME_COLOURS
-} from "../config.js";
+} from "../core/config.js";
 import {
     getAxisLabel,
     getAxisValues,
     loadChartData,
-} from "../data.js";
+} from "../core/data.js";
 import {
     createChart6QuadrantPanels,
     getRowsByFamilyColourKey
-} from "../chart-helpers.js";
+} from "../plotly/chart-primitives.js";
 import {
     createChart6XAnnotation,
     createChart6YAnnotation
-} from "../annotations.js";
+} from "../plotly/annotations.js";
 import {
     createReferenceLine,
     renderChart
-} from "../rendering.js";
-import { calculateMedian, unpack } from "../utils.js";
+} from "../plotly/rendering.js";
+import { calculateMedian, unpack } from "../core/utils.js";
 
 export async function renderChart6(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
@@ -118,5 +118,5 @@ export async function renderChart6(chartId) {
         annotations: [xMedianLineAnnotation, yMedianLineAnnotation]
     };
 
-    renderChart(chartId, data, layout);
+    renderChart(chartId, data, layout, chartMetadata);
 }

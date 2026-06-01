@@ -2,18 +2,18 @@ import {
     CHART_RANGES,
     CHART_TITLES,
     MARKER_SIZE
-} from "../config.js";
+} from "../core/config.js";
 import {
     getAxisLabel,
     loadChartData,
-} from "../data.js";
+} from "../core/data.js";
 import {
     createChart5EqualityTrace,
     getRowsByFamilyColourKey,
-} from "../chart-helpers.js";
-import { createChart5EqualityAnnotation } from "../annotations.js";
-import { renderChart } from "../rendering.js";
-import { unpack } from "../utils.js";
+} from "../plotly/chart-primitives.js";
+import { createChart5EqualityAnnotation } from "../plotly/annotations.js";
+import { renderChart } from "../plotly/rendering.js";
+import { unpack } from "../core/utils.js";
 
 export async function renderChart5(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
@@ -86,5 +86,5 @@ export async function renderChart5(chartId) {
         annotations: [equalityLineAnnotation]
     };
 
-    renderChart(chartId, data, layout);
+    renderChart(chartId, data, layout, chartMetadata);
 }

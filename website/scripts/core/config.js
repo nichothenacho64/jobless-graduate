@@ -15,7 +15,7 @@ export const CHART_METADATA_ID = "chart_metadata";
 export const CHART_TITLES = {
     chart1a: "More Australians now hold degrees",
     chart1b: "High-skill work is age-sorted",
-    chart2: "The first year is the weak point",
+    chart2: "The first year after graduation is the weak point",
     chart3: "The bottleneck is uneven",
     chart4: "Some gaps close while others persist",
     chart5: "Some fields recover after the first graduate year",
@@ -86,6 +86,11 @@ export const GLOBAL_TRACES = {
 
 
 // shared chart labels
+export const SOURCE_LABEL_TEXT = {
+    singular: "Source",
+    plural: "Sources"
+};
+
 export const UNITS_TO_LABELS = {
     "percentage_point": " (pp)",
     "percent": " (%)",
@@ -115,8 +120,14 @@ export const DISCIPLINE_FAMILY_RENDERING = {
 };
 
 export const DUMBBELL_LINE = {
-    width: 2.5,
-    color: THEME_COLOURS.grey500
+    default: {
+        width: 2.5,
+        color: THEME_COLOURS.grey500
+    },
+    emphasised: {
+        width: 2.5,
+        color: THEME_COLOURS.amber700
+    }
 };
 
 export const DIAGONAL_LINE = {
@@ -135,7 +146,7 @@ export const LINE_ANNOTATIONS = {
 export const CHART_RANGES = {
     chart1a: { x: [2016, 2025.1], y: [4500000, 7000000] },
     chart1b: { x: null, y: null },
-    chart2: { x: null, y: [69, 96] },
+    chart2: { x: null, y: [59, 96] },
     chart3: { x: [55, 86], y: null },
     chart4: { x: [-3, 19], y: null },
     chart5: { x: [45, 100], y: [45, 100] },
@@ -156,8 +167,8 @@ export const CHART_1B_TRACE_COLOURS = [
 
 // chart 2
 export const CHART_2_TRACE_COLOURS = [
-    THEME_COLOURS.amber500, 
-    THEME_COLOURS.blue500, 
+    THEME_COLOURS.amber500,
+    THEME_COLOURS.blue500,
     THEME_COLOURS.amber700
 ];
 
@@ -175,8 +186,13 @@ export const CHART_3_DIMENSIONS = {
 
 export const CHART_3_RENDERING = {
     defaultColour: THEME_COLOURS.amber500,
-    homeLanguageDimension: "Home language",
-    homeLanguageColour: THEME_COLOURS.amber700
+    homeLanguageDimension: "Home language"
+};
+
+export const CHART_3_SHORT_LABELS = {
+    "Socio-economic status": "Socio-economic",
+    "Disability reported": "Disability",
+    "No disability reported": "No disability"
 };
 
 export const CHART_4_DIMENSIONS = {

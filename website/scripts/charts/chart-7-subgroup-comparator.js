@@ -1,11 +1,11 @@
-import { CHART_7_TEXT, CHART_7_RENDERING } from "../config.js";
-import { loadChartData } from "../data.js";
+import { CHART_7_TEXT, CHART_7_RENDERING } from "../core/config.js";
+import { loadChartData } from "../core/data.js";
 import {
     createChart7DropdownItems,
     getChart7Selectors,
     renderChart7SelectedComparison,
     updateChart7DropdownSelection,
-} from "../subgroup-comparator-helpers.js";
+} from "../interactions/subgroup-comparator.js";
 
 export async function renderChart7(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);

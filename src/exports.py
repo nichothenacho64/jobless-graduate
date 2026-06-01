@@ -55,8 +55,12 @@ def build_chart_metadata(
     metadata: ChartMetadata = {}
 
     for chart_id, chart_table in chart_tables.items():
-        sources = _build_sources(_collect_source_keys(chart_table), chart_sources)
         chart_specific_metadata = _chart_metadata(chart_table)
+        sources = _build_sources(
+            _collect_source_keys(chart_table),
+            chart_sources,
+            _chart_source_metadata(chart_specific_metadata),
+        )
         chart_labels: dict[str, object] = {
             "sources": _build_source_labels(sources),
         }
@@ -141,11 +145,22 @@ def _collect_source_keys(chart_table: pd.DataFrame) -> list[str]:
 
 
 def _build_sources(
-    source_keys: list[str], chart_sources: Mapping[str, object]
+    source_keys: list[str],
+    chart_sources: Mapping[str, object],
+    chart_source_metadata: Mapping[str, object],
 ) -> dict[str, object]:
     sources: dict[str, object] = {}
 
     for source_key in source_keys:
+        if source_key in chart_source_metadata:
+            source_metadata = chart_source_metadata[source_key]
+            if not isinstance(source_metadata, Mapping):
+                raise ValueError(
+                    f"Chart source metadata for {source_key!r} must be a mapping."
+                )
+            sources[source_key] = dict(source_metadata)
+            continue
+
         if source_key not in chart_sources:
             raise KeyError(
                 f"Missing prepared source for chart source key {source_key!r}."
@@ -180,6 +195,10 @@ def _build_source_labels(chart_sources: Mapping[str, object]) -> dict[str, str]:
 
 
 def _derive_source_label(source_key: str, source: Mapping[str, object]) -> str:
+    label = source.get("label")
+    if isinstance(label, str):
+        return label
+
     dataset = source.get("dataset")
 
     if dataset in {"GOS", "GOS-L"}:
@@ -232,3 +251,11 @@ def _chart_metadata(chart_table: pd.DataFrame) -> ChartMetadata:
         raise ValueError("Chart table 'chart_metadata' attribute must be a mapping.")
 
     return dict(chart_metadata)
+
+
+def _chart_source_metadata(chart_metadata: Mapping[str, object]) -> Mapping[str, object]:
+    chart_sources = chart_metadata.get("sources", {})
+    if not isinstance(chart_sources, Mapping):
+        raise ValueError("Chart metadata 'sources' section must be a mapping.")
+
+    return chart_sources
