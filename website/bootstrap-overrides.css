@@ -1,4 +1,4 @@
-.chart-7-dropdown-toggle {
+#chart7DropdownButton {
     --bs-btn-color: var(--background-colour);
     --bs-btn-bg: var(--amber-500);
     --bs-btn-border-color: var(--amber-500);
@@ -10,7 +10,7 @@
     --bs-btn-active-border-color: var(--amber-700);
 }
 
-.chart-7-dropdown-menu {
+#chart7DropdownMenu {
     --bs-dropdown-bg: var(--background-colour);
     --bs-dropdown-link-color: var(--text-colour);
     --bs-dropdown-link-hover-bg: var(--amber-300);

@@ -1,8 +1,6 @@
 import {
-    CHART_5_GAIN_VALUES,
     CHART_TITLES,
-    MARKER_SIZE,
-    THEME_COLOURS
+    MARKER_SIZE
 } from "../config.js";
 import {
     getAxisLabel,
@@ -10,8 +8,7 @@ import {
 } from "../data.js";
 import {
     createChart5EqualityTrace,
-    getChart5MarkerColour,
-    groupRowsByMarkerColour,
+    getRowsByFamilyColourKey,
 } from "../chart-helpers.js";
 import {
     renderChart,
@@ -29,53 +26,40 @@ export async function renderChart5(chartId) {
 
     const data = [];
     const equalityLineTrace = createChart5EqualityTrace(50, 100);
-    const gainGroups = [
-        {
-            name: `${CHART_5_GAIN_VALUES.high}+ pp`,
-            colour: THEME_COLOURS.amber700,
-            rows: []
-        },
-        {
-            name: `${CHART_5_GAIN_VALUES.medium}-${CHART_5_GAIN_VALUES.high - 1} pp`,
-            colour: THEME_COLOURS.amber500,
-            rows: []
-        },
-        {
-            name: `${CHART_5_GAIN_VALUES.low}-${CHART_5_GAIN_VALUES.medium - 1} pp`,
-            colour: THEME_COLOURS.blue500,
-            rows: []
-        },
-        {
-            name: `<${CHART_5_GAIN_VALUES.low} pp`,
-            colour: THEME_COLOURS.blue700,
-            rows: []
-        },
-    ];
-
-    groupRowsByMarkerColour(gainGroups, chartData, getChart5MarkerColour, CHART_5_GAIN_VALUES);
+    const familyColourGroups = getRowsByFamilyColourKey(chartData);
 
     equalityLineTrace.showlegend = false;
     
     data.push(equalityLineTrace);
 
-    for (let gainGroup of gainGroups) {
+    for (let familyColourGroup of familyColourGroups) {
+        const customData = [];
+
+        for (let row of familyColourGroup.rows) {
+            customData.push([
+                row[yKey] - row[xKey],
+                row["discipline_family"]
+            ]);
+        }
+
         const trace = {
-            x: unpack(gainGroup.rows, xKey),
-            y: unpack(gainGroup.rows, yKey),
-            text: unpack(gainGroup.rows, "study_area"),
-            customdata: gainGroup.rows.map(row => row[yKey] - row[xKey]),
-            name: gainGroup.name,
+            x: unpack(familyColourGroup.rows, xKey),
+            y: unpack(familyColourGroup.rows, yKey),
+            text: unpack(familyColourGroup.rows, "study_area"),
+            customdata: customData,
+            name: familyColourGroup.name,
             mode: "markers",
             type: "scatter",
             showlegend: true,
             marker: {
                 size: MARKER_SIZE.small,
-                color: gainGroup.colour,
+                color: familyColourGroup.colour,
             },
             hovertemplate: `<b>%{text}</b><br>` +
                 `${xLabel}: %{x}%<br>` +
                 `${yLabel}: %{y}%<br>` +
-                `Change: %{customdata:.1f} pp` +
+                `Change: %{customdata[0]:.1f} pp<br>` +
+                `Discipline family: %{customdata[1]}` +
                 `<extra></extra>`
         };
 
@@ -86,7 +70,7 @@ export async function renderChart5(chartId) {
         title: { text: CHART_TITLES.chart5 },
         showlegend: true,
         legend: {
-            title: { text: "Medium-term gain over short-term FTE" },
+            title: { text: "Family average on this chart" },
             traceorder: "normal"
         },
         xaxis: {

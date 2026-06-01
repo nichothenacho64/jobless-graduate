@@ -3,9 +3,13 @@ from __future__ import annotations
 import pandas as pd
 
 from src.preparation.qilt import clean_qilt_display_text
-from src.transform.chart_helpers import select_chart_table_schema
+from src.transform.chart_helpers import (
+    add_discipline_family_colour_fields,
+    select_chart_table_schema,
+)
 from src.transform.constants import (
     CHART_5_CONSTANTS,
+    DISCIPLINE_FAMILY_CONSTANTS,
     GOS_L_6_SOURCE_KEY,
 )
 from src.transform.metadata import CHART_5_METADATA
@@ -31,6 +35,10 @@ def build_chart_5_table(gos_l_area_sheet: QILTPreparedSheet) -> pd.DataFrame:
         )
 
     chart_table = pd.DataFrame(prepared_rows)
+    chart_table = add_discipline_family_colour_fields(
+        chart_table,
+        DISCIPLINE_FAMILY_CONSTANTS["colour_columns"],
+    )
     chart_table = chart_table.sort_values("study_area", kind="mergesort")
     chart_table = select_chart_table_schema(
         chart_table,

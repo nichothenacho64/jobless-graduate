@@ -1,21 +1,21 @@
-study_area,fte_gain_pp,underutilisation_reduction_pp,fit_metric_key,employment_source_key,fit_source_key
-Agriculture and environmental studies,20.7,14.6,skills_education_utilisation,gos_l_6,gos_l_26
-Architecture and built environment,21.4,4.7,skills_education_utilisation,gos_l_6,gos_l_26
-Business and management,19.7,7.7,skills_education_utilisation,gos_l_6,gos_l_26
-Communications,28.5,3.0,skills_education_utilisation,gos_l_6,gos_l_26
-Computing and information systems,20.6,6.7,skills_education_utilisation,gos_l_6,gos_l_26
-Creative arts,31.7,1.4,skills_education_utilisation,gos_l_6,gos_l_26
-Dentistry,4.1,5.4,skills_education_utilisation,gos_l_6,gos_l_26
-Engineering,11.0,3.4,skills_education_utilisation,gos_l_6,gos_l_26
-Health services and support,18.5,13.1,skills_education_utilisation,gos_l_6,gos_l_26
-"Humanities, culture and social sciences",28.0,9.9,skills_education_utilisation,gos_l_6,gos_l_26
-Law and paralegal studies,22.2,13.5,skills_education_utilisation,gos_l_6,gos_l_26
-Medicine,10.7,0.4,skills_education_utilisation,gos_l_6,gos_l_26
-Nursing,15.7,5.9,skills_education_utilisation,gos_l_6,gos_l_26
-Pharmacy,-0.6,-4.2,skills_education_utilisation,gos_l_6,gos_l_26
-Psychology,24.8,11.3,skills_education_utilisation,gos_l_6,gos_l_26
-Rehabilitation,1.5,0.5,skills_education_utilisation,gos_l_6,gos_l_26
-Science and mathematics,25.5,11.6,skills_education_utilisation,gos_l_6,gos_l_26
-Social work,17.4,1.7,skills_education_utilisation,gos_l_6,gos_l_26
-Teacher education,13.9,-0.1,skills_education_utilisation,gos_l_6,gos_l_26
-Veterinary science,4.6,-7.6,skills_education_utilisation,gos_l_6,gos_l_26
+study_area,discipline_family,family_colour_key,fte_gain_pp,underutilisation_reduction_pp,fit_metric_key,employment_source_key,fit_source_key
+Agriculture and environmental studies,"STEM, built & environmental",stronger,20.7,14.6,skills_education_utilisation,gos_l_6,gos_l_26
+Architecture and built environment,"STEM, built & environmental",stronger,21.4,4.7,skills_education_utilisation,gos_l_6,gos_l_26
+Business and management,"Business, law & society",weaker,19.7,7.7,skills_education_utilisation,gos_l_6,gos_l_26
+Communications,"Creative, communication & services",weakest,28.5,3.0,skills_education_utilisation,gos_l_6,gos_l_26
+Computing and information systems,"STEM, built & environmental",stronger,20.6,6.7,skills_education_utilisation,gos_l_6,gos_l_26
+Creative arts,"Creative, communication & services",weakest,31.7,1.4,skills_education_utilisation,gos_l_6,gos_l_26
+Dentistry,Health & education,strongest,4.1,5.4,skills_education_utilisation,gos_l_6,gos_l_26
+Engineering,"STEM, built & environmental",stronger,11.0,3.4,skills_education_utilisation,gos_l_6,gos_l_26
+Health services and support,Health & education,strongest,18.5,13.1,skills_education_utilisation,gos_l_6,gos_l_26
+"Humanities, culture and social sciences","Business, law & society",weaker,28.0,9.9,skills_education_utilisation,gos_l_6,gos_l_26
+Law and paralegal studies,"Business, law & society",weaker,22.2,13.5,skills_education_utilisation,gos_l_6,gos_l_26
+Medicine,Health & education,strongest,10.7,0.4,skills_education_utilisation,gos_l_6,gos_l_26
+Nursing,Health & education,strongest,15.7,5.9,skills_education_utilisation,gos_l_6,gos_l_26
+Pharmacy,Health & education,strongest,-0.6,-4.2,skills_education_utilisation,gos_l_6,gos_l_26
+Psychology,"Business, law & society",weaker,24.8,11.3,skills_education_utilisation,gos_l_6,gos_l_26
+Rehabilitation,Health & education,strongest,1.5,0.5,skills_education_utilisation,gos_l_6,gos_l_26
+Science and mathematics,"STEM, built & environmental",stronger,25.5,11.6,skills_education_utilisation,gos_l_6,gos_l_26
+Social work,"Business, law & society",weaker,17.4,1.7,skills_education_utilisation,gos_l_6,gos_l_26
+Teacher education,Health & education,strongest,13.9,-0.1,skills_education_utilisation,gos_l_6,gos_l_26
+Veterinary science,Health & education,strongest,4.6,-7.6,skills_education_utilisation,gos_l_6,gos_l_26

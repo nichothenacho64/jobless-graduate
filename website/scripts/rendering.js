@@ -6,7 +6,7 @@ import {
     THEME_COLOURS,
     HOVERLABEL_BORDER_COLOURS
 } from "./config.js";
-import { capitaliseWord } from "./utils.js";
+import { capitaliseWord, clampValue } from "./utils.js";
 
 export function addGlobalLayoutDefaults(layout) {
     return {
@@ -116,6 +116,14 @@ export function createReferenceLine(axis, value, lineColour, lineWidth, layer = 
             width: lineWidth
         }
     };
+}
+
+export function createTransparentFillColour(colour, opacity) {
+    const clampedOpacity = clampValue(opacity, 0, 1);
+    const alphaValue = Math.round(clampedOpacity * 255);
+    const alphaHex = alphaValue.toString(16).padStart(2, "0").toUpperCase();
+
+    return colour + alphaHex;
 }
 
 export function renderChart(chartId, data, layout) {

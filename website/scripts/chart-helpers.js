@@ -1,9 +1,12 @@
 import {
+    CHART_6_RENDERING,
     DIAGONAL_LINE,
+    DISCIPLINE_FAMILY_RENDERING,
     MARKER_SIZE,
     THEME_COLOURS
 } from "./config.js";
 import { getAxisLabel, getAxisValues, getChartPoints } from "./data.js";
+import { createTransparentFillColour } from "./rendering.js";
 import { calculateMean, getBestFitNumerator, getBestFitDenominator, formatOneDecimal } from "./utils.js";
 
 const CHART_3_SHORT_LABELS = {
@@ -194,6 +197,105 @@ export function createChart5EqualityTrace(xStart, xEnd) {
     };
 }
 
+export function getRowsByFamilyColourKey(chartData) {
+    const familyGroups = [];
+
+    for (let colourKey of DISCIPLINE_FAMILY_RENDERING.order) {
+        for (let row of chartData) {
+            if (row["family_colour_key"] !== colourKey) continue;
+
+            let familyGroup;
+            const disciplineFamily = row["discipline_family"];
+
+            for (let group of familyGroups) {
+                const sameFamily = group.disciplineFamily === disciplineFamily;
+                const sameColourKey = group.familyColourKey === colourKey;
+
+                if (sameFamily && sameColourKey) {
+                    familyGroup = group;
+                    break;
+                }
+            }
+
+            if (!familyGroup) {
+                familyGroup = {
+                    name: disciplineFamily,
+                    disciplineFamily,
+                    familyColourKey: colourKey,
+                    colour: DISCIPLINE_FAMILY_RENDERING.colours[colourKey],
+                    rows: []
+                };
+
+                familyGroups.push(familyGroup);
+            }
+
+            familyGroup.rows.push(row);
+        }
+    }
+
+    return familyGroups;
+}
+
+export function createChart6QuadrantPanels(xMedian, yMedian, xRange, yRange) {
+    const quadrantPanels = [];
+    const leftPanelOpacity = CHART_6_RENDERING.leftQuadrantPanelOpacity;
+    const rightPanelOpacity = CHART_6_RENDERING.rightQuadrantPanelOpacity;
+    const topRightPanel = createChart6QuadrantPanel(
+        xMedian,
+        xRange[1],
+        yMedian,
+        yRange[1],
+        THEME_COLOURS.blue700,
+        rightPanelOpacity
+    );
+    const bottomRightPanel = createChart6QuadrantPanel(
+        xMedian,
+        xRange[1],
+        yRange[0],
+        yMedian,
+        THEME_COLOURS.amber700,
+        rightPanelOpacity
+    );
+    const topLeftPanel = createChart6QuadrantPanel(
+        xRange[0],
+        xMedian,
+        yMedian,
+        yRange[1],
+        THEME_COLOURS.blue300,
+        leftPanelOpacity
+    );
+    const bottomLeftPanel = createChart6QuadrantPanel(
+        xRange[0],
+        xMedian,
+        yRange[0],
+        yMedian,
+        THEME_COLOURS.amber300,
+        leftPanelOpacity
+    );
+
+    quadrantPanels.push(topRightPanel);
+    quadrantPanels.push(bottomRightPanel);
+    quadrantPanels.push(topLeftPanel);
+    quadrantPanels.push(bottomLeftPanel);
+
+    return quadrantPanels;
+}
+
+function createChart6QuadrantPanel(x0, x1, y0, y1, colour, opacity) {
+    return {
+        type: "rect",
+        xref: "x",
+        yref: "y",
+        layer: "below",
+        x0,
+        x1,
+        y0,
+        y1,
+        line: { width: 0 },
+        fillcolor: createTransparentFillColour(colour, opacity)
+    };
+}
+
 export function createBestFitLineTrace(chartData, xKey, yKey) {
     const xValues = getAxisValues(chartData, xKey);
     const yValues = getAxisValues(chartData, yKey);
@@ -222,47 +324,4 @@ export function createBestFitLineTrace(chartData, xKey, yKey) {
         line: DIAGONAL_LINE,
         hoverinfo: "skip"
     };
-}
-
-export function getChart5MarkerColour(row, gainValues) {
-    const gain = row["medium_term_fte_pct"] - row["short_term_fte_pct"];
-
-    if (gain >= gainValues.high) {
-        return THEME_COLOURS.amber700;
-    } else if (gain >= gainValues.medium) {
-        return THEME_COLOURS.amber500;
-    } else if (gain >= gainValues.low) {
-        return THEME_COLOURS.blue500;
-    }
-
-    return THEME_COLOURS.blue700;
-}
-
-export function getChart6MarkerColour(row, quadrantValues) {
-    const highEmploymentGain = row["fte_gain_pp"] >= quadrantValues.highEmploymentGain;
-    const highWorkFitImprovement = row["underutilisation_reduction_pp"] >= quadrantValues.highWorkFitImprovement;
-
-    if (highEmploymentGain && !highWorkFitImprovement) {
-        return THEME_COLOURS.amber700;
-    } else if (highEmploymentGain && highWorkFitImprovement) {
-        return THEME_COLOURS.blue700;
-    } else if (!highEmploymentGain && highWorkFitImprovement) {
-        return THEME_COLOURS.blue500;
-    } 
-    
-    return THEME_COLOURS.grey500;
-}
-
-export function groupRowsByMarkerColour(colourGroups, chartData, getMarkerColour, markerColourValues) {
-    for (let row of chartData) {
-        const markerColour = getMarkerColour(row, markerColourValues);
-
-        for (let colourGroup of colourGroups) {
-            if (colourGroup.colour === markerColour) {
-                colourGroup.rows.push(row);
-            }
-        }
-    }
-
-    return colourGroups;
 }

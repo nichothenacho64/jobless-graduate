@@ -7,6 +7,57 @@ SHORT_TERM_TIME_WINDOW = "short_term"
 MEDIUM_TERM_TIME_WINDOW = "medium_term"
 
 
+# Shared discipline-family constants
+DISCIPLINE_FAMILY_CONSTANTS = {
+    "families": {
+        "Health & education": [
+            "Dentistry",
+            "Health services and support",
+            "Medicine",
+            "Nursing",
+            "Pharmacy",
+            "Rehabilitation",
+            "Teacher education",
+            "Veterinary science",
+        ],
+        "STEM, built & environmental": [
+            "Agriculture and environmental studies",
+            "Architecture and built environment",
+            "Computing and information systems",
+            "Engineering",
+            "Science and mathematics",
+        ],
+        "Business, law & society": [
+            "Business and management",
+            "Humanities, culture and social sciences",
+            "Law and paralegal studies",
+            "Psychology",
+            "Social work",
+        ],
+        "Creative, communication & services": [
+            "Communications",
+            "Creative arts",
+            "Tourism, hospitality, personal services, sport and recreation",
+        ],
+    },
+    "colour_columns": [
+        "short_term_fte_pct",
+        "medium_term_fte_pct",
+    ],
+    "colour_excluded_study_areas": {
+        "Standard deviation",
+        "Total",
+        "Tourism, hospitality, personal services, sport and recreation",
+    },
+    "colour_keys_by_rank": {
+        1: "strongest",
+        2: "stronger",
+        3: "weaker",
+        4: "weakest",
+    },
+}
+
+
 # Chart ids
 CHART_1A_ID = "chart_1a_degree_supply"
 CHART_1B_ID = "chart_1b_skill_by_age"
@@ -109,16 +160,22 @@ CHART_4_CONSTANTS = {
 CHART_5_CONSTANTS = {
     "table_columns": [
         "study_area",
+        "discipline_family",
+        "family_colour_key",
         "short_term_fte_pct",
         "medium_term_fte_pct",
         "source_key",
     ],
-    "excluded_study_areas": {"Standard deviation", "Total"},
+    "excluded_study_areas": DISCIPLINE_FAMILY_CONSTANTS[
+        "colour_excluded_study_areas"
+    ],
 }
 
 CHART_6_CONSTANTS = {
     "table_columns": [
         "study_area",
+        "discipline_family",
+        "family_colour_key",
         "fte_gain_pp",
         "underutilisation_reduction_pp",
         "fit_metric_key",

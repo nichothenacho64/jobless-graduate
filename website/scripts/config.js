@@ -98,6 +98,21 @@ export const MARKER_SIZE = {
     large: 10
 };
 
+export const DISCIPLINE_FAMILY_RENDERING = {
+    order: [
+        "strongest",
+        "stronger",
+        "weaker",
+        "weakest"
+    ],
+    colours: {
+        strongest: THEME_COLOURS.blue700,
+        stronger: THEME_COLOURS.blue500,
+        weaker: THEME_COLOURS.amber500,
+        weakest: THEME_COLOURS.amber700
+    }
+};
+
 export const DUMBBELL_LINE = {
     width: 2.5,
     color: THEME_COLOURS.grey500
@@ -147,11 +162,10 @@ export const CHART_4_DIMENSIONS = {
 };
 
 
-// chart 5
-export const CHART_5_GAIN_VALUES = {
-    high: 25,
-    medium: 15,
-    low: 8,
+// chart 6
+export const CHART_6_RENDERING = {
+    leftQuadrantPanelOpacity: 0.05,
+    rightQuadrantPanelOpacity: 0.05
 };
 
 

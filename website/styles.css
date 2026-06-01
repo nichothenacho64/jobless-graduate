@@ -48,26 +48,16 @@ main {
     width: 95%;
 }
 
-.chart-7-panel {
+#chart7Panel {
     width: 75%;
 }
 
-.chart-7-chart {
+#chart7SubgroupComparator {
     width: 100%;
 }
 
-.chart-7-caption {
-    color: var(--text-colour);
-}
-
-.chart-7-card {
+#chart7ExplanationCard {
     color: var(--text-colour);
     background-color: var(--background-colour);
     border-color: var(--grey-500);
-}
-
-@media (max-width: 900px) {
-    .chart-7-panel {
-        width: 90%;
-    }
 }

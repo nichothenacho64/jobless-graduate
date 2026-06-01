@@ -39,6 +39,10 @@ function createNumberArray(values) {
     return numericValues;
 }
 
+export function clampValue(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+}
+
 export function calculateMean(values) {
     return values.reduce((sum, value) => sum + value, 0) / values.length;
 }

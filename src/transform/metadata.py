@@ -144,7 +144,7 @@ CHART_6_METADATA = {
                 "unit": "percentage_point",
             },
             "underutilisation_reduction_pp": {
-                "label": "Skills mismatch reduction",
+                "label": "Work fit improvement",
                 "unit": "percentage_point",
             },
         },

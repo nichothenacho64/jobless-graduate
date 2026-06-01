@@ -8,7 +8,10 @@ import {
     getAxisValues,
     loadChartData,
 } from "../data.js";
-import { getChart6MarkerColour, groupRowsByMarkerColour } from "../chart-helpers.js";
+import {
+    createChart6QuadrantPanels,
+    getRowsByFamilyColourKey
+} from "../chart-helpers.js";
 import { createReferenceLine, renderChart } from "../rendering.js";
 import { calculateMedian, unpack } from "../utils.js";
 
@@ -26,60 +29,58 @@ export async function renderChart6(chartId) {
 
     const medianEmploymentGain = calculateMedian(xValues);
     const medianWorkFitImprovement = calculateMedian(yValues);
-    const medianQuadrants = {
-        highEmploymentGain: medianEmploymentGain,
-        highWorkFitImprovement: medianWorkFitImprovement
-    };
+    const xRange = [0, medianEmploymentGain * 2];
+    const yRange = [-8, 17];
 
     const medianLines = [];
     const xMedianLine = createReferenceLine("x", medianEmploymentGain, THEME_COLOURS.text, 2, "above");
     const yMedianLine = createReferenceLine("y", medianWorkFitImprovement, THEME_COLOURS.text, 2, "above");
+    const quadrantPanels = createChart6QuadrantPanels(
+        medianEmploymentGain,
+        medianWorkFitImprovement,
+        xRange,
+        yRange
+    );
+    const shapes = [];
+
+    for (let quadrantPanel of quadrantPanels) {
+        shapes.push(quadrantPanel);
+    }
 
     medianLines.push(xMedianLine);
     medianLines.push(yMedianLine);
 
+    for (let medianLine of medianLines) {
+        shapes.push(medianLine);
+    }
+
     const data = [];
-    const workFitQuadrants = [
-        {
-            name: "High gain/high fit improvement",
-            colour: THEME_COLOURS.blue700,
-            rows: []
-        },
-        {
-            name: "High gain/low fit improvement",
-            colour: THEME_COLOURS.amber700,
-            rows: []
-        },
-        {
-            name: "Low gain/high fit improvement",
-            colour: THEME_COLOURS.blue500,
-            rows: []
-        },
-        {
-            name: "Low gain/low fit improvement",
-            colour: THEME_COLOURS.grey500,
-            rows: []
-        },
-    ];
+    const familyColourGroups = getRowsByFamilyColourKey(chartData);
 
-    groupRowsByMarkerColour(workFitQuadrants, chartData, getChart6MarkerColour, medianQuadrants);
+    for (let familyColourGroup of familyColourGroups) {
+        const customData = [];
 
-    for (let workFitQuadrant of workFitQuadrants) {
+        for (let row of familyColourGroup.rows) {
+            customData.push(row["discipline_family"]);
+        }
+
         const trace = {
-            x: unpack(workFitQuadrant.rows, xKey),
-            y: unpack(workFitQuadrant.rows, yKey),
-            text: unpack(workFitQuadrant.rows, "study_area"),
-            name: workFitQuadrant.name,
+            x: unpack(familyColourGroup.rows, xKey),
+            y: unpack(familyColourGroup.rows, yKey),
+            text: unpack(familyColourGroup.rows, "study_area"),
+            customdata: customData,
+            name: familyColourGroup.name,
             mode: "markers",
             type: "scatter",
             showlegend: true,
             marker: {
                 size: MARKER_SIZE.small,
-                color: workFitQuadrant.colour,
+                color: familyColourGroup.colour,
             },
             hovertemplate: `<b>%{text}</b><br>` +
                 `${xLabel}: %{x} pp<br>` +
                 `${yLabel}: %{y} pp<br>` +
+                `Discipline family: %{customdata}` +
                 `<extra></extra>`
         };
 
@@ -90,20 +91,20 @@ export async function renderChart6(chartId) {
         title: { text: CHART_TITLES.chart6 },
         showlegend: true,
         legend: {
-            title: { text: "Employment gain/work fit" },
+            title: { text: "Family average on this chart" },
             traceorder: "normal"
         },
         xaxis: {
             title: { text: getAxisLabel(chartMetadata, xKey, true) },
             zeroline: false,
-            range: [0, medianEmploymentGain * 2]
+            range: xRange
         },
         yaxis: {
             title: { text: getAxisLabel(chartMetadata, yKey, true) },
             zeroline: false,
-            range: [-8, 17]
+            range: yRange
         },
-        shapes: medianLines,
+        shapes: shapes,
     };
 
     renderChart(chartId, data, layout);
