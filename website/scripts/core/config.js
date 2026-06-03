@@ -13,14 +13,13 @@ export const CHART_7_ID = "chart_7_subgroup_comparator";
 export const CHART_METADATA_ID = "chart_metadata";
 
 export const CHART_TITLES = {
-    chart1a: "More Australians now hold degrees",
-    chart1b: "High-skill work is age-sorted",
-    chart2: "The first year after graduation is the weak point",
-    chart3: "The bottleneck is uneven",
-    chart4: "Some gaps close while others persist",
-    chart5: "Some fields recover after the first graduate year",
-    chart6: "More work does not always mean better fit",
-    chart7: "Inspect one subgroup gap"
+    chart1a: "Australians with degrees have increased since 2016",
+    chart1b: "Younger workers are concentrated in lower-skill work",
+    chart2: "Full-time employment is weakest 4–6 months after graduation",
+    chart3: "Early graduate employment gaps are not evenly shared",
+    chart4: "Some early gaps narrow, but others remain",
+    chart5: "Some fields improve strongly after the first graduate year",
+    chart6: "Full-time employment gains do not always mean better work fit",
 };
 
 
@@ -71,6 +70,10 @@ export const GLOBAL_TRACES = {
         font: { size: 12 }
     },
     marker: { line: { width: 1.5 } }
+};
+
+export const VIEWPORT_MEDIA_QUERIES = {
+    large: "(min-width: 992px)"
 };
 
 
@@ -276,4 +279,70 @@ export const CHART_7_TEXT = {
         comparisonMinusReference: "Positive values mean the comparison group has a higher full-time employment rate than the reference group. Negative values mean the gap reverses.",
         referenceMinusComparison: "Positive values mean the reference group has a higher full-time employment rate than the comparison group. Negative values mean the gap reverses."
     }
+};
+
+// chart annotations
+export const ANNOTATION_LABELS = {
+    chart1a: [
+        {
+            year: 2025,
+            text: "As of 2025, approximately <br><b>6.8 million</b> Australians <br>hold degrees",
+            ax: 40,
+            ay: 0
+        }
+    ],
+    chart1b: [
+        {
+            ageGroup: "15–24",
+            text: "15–24 year-olds have the <br><b>largest share</b> of lower skill work",
+            ax: 0,
+            ay: -40
+        }
+    ],
+    chart4: [
+        {
+            subgroupDimension: "Home language",
+            text: "The home language<br> gap <b>closes</b>",
+            ax: 150,
+            ay: -26
+        },
+        {
+            subgroupDimension: "Disability",
+            text: "The disability gap <b>persists</b>",
+            ax: 200,
+            ay: -26
+        }
+    ],
+    chart5: [
+        {
+            studyArea: "Creative arts",
+            text: "Creative arts has the largest later recovery",
+            xanchor: "left",
+            ax: 20,
+            ay: -80
+        },
+        {
+            studyArea: "Rehabilitation",
+            text: "Rehabilitation is already high after year one",
+            xanchor: "left",
+            ax: 40,
+            ay: -40
+        }
+    ],
+    chart6: [
+        {
+            studyArea: "Creative arts",
+            text: "Creative arts has the<br>biggest work gain,<br>but fit barely improves",
+            xanchor: "left",
+            ax: 30,
+            ay: 55
+        },
+        {
+            studyArea: "Science and mathematics",
+            text: "Science and mathematics <br>has work and fit<br>improving together",
+            xanchor: "left",
+            ax: 25,
+            ay: -30
+        }
+    ]
 };

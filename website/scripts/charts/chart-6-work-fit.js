@@ -1,4 +1,5 @@
 import {
+    ANNOTATION_LABELS,
     CHART_RANGES,
     CHART_TITLES,
     MARKER_SIZE,
@@ -14,6 +15,8 @@ import {
     getRowsByFamilyColourKey
 } from "../plotly/chart-primitives.js";
 import {
+    createAnnotations,
+    createChart6Annotation,
     createChart6XAnnotation,
     createChart6YAnnotation
 } from "../plotly/annotations.js";
@@ -44,6 +47,13 @@ export async function renderChart6(chartId) {
 
     const xMedianLineAnnotation = createChart6XAnnotation(medianEmploymentGain, xLabel);
     const yMedianLineAnnotation = createChart6YAnnotation(medianWorkFitImprovement, yLabel);
+    const chartAnnotations = createAnnotations(
+        chartData,
+        ANNOTATION_LABELS.chart6,
+        "study_area",
+        "studyArea",
+        createChart6Annotation
+    );
 
     const quadrantPanels = createChart6QuadrantPanels(
         medianEmploymentGain,
@@ -115,7 +125,7 @@ export async function renderChart6(chartId) {
             range: CHART_RANGES.chart6.y
         },
         shapes: shapes,
-        annotations: [xMedianLineAnnotation, yMedianLineAnnotation]
+        annotations: [xMedianLineAnnotation, yMedianLineAnnotation, ...chartAnnotations]
     };
 
     renderChart(chartId, data, layout, chartMetadata);

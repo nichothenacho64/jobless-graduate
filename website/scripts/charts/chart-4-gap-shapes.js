@@ -16,13 +16,17 @@ import {
     getYTickValues,
 } from "../plotly/chart-primitives.js";
 import {
+    ANNOTATION_LABELS,
     CHART_4_DIMENSIONS,
     CHART_RANGES,
     CHART_TITLES,
     DUMBBELL_LINE,
     THEME_COLOURS
 } from "../core/config.js";
-import { createChart4Annotations } from "../plotly/annotations.js";
+import {
+    createAnnotations,
+    createChart4Annotation
+} from "../plotly/annotations.js";
 
 export async function renderChart4(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
@@ -92,7 +96,14 @@ export async function renderChart4(chartId) {
             ticktext: getChart4YTickLabels(shortTermRows)
         },
         shapes: [createReferenceLine("x", 0, THEME_COLOURS.text, 1)],
-        annotations: createChart4Annotations(chartData),
+        annotations: createAnnotations(
+            mediumTermRows,
+            ANNOTATION_LABELS.chart4,
+            "subgroup_dimension",
+            "subgroupDimension",
+            createChart4Annotation,
+            shortTermRows.length
+        ),
         margin: {
             l: CHART_4_DIMENSIONS.leftMargin,
             r: CHART_4_DIMENSIONS.rightMargin,

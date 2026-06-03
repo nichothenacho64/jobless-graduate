@@ -3,7 +3,6 @@ import {
     CHART_7_TEXT,
     CHART_7_RENDERING,
     CHART_7_VALUES,
-    CHART_TITLES,
     DUMBBELL_LINE,
     MARKER_SIZE,
     THEME_COLOURS
@@ -80,7 +79,6 @@ function createChart7Layout(selectedRows, chartMetadata, yAxisRange) {
     }
 
     return {
-        // title: { text: CHART_TITLES.chart7 },
         height: CHART_7_RENDERING.dimensions.height,
         showlegend: false,
         xaxis: {

@@ -4,7 +4,8 @@ import {
     GLOBAL_CONFIG,
     GLOBAL_LAYOUT,
     THEME_COLOURS,
-    HOVERLABEL_BORDER_COLOURS
+    HOVERLABEL_BORDER_COLOURS,
+    VIEWPORT_MEDIA_QUERIES
 } from "../core/config.js";
 import { capitaliseWord, clampValue } from "../core/utils.js";
 import { renderChartSourceLabel } from "./source-labels.js";
@@ -127,24 +128,67 @@ export function createTransparentFillColour(colour, opacity) {
     return colour + alphaHex;
 }
 
+export function getViewportAnnotations(annotations, mediaQuery) {
+    const viewportAnnotations = [];
+
+    for (let annotation of annotations) {
+        if (annotation.unresponsive && !mediaQuery.matches) {
+            continue; // skip annotations marked as unresponsive (i.e those that stay on smaller viewports)
+        }
+
+        const { unresponsive, ...plotlyAnnotation } = annotation; // remove unresponsive before passing to Plotly
+        viewportAnnotations.push(plotlyAnnotation);
+    }
+
+    return viewportAnnotations; // return only annotations that should be shown in the current viewport size
+}
+
+function resetAnnotationHandler(chart, annotations, mediaQuery) {
+    if (chart.__annotationState) { // remove the preious media query listener to prevent stacking listeners
+        chart.__annotationState.mediaQuery.removeEventListener("change", chart.__annotationState.handler);
+    }
+
+    chart.__annotationState = undefined;
+
+    if (!annotations?.some((annotation) => annotation.unresponsive)) return;
+
+    const handler = () => { // recalculate annnotations when the viewport crosses the media query
+        Plotly.relayout(chart, {
+            annotations: getViewportAnnotations(annotations, mediaQuery)
+        });
+    };
+
+    mediaQuery.addEventListener("change", handler);
+    chart.__annotationState = { mediaQuery, handler };
+}
+
 export async function renderChart(chartId, data, layout, chartMetadata) {
     const chartElementId = getChartElementId(chartId);
     const renderedData = addGlobalTraceDefaults(data);
     const renderedLayout = addGlobalLayoutDefaults(layout);
+    const layoutAnnotations = renderedLayout.annotations;
+
+    const largeMediaQuery = window.matchMedia(VIEWPORT_MEDIA_QUERIES.large); // whether or not larger-screen annotations should appear
+
+    if (layoutAnnotations) {
+        renderedLayout.annotations = getViewportAnnotations(layoutAnnotations, largeMediaQuery);
+    }
 
     const chart = await Plotly.newPlot(chartElementId, renderedData, renderedLayout, GLOBAL_CONFIG);
 
-    if (chart.__sourceLabelAfterPlotHandler) {
-        chart.removeListener("plotly_afterplot", chart.__sourceLabelAfterPlotHandler);
+    resetAnnotationHandler(chart, layoutAnnotations, largeMediaQuery);
+
+    if (chart.__sourceHandler) { 
+        chart.removeListener("plotly_afterplot", chart.__sourceHandler);
     }
 
-    const sourceLabelHandler = () => { // when plotly finishes plotting, run the function with the current chart's details
+    const sourceHandler = () => { // reposition the source label after Plotly finishes drawing or redrawing the chart
         renderChartSourceLabel(chartId, chartMetadata, chart);
     };
 
-    chart.__sourceLabelAfterPlotHandler = sourceLabelHandler;
-    chart.on("plotly_afterplot", sourceLabelHandler);
-    sourceLabelHandler();
+    chart.__sourceHandler = sourceHandler;
+    chart.on("plotly_afterplot", sourceHandler);
+    sourceHandler(); // render the source label immediately after the first plot
 
     return chart;
 }

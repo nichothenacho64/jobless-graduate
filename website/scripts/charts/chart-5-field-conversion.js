@@ -1,4 +1,5 @@
 import {
+    ANNOTATION_LABELS,
     CHART_RANGES,
     CHART_TITLES,
     MARKER_SIZE
@@ -12,7 +13,8 @@ import {
     getRowsByFamilyColourKey,
 } from "../plotly/chart-primitives.js";
 import {
-    createChart5Annotations,
+    createAnnotations,
+    createChart5Annotation,
     createChart5EqualityAnnotation
 } from "../plotly/annotations.js";
 import { renderChart } from "../plotly/rendering.js";
@@ -70,7 +72,13 @@ export async function renderChart5(chartId) {
     }
 
     const equalityLineAnnotation = createChart5EqualityAnnotation(CHART_RANGES.chart5.x, CHART_RANGES.chart5.y, equalityLineTrace.name);
-    const chartAnnotations = createChart5Annotations(chartData);
+    const chartAnnotations = createAnnotations(
+        chartData,
+        ANNOTATION_LABELS.chart5,
+        "study_area",
+        "studyArea",
+        createChart5Annotation
+    );
 
     const layout = {
         title: { text: CHART_TITLES.chart5 },
