@@ -14,17 +14,33 @@
     --background-colour: #FFFDF9;
     --background-colour-opaque: #fffdf95e;
     --label-colour: #e5e0d7;
-    --label-colour-opaque: #e5e0d733;
+    --labelgener-colour-opaque: #e5e0d733;
 }
 
 body {
     font-family: "Source Sans 3", sans-serif;
     background-color: var(--background-colour);
-    font-size: 0.85rem;
 }
 
 main {
-    margin: 7.5em;
+    margin: 1em 7.5em;
+    line-height: 2;
+}
+
+section {
+    margin-bottom: 3.5em;
+}
+
+aside {
+    font-size: 0.85rem;
+}
+
+.text-amber {
+    color: var(--amber-500);
+}
+
+.text-blue {
+    color: var(--blue-500);
 }
 
 .explanatory-modal {
@@ -55,19 +71,19 @@ main {
 }
 
 .chart-source-label {
-    --chart-source-label-left-inset: 0px;
-    --chart-source-label-right-inset: 0px;
+    --left-inset: 0px;
+    --right-inset: 0px;
     align-self: flex-start;
     box-sizing: border-box;
     color: var(--grey-500);
     font-size: 0.75rem;
-    margin-left: var(--chart-source-label-left-inset);
-    margin-right: var(--chart-source-label-right-inset);
+    margin-left: var(--left-inset);
+    margin-right: var(--right-inset);
     margin-top: 0.25rem;
     margin-bottom: 0.75rem;
     overflow-wrap: anywhere;
     width: max(0px,
-            calc(100% - var(--chart-source-label-left-inset) - var(--chart-source-label-right-inset)));
+            calc(100% - var(--left-inset) - var(--right-inset)));
 }
 
 #chart7Container {

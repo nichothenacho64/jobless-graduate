@@ -16,104 +16,307 @@
     </head>
     <body>
         <main>
-            <h1>Homeless graduate</h1>
-            <br />
-            <h2>Key</h2>
-            <article class="explanatory-modal amber-modal">
+            <article>
+                <h1>Homeless Graduate</h1>
                 <p>
-                    <strong>Terminology</strong><br />
-                    FTE = full-time employment<br />
-                    pp = percentage points<br />
-                    Short-term = around 4 months after graduation<br />
-                    Medium-term = around 3 years after graduation<br />
+                    <strong
+                        >The
+                        <span class="text-amber"
+                            >first year after university</span
+                        >, mapped.</strong
+                    >
                 </p>
                 <p>
-                    <em>
-                        A note on reading the data: Gaps are shown in percentage
-                        points, not percentages. For example, a change from 60%
-                        to 70% is a 10 pp increase.
-                    </em>
+                    Every year, Australian students graduate into a
+                    <strong>gap</strong> between what they were promised and
+                    <strong>what actually happens</strong>. The advice they
+                    receive for surviving it is almost always
+                    <span class="text-amber">personal</span>, but the data tells
+                    a <strong>different story</strong>. The transition from
+                    university to full-time work is a
+                    <strong>structure</strong>. It
+                    <span class="text-amber"
+                        >does not treat everyone equally</span
+                    >, and it does not break down where most people assume.
+                </p>
+                <p>
+                    Rather than starting with generic career advice, this
+                    website uses national graduate and labour market data to
+                    explore where the <strong>pressure actually is</strong> and
+                    what changes in
+                    <span class="text-blue">the years after graduation</span>.
                 </p>
             </article>
-            <br />
-            <article class="explanatory-modal blue-modal">
-                <strong>Datasets used</strong><br />
-                QILT (Quality Indicators for Teaching and Learning) – the
-                national survey system for Australian higher education outcomes
-                <ul>
-                    <li>
-                        GOS (Graduate Outcomes Survey) – short-term graduate
-                        outcomes
-                    </li>
-                    <li>
-                        GOS-L (Graduate Outcomes Survey - Longitudinal) –
-                        medium-term graduate outcomes
-                    </li>
-                </ul>
+            <article class="pb-0 explanatory-modal amber-modal">
+                <p>
+                    Key: FTE means full-time
+                    employment, and pp means
+                    percentage points. Short-term outcomes are
+                    measured 4 to 6 months after graduation.
+                    Medium-term outcomes are measured 3 to 4
+                    years later.
+                </p>
+            </article>
+            <hr />
+            <section>
+                <h2>More degrees, fewer clear paths</h2>
+                <p>
+                    Since 2016, the number of Australians holding a bachelor's
+                    degree or higher has grown by <strong>48%</strong>, from
+                    roughly <strong>4.6 million</strong> to
+                    <strong>nearly 6.8 million</strong> in under a decade. That
+                    growth does not mean that graduates are automatically worse
+                    off, but it does change the conditions they face when they
+                    start looking for work.
+                </p>
 
-                ABS (Australian Bureau of Statistics) - Australia's national
-                statistical agency
-                <ul>
-                    <li>
-                        SEW (Survey of Education and Work) – broader education
-                        and work context in Australia
-                    </li>
-                </ul>
-            </article>
-            <div class="chart-container">
-                <div id="chart1aDegreeSupply" class="chart"></div>
-            </div>
-            <div class="chart-container">
-                <div id="chart1bSkillByAge" class="chart"></div>
-            </div>
-            <div class="chart-container">
-                <div id="chart2TransitionWindow" class="chart"></div>
-            </div>
-            <p>
-                <em>
-                    Note: Matching cohort data (from GOS-L) is delayed, so
-                    recent cohorts do not yet have matching medium-term data
-                </em>
-            </p>
-            <div class="chart-container">
-                <div id="chart3SubgroupBottleneck" class="chart"></div>
-            </div>
-            <div class="chart-container">
-                <div id="chart4GapShapes" class="chart"></div>
-            </div>
-            <div class="chart-container">
-                <div id="chart5FieldConversion" class="chart"></div>
-            </div>
-            <div class="chart-container">
-                <div id="chart6WorkFit" class="chart"></div>
-            </div>
-            <div id="chart7Container" class="chart-container">
-                <h1>Subgroup comparator</h1>
-                <div id="chart7Panel">
-                    <div id="chart7Control" class="d-flex align-items-center gap-2">
-                        <span id="chart7SelectorLabel" class="mb-0 form-label"></span>
-                        <div class="dropdown">
-                            <button
-                                id="chart7DropdownButton"
-                                class="btn dropdown-toggle"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-labelledby="chart7SelectorLabel chart7DropdownButton"
-                                aria-expanded="false"
-                            ></button>
-                            <ul id="chart7DropdownMenu" class="dropdown-menu"></ul>
+                <div class="chart-container">
+                    <div id="chart1aDegreeSupply" class="chart"></div>
+                </div>
+
+                <p>
+                    The broader labour market still sorts younger workers into
+                    <strong>lower-skill roles</strong> regardless of
+                    qualification. Among employed 15 to 24 year-olds, only
+                    <strong>12.3%</strong> work in the highest skill category,
+                    while <strong>64.5%</strong> are concentrated in the two
+                    lowest tiers. In contrast, <strong>45.0%</strong> of workers
+                    aged 35-44 work in the highest skill category. This includes
+                    <strong>all workers, not only graduates</strong>, but it
+                    shows the
+                    <span class="text-amber">structural landscape</span> that
+                    new graduates are entering.
+                </p>
+
+                <div class="chart-container">
+                    <div id="chart1bSkillByAge" class="chart"></div>
+                </div>
+
+                <p>
+                    That labour market's pressure becomes
+                    <strong>most pronounced right after graduation</strong>. In
+                    the latest GOS-L matched cohort series, from
+                    <strong>2024</strong>, full-time employment was
+                    <strong>71.1%</strong> when first measured four to six
+                    months after graduation. Three to four years later, the same
+                    cohort reached <strong>91.1%</strong>. The
+                    <span class="text-amber"
+                        >first year employment gap is real</span
+                    >
+                    and it appears across every available matched cohort from
+                    <strong>2020 to 2024</strong>. But the newest short-term GOS
+                    figures, including the <strong>2024</strong> result,
+                    <strong>cannot yet be fully tested</strong> against
+                    medium-term data, because those cohorts have not had enough
+                    time to appear in the longitudinal survey. Whether the
+                    pattern holds for the most recent graduates remains
+                    <span class="text-blue">unanswered</span>.
+                </p>
+
+                <div class="chart-container">
+                    <div id="chart2TransitionWindow" class="chart"></div>
+                </div>
+            </section>
+            <section>
+                <h2>The bottleneck is not shared equally</h2>
+                <p>
+                    If the first year after graduation is a bottleneck, the next
+                    question is <strong>who gets stuck</strong>. The answer is
+                    <span class="text-amber"
+                        >not always what you would expect</span
+                    >.
+                </p>
+                <p>
+                    The <strong>largest short-term differences</strong> appear
+                    across
+                    <span class="text-amber">home language and disability</span
+                    >. Graduates who speak a language other than English at home
+                    had a full-time employment rate of <strong>58.1%</strong>,
+                    compared to <strong>74.5%</strong> for English speakers,
+                    which is a <strong>16.4 percentage point gap</strong>.
+                    Graduates who reported a disability sat at
+                    <strong>66.8%</strong>, an
+                    <strong>8.2 point gap</strong> from those without.
+                </p>
+                <p>
+                    But other comparisons run against
+                    <span class="text-amber">conventional assumptions</span>.
+                    External students
+                    <strong><strong>outperformed</strong></strong> internal and
+                    mixed-mode students by <strong>9.3 points</strong>. Regional
+                    and remote graduates outperformed those in metro areas by
+                    <strong>8.9 points</strong>. The early transition window
+                    results in <strong>large differences</strong>, but not in a
+                    simple and predictable way.
+                </p>
+
+                <div class="chart-container">
+                    <div id="chart3SubgroupBottleneck" class="chart"></div>
+                </div>
+
+                <p>
+                    Tracking these groups over time adds a second layer. Some
+                    gaps behave like <strong>delays</strong>. The 16.4 point
+                    home-language gap narrows to just
+                    <strong>0.8 points</strong> by the medium term.
+                    Non-English-speaking graduates eventually reach similar
+                    employment levels, but
+                    <span class="text-amber">take longer to get there</span>.
+                    The study-mode gap nearly completely closes.
+                </p>
+                <p>
+                    <strong>However, others persist</strong>. The disability gap
+                    only narrows from <strong>8.2</strong> to
+                    <strong>5.3 points</strong> over three years. Graduates who
+                    reported a disability still face a
+                    <span class="text-amber">meaningful disadvantage</span> in
+                    full-time work at the medium-term mark. The labour market
+                    takes most graduates eventually, but
+                    <strong>not all of them equally</strong>.
+                </p>
+
+                <div class="chart-container">
+                    <div id="chart4GapShapes" class="chart"></div>
+                </div>
+            </section>
+            <section>
+                <h2>Recovery is not the same as fit</h2>
+                <p>
+                    Demographic background is
+                    <strong>not the only sorting mechanism</strong>. The
+                    transition story shifts again by
+                    <span class="text-amber">field of study</span>. Some
+                    disciplines start with
+                    <strong>weak short-term employment</strong> but
+                    <span class="text-blue">recover strongly</span> over the
+                    following years.
+                    <strong>Creative Arts graduates</strong> begin at just
+                    <strong>49.6%</strong> full-time employment and reach
+                    <strong>81.3%</strong> within three to four years.
+                    Communications follows a similar arc, climbing from
+                    <strong>55.9%</strong> to <strong>84.4%</strong>.
+                </p>
+
+                <div class="chart-container">
+                    <div id="chart5FieldConversion" class="chart"></div>
+                </div>
+
+                <p>
+                    But getting <strong>full-time work</strong> is not the same
+                    as getting the <strong>right work</strong>.
+                    <span class="text-amber">Work fit</span> here means whether
+                    graduates report that their
+                    <strong>skills and education are being fully used</strong>
+                    in their current role. When employment gains are plotted
+                    against improvements in work fit, the picture gets more
+                    <span class="text-amber">complicated</span>.
+                </p>
+                <p>
+                    Creative Arts graduates gain
+                    <strong>31.7 percentage points</strong> in full-time
+                    employment but only <strong>1.4 points</strong> in work fit.
+                    They find jobs, but
+                    <span class="text-amber"
+                        >not ones that use what they trained for</span
+                    >. Agriculture and Environmental Studies graduates gain
+                    <strong>20.7 points</strong> in employment alongside
+                    <strong>14.6 points in fit</strong>. Their recovery actually
+                    <span class="text-blue"
+                        >leads them to work that is relevant to their
+                        degree</span
+                    >.
+                </p>
+                <p>
+                    And some fields
+                    <span class="text-amber">go backwards</span>. Pharmacy
+                    graduates start with the highest short-term employment rate
+                    at <strong>96.2%</strong>, but both their employment rate
+                    and their work fit decline slightly by the medium term. A
+                    strong start doesn't mean that outcomes will remain
+                    favourable for graduates.
+                </p>
+
+                <div class="chart-container">
+                    <div id="chart6WorkFit" class="chart"></div>
+                </div>
+            </section>
+            <section>
+                <h2>Explore a subgroup comparison</h2>
+                <p>
+                    <strong>Select a subgroup</strong> below to explore how the
+                    gap between short-term and medium-term employment changes
+                    depending on the comparison. These are
+                    <strong>group-level patterns</strong> drawn from national
+                    survey data,
+                    <span class="text-amber"
+                        >not predictions about any individual graduate's
+                        trajectory</span
+                    >.
+                </p>
+
+                <div id="chart7Container" class="chart-container">
+                    <!-- <h1>Subgroup comparator</h1> -->
+                    <div id="chart7Panel">
+                        <div
+                            id="chart7Control"
+                            class="d-flex align-items-center gap-2 pb-2"
+                        >
+                            <span
+                                id="chart7SelectorLabel"
+                                class="mb-0 form-label"
+                            ></span>
+                            <div class="dropdown">
+                                <button
+                                    id="chart7DropdownButton"
+                                    class="btn dropdown-toggle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-labelledby="chart7SelectorLabel chart7DropdownButton"
+                                    aria-expanded="false"
+                                ></button>
+                                <ul
+                                    id="chart7DropdownMenu"
+                                    class="dropdown-menu"
+                                ></ul>
+                            </div>
                         </div>
-                    </div>
-                    <div class="align-items-start row g-3">
-                        <div class="col-12 col-lg-8">
-                            <div id="chart7SubgroupComparator" class="chart"></div>
-                        </div>
-                        <div class="col-12 col-lg-4">
-                            <aside id="chart7ExplanationCard" class="card"></aside>
+                        <div class="align-items-start row g-3">
+                            <div class="col-12 col-lg-7">
+                                <div
+                                    id="chart7SubgroupComparator"
+                                    class="chart"
+                                ></div>
+                            </div>
+                            <div class="col-12 col-lg-5">
+                                <aside
+                                    id="chart7ExplanationCard"
+                                    class="card"
+                                ></aside>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
+            <hr />
+            <section>
+                <h2>It's not just you</h2>
+                <p>
+                    The transition from university into relevant full-time work
+                    in Australia is <strong>not a smooth path</strong>. It is an
+                    <span class="text-amber">uneven structure</span>, shaped by
+                    <strong>who you are and what you studied</strong> rather
+                    than by how hard you worked or how ready you felt.
+                </p>
+                <p>
+                    This is <strong>not a personal failure story</strong>. If it
+                    reflects your experience, or the experience of a graduate
+                    you know, pass it along. The more people who can see the
+                    true nature of this
+                    <span class="text-amber">bottleneck</span>, the harder it
+                    becomes to treat it as something individuals should just
+                    push through.
+                </p>
+            </section>
         </main>
     </body>
 </html>

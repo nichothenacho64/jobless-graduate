@@ -68,8 +68,8 @@ function getSourceLabelInsets(chart) {
 function applySourceLabelInsets(sourceLabel, chart) {
     const { left, right } = getSourceLabelInsets(chart);
 
-    sourceLabel.style.setProperty("--chart-source-label-left-inset", `${left}px`);
-    sourceLabel.style.setProperty("--chart-source-label-right-inset", `${right}px`);
+    sourceLabel.style.setProperty("--left-inset", `${left}px`);
+    sourceLabel.style.setProperty("--right-inset", `${right}px`);
 }
 
 export function renderChartSourceLabel(chartId, chartMetadata, chart) {
