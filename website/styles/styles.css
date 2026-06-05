@@ -1,5 +1,3 @@
-@import url("./bootstrap-overrides.css");
-
 :root {
     --amber-700: #A55A1f;
     --blue-700: #2F5D7E;
@@ -14,21 +12,23 @@
     --background-colour: #FFFDF9;
     --background-colour-opaque: #fffdf95e;
     --label-colour: #e5e0d7;
-    --labelgener-colour-opaque: #e5e0d733;
+    --label-colour-opaque: #e5e0d733;
+    --inline-spacing: 7.5em;
+    --bs-body-color: var(--text-colour);
 }
 
-body {
+html, body {
+    height: 100%;
+    line-height: 1.75;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    overscroll-behavior: none;
     font-family: "Source Sans 3", sans-serif;
     background-color: var(--background-colour);
 }
 
-main {
-    margin: 1em 7.5em;
-    line-height: 2;
-}
-
 section {
-    margin-bottom: 3.5em;
+    margin: 0 var(--inline-spacing);
 }
 
 aside {
@@ -77,13 +77,51 @@ aside {
     box-sizing: border-box;
     color: var(--grey-500);
     font-size: 0.75rem;
-    margin-left: var(--left-inset);
-    margin-right: var(--right-inset);
-    margin-top: 0.25rem;
-    margin-bottom: 0.75rem;
+    margin: 0.25rem var(--right-inset) 0.75rem var(--left-inset);
     overflow-wrap: anywhere;
     width: max(0px,
             calc(100% - var(--left-inset) - var(--right-inset)));
+}
+
+.scrollable-section {
+    opacity: 0;
+    transition: opacity 2s;
+}
+
+.scrollable-section.visible {
+    opacity: 1;
+}
+
+.scrollable-section .scrollable-step > * { /* keeping the snap target stable */
+    transform: translateY(1rem); /* contents animate in */
+    transition: transform 2s ease;
+}
+
+.scrollable-section.visible .scrollable-step > * {
+    transform: translateY(0);
+}
+
+.scrollable-step {
+    box-sizing: border-box;
+    padding: 6vh 0;
+}
+
+.scrollable-step, #openingSection {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+#openingSection {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0 var(--inline-spacing) 0 var(--inline-spacing);
+    min-height: 100vh;
+    color: var(--background-colour);
+    background: var(--text-colour);
 }
 
 #chart7Container {
@@ -109,4 +147,37 @@ aside {
     color: var(--text-colour);
     background-color: var(--background-colour-opaque);
     border-color: var(--grey-500);
+}
+
+/* bootstrap overrides */
+
+#chart7DropdownButton {
+    --bs-btn-color: var(--background-colour);
+    --bs-btn-bg: var(--amber-500);
+    --bs-btn-border-color: var(--amber-500);
+    --bs-btn-hover-color: var(--background-colour);
+    --bs-btn-hover-bg: var(--amber-700);
+    --bs-btn-hover-border-color: var(--amber-700);
+    --bs-btn-active-color: var(--background-colour);
+    --bs-btn-active-bg: var(--amber-700);
+    --bs-btn-active-border-color: var(--amber-700);
+    font-size: inherit;
+}
+
+#chart7DropdownButton::after {
+    transform: rotate(0deg);
+    transition: transform 0.15s ease-in-out;
+}
+
+#chart7DropdownButton[aria-expanded="true"]::after {
+    transform: rotate(180deg);
+}
+
+#chart7DropdownMenu {
+    --bs-dropdown-bg: var(--background-colour);
+    --bs-dropdown-link-color: var(--text-colour);
+    --bs-dropdown-link-hover-bg: var(--amber-300);
+    --bs-dropdown-link-active-color: var(--background-colour);
+    --bs-dropdown-link-active-bg: var(--amber-500);
+    font-size: inherit;
 }
