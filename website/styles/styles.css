@@ -1,6 +1,8 @@
+@import url("chevrons.css");
+
 :root {
-    --amber-700: #A55A1f;
-    --blue-700: #2F5D7E;
+    --amber-700: #a55a1f;
+    --blue-700: #2f5d7e;
     --amber-500: #D08A3C;
     --blue-500: #5E88A8;
     --amber-300: #E7C48B;
@@ -8,13 +10,21 @@
     --blue-300: #AFC6D8;
     --blue-300-opaque: #AFC6D833;
     --grey-500: #a0a0a0;
-    --text-colour: #1F2328;
+    --text-colour: #1f2328;
     --background-colour: #FFFDF9;
     --background-colour-opaque: #fffdf95e;
     --label-colour: #e5e0d7;
     --label-colour-opaque: #e5e0d733;
     --inline-spacing: 7.5em;
+    --header-height: 4.25rem;
+    --footer-height: 3.5rem;
     --bs-body-color: var(--text-colour);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
 html, body {
@@ -22,6 +32,7 @@ html, body {
     line-height: 1.75;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
+    scroll-padding-top: var(--header-height);
     overscroll-behavior: none;
     font-family: "Source Sans 3", sans-serif;
     background-color: var(--background-colour);
@@ -29,10 +40,45 @@ html, body {
 
 section {
     margin: 0 var(--inline-spacing);
+    scroll-margin-top: var(--header-height);
 }
 
 aside {
     font-size: 0.85rem;
+}
+
+header > nav, footer {
+    background-color: var(--background-colour) !important;
+    border-color: var(--label-colour);
+}
+
+header > nav {
+    border-bottom: 1px solid var(--label-colour);
+    height: var(--header-height);
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid var(--label-colour);
+    color: var(--grey-500);
+    font-size: 0.85rem;
+    height: var(--footer-height);
+    padding: 0 clamp(1rem, 6vw, var(--inline-spacing));
+    scroll-snap-align: end;
+    text-align: center;
+}
+
+.nav-link {
+    color: var(--text-colour);
+    font-weight: 500;
+    padding: 0.5rem;
+    text-decoration: none;
+}
+
+.nav-link:hover, .nav-link:focus {
+    color: var(--amber-700);
 }
 
 .text-amber {
@@ -74,7 +120,6 @@ aside {
     --left-inset: 0px;
     --right-inset: 0px;
     align-self: flex-start;
-    box-sizing: border-box;
     color: var(--grey-500);
     font-size: 0.75rem;
     margin: 0.25rem var(--right-inset) 0.75rem var(--left-inset);
@@ -102,7 +147,6 @@ aside {
 }
 
 .scrollable-step {
-    box-sizing: border-box;
     padding: 6vh 0;
 }
 
@@ -112,11 +156,61 @@ aside {
     scroll-snap-stop: always;
 }
 
+#closingSection > .scrollable-step {
+    min-height: calc(100vh - var(--header-height) - var(--footer-height));
+}
+
+#branding {
+    align-items: center;
+    margin: 0;
+    color: var(--text-colour);
+    display: inline-flex;
+    font-weight: 700;
+    gap: 0.6rem;
+    white-space: nowrap;
+    height: 100%;
+    font-size: 1.25rem;
+    text-decoration: none !important;
+}
+
+#icon {
+    height: 100%;
+}
+
+#branding:hover,
+#branding:focus {
+    color: var(--amber-700);
+}
+
+#navbarContainer {
+    flex-wrap: nowrap;
+    height: 100%;
+    padding-inline: var(--inline-spacing);
+    position: relative;
+}
+
+@media (max-width: 991.98px) {
+    #siteNavbar {
+        background-color: var(--background-colour);
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 100%;
+    }
+
+    #siteNavbar > .navbar-nav {
+        background-color: var(--background-colour);
+        border-bottom: 1px solid var(--label-colour);
+        margin-left: 0 !important;
+        padding: 0.5rem var(--inline-spacing);
+    }
+}
+
+
 #openingSection {
     display: flex;
     align-items: center;
     flex-direction: row;
-    box-sizing: border-box;
     margin: 0;
     padding: 0 var(--inline-spacing) 0 var(--inline-spacing);
     min-height: 100vh;
@@ -162,15 +256,6 @@ aside {
     --bs-btn-active-bg: var(--amber-700);
     --bs-btn-active-border-color: var(--amber-700);
     font-size: inherit;
-}
-
-#chart7DropdownButton::after {
-    transform: rotate(0deg);
-    transition: transform 0.15s ease-in-out;
-}
-
-#chart7DropdownButton[aria-expanded="true"]::after {
-    transform: rotate(180deg);
 }
 
 #chart7DropdownMenu {
