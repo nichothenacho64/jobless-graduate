@@ -19,12 +19,12 @@ export async function renderChart7(chartId) {
     selectorLabel.textContent = CHART_7_TEXT.cardLabels.selector;
     createChart7DropdownItems(dropdownMenu, selectors);
 
-    const defaultSelectorId = selectors[0].selectorId;
+    const defaultSelectorId = selectors[0].selectorId; /* for the intial rendering of the dropdown */
     const selectorId = updateChart7DropdownSelection(dropdownButton, dropdownMenu, selectors, defaultSelectorId);
 
     renderChart7SelectedComparison(chartId, chartData, chartMetadata, selectorId, explanationCard);
 
-    dropdownMenu.addEventListener("click", (event) => {
+    dropdownMenu.addEventListener("click", (event) => { /* activated once a dropdown item is clicked on */
         const dropdownItem = event.target.closest(".dropdown-item");
         if (!dropdownItem) return;
 

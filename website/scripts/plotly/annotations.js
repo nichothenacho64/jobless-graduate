@@ -17,7 +17,7 @@ export function createAnnotations(
 ) {
     const chartAnnotations = [];
 
-    for (let label of labels) {
+    for (let label of labels) { /* for each label, get the corresponding chart annotation */
         const row = getTraceRow(rows, traceKey, label[labelKey]);
         const chartAnnotation = createAnnotation(row, label, annotationArgument);
 
@@ -29,7 +29,7 @@ export function createAnnotations(
 
 function createChart1aAnnotation(row, label) {
     return {
-        unresponsive: true,
+        unresponsive: true, /* a custom property added for making this annotation not render on smaller screens */
         x: row["year"],
         y: row["bachelor_degree_or_above_holders_population"],
         xref: "x",

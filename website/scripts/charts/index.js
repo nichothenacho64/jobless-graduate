@@ -1,3 +1,5 @@
+/* providing a shared export location for all chart rendering functions */
+
 export { renderChart1a } from "./chart-1a-degree-supply.js";
 export { renderChart1b } from "./chart-1b-skill-by-age.js";
 export { renderChart2 } from "./chart-2-transition-window.js";

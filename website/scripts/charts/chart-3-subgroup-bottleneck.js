@@ -17,7 +17,7 @@ import {
     DUMBBELL_LINE
 } from "../core/config.js";
 
-export async function renderChart3(chartId) {
+export async function renderChart3(chartId) { // modified from the base layout of scatter plots found here: https://plotly.com/javascript/line-and-scatter/
     const { chartData, chartMetadata } = await loadChartData(chartId);
     const xKey = "lower_group_pct";
     const xLabel = getAxisLabel(chartMetadata, xKey);
@@ -35,7 +35,7 @@ export async function renderChart3(chartId) {
         let traceColour = CHART_3_RENDERING.defaultColour;
         let dumbbellLine = DUMBBELL_LINE.default;
 
-        if (isHomeLanguage) {
+        if (isHomeLanguage) { /* specific emphasis for home language */
             traceColour = DUMBBELL_LINE.emphasised.color;
             dumbbellLine = DUMBBELL_LINE.emphasised;
         }

@@ -20,9 +20,12 @@ const SKILL_LEVEL_LEGEND_LABELS = [
     "Skill level 5 (lowest)"
 ];
 
-export async function renderChart1b(chartId) {
+export async function renderChart1b(chartId) { // adapted from the stacked bar chart examples found here: https://plotly.com/javascript/bar-charts/
     const { chartData, chartMetadata } = await loadChartData(chartId);
+    
     const xLabel = getAxisLabel(chartMetadata, "age_group");
+    const yLabel = getAxisLabel(chartMetadata, "share_pct", true); 
+    
     const skillLevelLabel = getAxisLabel(chartMetadata, "skill_level");
     const shareLabel = getAxisLabel(chartMetadata, "share_pct");
 
@@ -61,7 +64,7 @@ export async function renderChart1b(chartId) {
             title: { text: xLabel },
         },
         yaxis: {
-            title: { text: getAxisLabel(chartMetadata, "share_pct", true) },
+            title: { text: yLabel },
             range: CHART_RANGES.chart1b.y
         },
         annotations: createChart1bAnnotations(chartData)

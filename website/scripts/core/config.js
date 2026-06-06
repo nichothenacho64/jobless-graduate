@@ -22,9 +22,6 @@ export const CHART_TITLES = {
     chart6: "Full-time employment gains do not always mean better work fit",
 };
 
-
-// theme 
-
 // export const FONT_FAMILY = "sans-serif"; // ! only for photo saving
 export const FONT_FAMILY = '"Source Sans 3", sans-serif';
 
@@ -302,7 +299,7 @@ export const ANNOTATION_LABELS = {
     chart4: [
         {
             subgroupDimension: "Home language",
-            text: "The home language<br> gap <b>closes</b>",
+            text: "The home language<br> gap significantly <b>closes</b>",
             ax: 150,
             ay: -26
         },
@@ -338,11 +335,11 @@ export const ANNOTATION_LABELS = {
             ay: 55
         },
         {
-            studyArea: "Science and mathematics",
-            text: "Science and mathematics <br>has work and fit<br>improving together",
+            studyArea: "Agriculture and environmental studies",
+            text: "Agriculture has work and <br>fit improving together",
             xanchor: "left",
-            ax: 25,
-            ay: -30
+            ax: 100,
+            ay: -10
         }
     ]
 };

@@ -11,18 +11,18 @@ import { capitaliseWord, clampValue } from "../core/utils.js";
 import { renderChartSourceLabel } from "./source-labels.js";
 
 export function addGlobalLayoutDefaults(layout) {
-    return {
+    return { 
         ...GLOBAL_LAYOUT,
         ...layout,
         font: {
             ...layout.font,
-            family: FONT_FAMILY
+            family: FONT_FAMILY /* applies the font to the layout of every chart */
         },
         hoverlabel: {
             ...layout.hoverlabel,
             font: {
                 ...layout.hoverlabel?.font,
-                family: FONT_FAMILY
+                family: FONT_FAMILY /* applies the font to the hover labels of every chart */
             }
         }
     };
@@ -76,7 +76,7 @@ function applyHoverlabelDefaults(traceColour) {
 export function addGlobalTraceDefaults(data) {
     return data.map((trace) => {
         const marker = applyMarkerDefaults(trace.marker);
-        const traceColour = marker?.color ?? marker?.line?.color ?? trace.line?.color;
+        const traceColour = marker?.color ?? marker?.line?.color ?? trace.line?.color; /* seeing if any colouring exists */
 
         return {
             ...trace,
@@ -101,7 +101,7 @@ export function getChartElementId(chartId) {
     return chartElementId;
 }
 
-export function createReferenceLine(axis, value, lineColour, lineWidth, layer = "below") {
+export function createReferenceLine(axis, value, lineColour, lineWidth, layer = "below") { /* for creating any sort of line */
     const isXAxis = axis === "x";
 
     return {

@@ -13,6 +13,7 @@
     --text-colour: #1f2328;
     --background-colour: #FFFDF9;
     --background-colour-opaque: #fffdf95e;
+    --navigation-colour: #faf8f4;
     --label-colour: #e5e0d7;
     --label-colour-opaque: #e5e0d733;
     --inline-spacing: 7.5em;
@@ -21,9 +22,7 @@
     --bs-body-color: var(--text-colour);
 }
 
-*,
-*::before,
-*::after {
+*, *::before, *::after {
     box-sizing: border-box;
 }
 
@@ -48,7 +47,7 @@ aside {
 }
 
 header > nav, footer {
-    background-color: var(--background-colour) !important;
+    background-color: var(--navigation-colour) !important;
     border-color: var(--label-colour);
 }
 
@@ -79,6 +78,7 @@ footer {
 
 .nav-link:hover, .nav-link:focus {
     color: var(--amber-700);
+    cursor: pointer;
 }
 
 .text-amber {
@@ -117,7 +117,7 @@ footer {
 }
 
 .chart-source-label {
-    --left-inset: 0px;
+    --left-inset: 0px; /* properties that are altered by JS code to correctly position chart source labels horizontally */
     --right-inset: 0px;
     align-self: flex-start;
     color: var(--grey-500);
@@ -174,11 +174,10 @@ footer {
 }
 
 #icon {
-    height: 100%;
+    height: 80%;
 }
 
-#branding:hover,
-#branding:focus {
+#branding:hover, #branding:focus {
     color: var(--amber-700);
 }
 

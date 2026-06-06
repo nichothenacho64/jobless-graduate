@@ -1,7 +1,7 @@
 import { DATA_DIR, CHART_METADATA_ID, UNITS_TO_LABELS } from "./config.js";
 import { transformValue } from "./utils.js";
 
-export async function loadChartData(chartId) {
+export async function loadChartData(chartId) { // the basic chart loading of chart data and metadata
     const metadataPath = DATA_DIR + CHART_METADATA_ID + ".json";
     const chartMetadata = await d3.json(metadataPath).then(metadata => metadata[chartId]);
     const dataPath = DATA_DIR + chartId + ".csv";
@@ -16,7 +16,7 @@ function transformChartData(chartData) {
 
     for (let row of chartData) {
         Object.entries(row).forEach(([columnName, value]) => {
-            row[columnName] = transformValue(value);
+            row[columnName] = transformValue(value); // transforms each value to the correct data type
         });
 
         transformedChartData.push(row);
@@ -25,7 +25,7 @@ function transformChartData(chartData) {
     return transformedChartData;
 }
 
-export function getTrace(rows, traceKey, targetTraceOrderValue) {
+export function getTrace(rows, traceKey, targetTraceOrderValue) { /* a simple function for getting a trace from a set of rows */
     const trace = [];
 
     for (let row of rows) {
@@ -38,7 +38,7 @@ export function getTrace(rows, traceKey, targetTraceOrderValue) {
     return trace;
 }
 
-export function getTraceRow(rows, traceKey, targetTraceOrderValue) {
+export function getTraceRow(rows, traceKey, targetTraceOrderValue) { /* getting a particular row from a trace */
     for (let row of rows) {
         const traceOrderValue = row[traceKey];
         if (traceOrderValue === targetTraceOrderValue) {
@@ -49,11 +49,7 @@ export function getTraceRow(rows, traceKey, targetTraceOrderValue) {
 
 function getLabelDefinition(chartMetadata, key) {
     const metadataLabels = chartMetadata.labels ?? {};
-    const labelSections = [
-        metadataLabels.metrics,
-        metadataLabels.dimensions,
-        metadataLabels.axes
-    ];
+    const labelSections = [metadataLabels.metrics, metadataLabels.dimensions, metadataLabels.axes];
 
     for (let labelDefinitions of labelSections) {
         if (labelDefinitions === undefined) {

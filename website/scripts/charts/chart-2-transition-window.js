@@ -17,8 +17,10 @@ import {
 export async function renderChart2(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);
     const metadataSeriesLabels = chartMetadata.labels.series;
+    
     const xKey = "display_year";
     const yKey = "value_pct";
+
     const xLabel = getAxisLabel(chartMetadata, xKey);
     const yLabel = getAxisLabel(chartMetadata, yKey);
 

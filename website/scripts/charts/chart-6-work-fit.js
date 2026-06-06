@@ -111,7 +111,7 @@ export async function renderChart6(chartId) {
         title: { text: CHART_TITLES.chart6 },
         showlegend: true,
         legend: {
-            title: { text: "Family average on this chart" },
+            title: { text: "Family average FTE outcomes" },
             traceorder: "normal"
         },
         xaxis: {

@@ -28,7 +28,7 @@ function resolveSourceLabel(source, sourceKey, sourceLabels) {
 
     const fallbackLabel = sourceLabels[sourceKey];
 
-    if (fallbackLabel) return fallbackLabel;
+    if (fallbackLabel) return fallbackLabel; /* in case no source key is found */
     return "N/A";
 }
 
@@ -68,7 +68,7 @@ function getSourceLabelInsets(chart) {
 function applySourceLabelInsets(sourceLabel, chart) {
     const { left, right } = getSourceLabelInsets(chart);
 
-    sourceLabel.style.setProperty("--left-inset", `${left}px`);
+    sourceLabel.style.setProperty("--left-inset", `${left}px`); /* responsively setting the insets */
     sourceLabel.style.setProperty("--right-inset", `${right}px`);
 }
 

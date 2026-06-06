@@ -20,7 +20,7 @@ import {
 import { renderChart } from "../plotly/rendering.js";
 import { unpack } from "../core/utils.js";
 
-export async function renderChart5(chartId) {
+export async function renderChart5(chartId) { /* made based on scatter plots found here: https://plotly.com/javascript/line-and-scatter/ */
     const { chartData, chartMetadata } = await loadChartData(chartId);
 
     const xKey = "short_term_fte_pct";
@@ -84,7 +84,7 @@ export async function renderChart5(chartId) {
         title: { text: CHART_TITLES.chart5 },
         showlegend: true,
         legend: {
-            title: { text: "Family average on this chart" },
+            title: { text: "Family average FTE outcomes" },
             traceorder: "normal"
         },
         xaxis: {

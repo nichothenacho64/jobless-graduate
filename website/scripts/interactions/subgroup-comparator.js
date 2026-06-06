@@ -22,6 +22,7 @@ function createChart7Trace(selectedRows, chartMetadata, gapSummary, gapPattern) 
     const customData = [];
     const referenceLabel = getAxisLabel(chartMetadata, "reference_group_pct");
     const comparisonLabel = getAxisLabel(chartMetadata, "comparison_group_pct");
+    // Opposite gap signs mean the advantage flips between time windows.
     const comparisonReverses = gapSummary.shortTermGap * gapSummary.mediumTermGap < 0;
 
     const line = {
@@ -37,6 +38,7 @@ function createChart7Trace(selectedRows, chartMetadata, gapSummary, gapPattern) 
         const timeWindowLabel = getChart7TimeWindowLabel(row, chartMetadata);
         xValues.push(timeWindowLabel);
         yValues.push(row["signed_gap_pp"]);
+        // Plotly customdata keeps hover-only values beside each plotted point.
         customData.push([
             row["subgroup_dimension"],
             row["time_window"].replace("_", "-"),
@@ -172,6 +174,7 @@ function appendChart7PeriodSummary(cardBody, leadText, row, suffixText = "") {
 
 export function getChart7Selectors(chartData) {
     const selectors = [];
+    // Each selector represents the two rows for one comparison.
     const selectorIds = new Set();
 
     for (let row of chartData) {
@@ -243,6 +246,7 @@ export function getChart7SelectedRows(chartData, selectorId) {
         }
     }
 
+    // Keep short-term before medium-term for the line and summary card.
     sortByKeyAscending(selectedRows, "time_window_order");
 
     return selectedRows;
@@ -274,6 +278,7 @@ export function getChart7GapPattern(gapSummary) {
     const signChanged = gapSummary.shortTermGap * gapSummary.mediumTermGap < 0;
     const substantiallyShrunk = mediumTermGapSize <= shortTermGapSize * substantialShrinkRatio;
 
+    // Classify the overall shape so the chart colour and caption match.
     if (shortTermGapSize <= smallThroughoutGap && mediumTermGapSize <= smallThroughoutGap) {
         return CHART_7_VALUES.gapPatterns.smallThroughout;
     } else if (signChanged) {
@@ -328,6 +333,7 @@ export function renderChart7SelectedComparison(
     selectorId,
     explanationCard
 ) {
+    // Rebuild the chart and explanation card from the same selected rows.
     const selectedRows = getChart7SelectedRows(chartData, selectorId);
     const gapSummary = getChart7GapSummary(selectedRows);
     const gapPattern = getChart7GapPattern(gapSummary);

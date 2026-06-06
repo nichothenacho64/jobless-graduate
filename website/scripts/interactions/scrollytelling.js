@@ -6,12 +6,12 @@ function revealSections(observedSections) {
             continue;
         }
 
-        observedSection.target.classList.add("visible");
+        observedSection.target.classList.add("visible"); // trigger the CSS reveal once a section enters the viewport
     }
 }
 
 function loadTransitions() {
-    const observerOptions = { threshold: 0.15 };
+    const observerOptions = { threshold: 0.15 }; // low threshold = reveal starts before the section is fully on the screen
 
     transitionObserver = new IntersectionObserver(revealSections, observerOptions);
     const sections = document.querySelectorAll(".scrollable-section");
@@ -24,7 +24,7 @@ function loadTransitions() {
 function resetTransitions() {
     const sections = document.querySelectorAll(".scrollable-section");
 
-    transitionObserver.disconnect();
+    transitionObserver.disconnect(); // pause while the jump scroll settles, then let reveals run again
 
     for (let section of sections) {
         section.classList.remove("visible");

@@ -1,4 +1,4 @@
-export function transformValue(value) {
+export function transformValue(value) { /* turns all numeric values into integers */
     if (typeof value !== "string") return value;
 
     if (value.trim() === "") return value;
@@ -25,7 +25,7 @@ export function sortByKeyAscending(items, key) {
     return items.sort((a, b) => sortAscending(a[key], b[key]));
 }
 
-function createNumberArray(values) {
+function createNumberArray(values) { /* creates an array with solely numeric values */
     const numericValues = [];
 
     for (let value of values) {
@@ -72,14 +72,14 @@ export function objectHasValues(object, keys) {
         const value = object[key];
 
         if (value === undefined || value === null || value === "") {
-            return false;
+            return false; /* if no value exists for the key, return false */
         }
     }
 
     return true;
 }
 
-export function joinItemsWithAnd(items) {
+export function joinItemsWithAnd(items) { /* joins items with commas and & before the last item */
     let joinedItems = "";
 
     for (let i = 0; i < items.length; i++) {
