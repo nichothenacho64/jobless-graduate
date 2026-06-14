@@ -39,7 +39,7 @@ export async function renderChart2(chartId) {
             marker: {
                 color: CHART_2_TRACE_COLOURS[seriesOrder],
             },
-            hovertemplate: `${xLabel}: %{x}<br>` +
+            hovertemplate: `<b>%{x}</b><br>` +
                 `${yLabel}: %{y}%` +
                 `<extra></extra>`
         };

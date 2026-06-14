@@ -3,29 +3,27 @@ import {
     GLOBAL_TRACES,
     GLOBAL_CONFIG,
     GLOBAL_LAYOUT,
-    THEME_COLOURS,
-    HOVERLABEL_BORDER_COLOURS,
     VIEWPORT_MEDIA_QUERIES
 } from "../core/config.js";
 import { capitaliseWord, clampValue } from "../core/utils.js";
+import {
+    applyHoverLabelLayoutDefaults,
+    applyHoverLabelTraceDefaults,
+    resetHoverLabelHandler
+} from "./hover-labels.js";
 import { renderChartSourceLabel } from "./source-labels.js";
 
 export function addGlobalLayoutDefaults(layout) {
-    return { 
+    const renderedLayout = { 
         ...GLOBAL_LAYOUT,
         ...layout,
         font: {
             ...layout.font,
             family: FONT_FAMILY /* applies the font to the layout of every chart */
-        },
-        hoverlabel: {
-            ...layout.hoverlabel,
-            font: {
-                ...layout.hoverlabel?.font,
-                family: FONT_FAMILY /* applies the font to the hover labels of every chart */
-            }
         }
     };
+
+    return applyHoverLabelLayoutDefaults(renderedLayout);
 }
 
 function applyMarkerDefaults(marker) {
@@ -44,46 +42,21 @@ function applyMarkerDefaults(marker) {
     };
 }
 
-function getHoverlabelColours(traceColour) {
-    let textColour = THEME_COLOURS.background;
-    const amberTrace = traceColour === THEME_COLOURS.amber300;
-    const blueTrace = traceColour === THEME_COLOURS.blue300;
-    const backgroundTrace = traceColour === THEME_COLOURS.background;
+export function addGlobalTraceDefaults(data) {
+    const renderedData = [];
 
-    if (amberTrace || blueTrace || backgroundTrace) {
-        textColour = THEME_COLOURS.text;
+    for (let trace of data) {
+        const marker = applyMarkerDefaults(trace.marker);
+        const renderedTrace = {
+            ...trace,
+            ...(marker ? { marker } : {})
+        };
+
+        const modifiedRenderedTrace = applyHoverLabelTraceDefaults(renderedTrace);
+        renderedData.push(modifiedRenderedTrace);
     }
 
-    return {
-        borderColour: HOVERLABEL_BORDER_COLOURS[traceColour],
-        textColour
-    };
-}
-
-function applyHoverlabelDefaults(traceColour) {
-    const hoverlabelColours = getHoverlabelColours(traceColour);
-
-    return {
-        ...GLOBAL_TRACES.hoverlabel,
-        ...(hoverlabelColours.borderColour ? { bordercolor: hoverlabelColours.borderColour } : {}),
-        font: {
-            ...GLOBAL_TRACES.hoverlabel.font,
-            color: hoverlabelColours.textColour
-        }
-    };
-}
-
-export function addGlobalTraceDefaults(data) {
-    return data.map((trace) => {
-        const marker = applyMarkerDefaults(trace.marker);
-        const traceColour = marker?.color ?? marker?.line?.color ?? trace.line?.color; /* seeing if any colouring exists */
-
-        return {
-            ...trace,
-            ...(marker ? { marker } : {}),
-            hoverlabel: applyHoverlabelDefaults(traceColour)
-        };
-    });
+    return renderedData;
 }
 
 export function getChartElementId(chartId) {
@@ -177,6 +150,7 @@ export async function renderChart(chartId, data, layout, chartMetadata) {
     const chart = await Plotly.newPlot(chartElementId, renderedData, renderedLayout, GLOBAL_CONFIG);
 
     resetAnnotationHandler(chart, layoutAnnotations, largeMediaQuery);
+    resetHoverLabelHandler(chart);
 
     if (chart.__sourceHandler) { 
         chart.removeListener("plotly_afterplot", chart.__sourceHandler);

@@ -22,7 +22,6 @@ function createChart7Trace(selectedRows, chartMetadata, gapSummary, gapPattern) 
     const customData = [];
     const referenceLabel = getAxisLabel(chartMetadata, "reference_group_pct");
     const comparisonLabel = getAxisLabel(chartMetadata, "comparison_group_pct");
-    // Opposite gap signs mean the advantage flips between time windows.
     const comparisonReverses = gapSummary.shortTermGap * gapSummary.mediumTermGap < 0;
 
     const line = {
@@ -38,7 +37,6 @@ function createChart7Trace(selectedRows, chartMetadata, gapSummary, gapPattern) 
         const timeWindowLabel = getChart7TimeWindowLabel(row, chartMetadata);
         xValues.push(timeWindowLabel);
         yValues.push(row["signed_gap_pp"]);
-        // Plotly customdata keeps hover-only values beside each plotted point.
         customData.push([
             row["subgroup_dimension"],
             row["time_window"].replace("_", "-"),
@@ -64,7 +62,7 @@ function createChart7Trace(selectedRows, chartMetadata, gapSummary, gapPattern) 
             color: gapPattern.colour,
         },
         hovertemplate: `<b>%{customdata[0]} (%{customdata[1]} gap)</b><br>` +
-            `%{customdata[2]}<br>` +
+            `<i>%{customdata[2]}</i><br>` +
             `%{customdata[3]}: %{customdata[4]:.1f}% ${referenceLabel}<br>` +
             `%{customdata[5]}: %{customdata[6]:.1f}% ${comparisonLabel}` +
             `<extra></extra>`
@@ -121,35 +119,8 @@ function appendChart7CardValue(cardList, label, value) {
     cardList.appendChild(row);
 }
 
-function getChart7SentenceGroupLabel(label) {
-    if (label === "Other") {
-        return "other";
-    }
-
-    return label;
-}
-
-function getChart7PanelGapSentence(row) {
-    const gap = Number(row["signed_gap_pp"]);
-    const absoluteGap = Math.abs(gap);
-    const referenceGroup = getChart7SentenceGroupLabel(row["reference_group"]);
-    const comparisonGroup = getChart7SentenceGroupLabel(row["comparison_group"]);
-
-    if (absoluteGap <= 0.1) {
-        return `${referenceGroup} and ${comparisonGroup} are about equal`;
-    }
-
-    const formattedGap = formatOneDecimal(absoluteGap);
-
-    if (gap > 0) {
-        return `${comparisonGroup} is ${formattedGap} pp higher than ${referenceGroup}`;
-    }
-
-    return `${referenceGroup} is ${formattedGap} pp higher than ${comparisonGroup}`;
-}
-
 function appendChart7PeriodSummary(cardBody, leadText, row, suffixText = "") {
-    const sentenceText = `${leadText}, ${getChart7PanelGapSentence(row)}${suffixText}.`;
+    const sentenceText = `${leadText}, ${getGapSentence(row)}${suffixText}.`;
 
     const sentence = document.createElement("p");
     sentence.className = "mb-1";
@@ -158,23 +129,17 @@ function appendChart7PeriodSummary(cardBody, leadText, row, suffixText = "") {
     const values = document.createElement("dl");
     values.className = "mb-3";
 
-    appendChart7CardValue(
-        values,
-        row["reference_group"],
-        `${formatOneDecimal(row["reference_group_pct"])}%`
-    );
-    appendChart7CardValue(
-        values,
-        row["comparison_group"],
-        `${formatOneDecimal(row["comparison_group_pct"])}%`
-    );
+    const referenceGroupPercentage = formatOneDecimal(row["reference_group_pct"]);
+    const comparisonGroupPercentage = formatOneDecimal(row["comparison_group_pct"]);
+
+    appendChart7CardValue(values, row["reference_group"], `${referenceGroupPercentage}%`);
+    appendChart7CardValue(values, row["comparison_group"], `${comparisonGroupPercentage}%`);
 
     cardBody.append(sentence, values);
 }
 
 export function getChart7Selectors(chartData) {
-    const selectors = [];
-    // Each selector represents the two rows for one comparison.
+    const selectors = []; // each selector represents the two rows for one comparison
     const selectorIds = new Set();
 
     for (let row of chartData) {
@@ -246,7 +211,6 @@ export function getChart7SelectedRows(chartData, selectorId) {
         }
     }
 
-    // Keep short-term before medium-term for the line and summary card.
     sortByKeyAscending(selectedRows, "time_window_order");
 
     return selectedRows;
@@ -278,7 +242,6 @@ export function getChart7GapPattern(gapSummary) {
     const signChanged = gapSummary.shortTermGap * gapSummary.mediumTermGap < 0;
     const substantiallyShrunk = mediumTermGapSize <= shortTermGapSize * substantialShrinkRatio;
 
-    // Classify the overall shape so the chart colour and caption match.
     if (shortTermGapSize <= smallThroughoutGap && mediumTermGapSize <= smallThroughoutGap) {
         return CHART_7_VALUES.gapPatterns.smallThroughout;
     } else if (signChanged) {
@@ -333,7 +296,6 @@ export function renderChart7SelectedComparison(
     selectorId,
     explanationCard
 ) {
-    // Rebuild the chart and explanation card from the same selected rows.
     const selectedRows = getChart7SelectedRows(chartData, selectorId);
     const gapSummary = getChart7GapSummary(selectedRows);
     const gapPattern = getChart7GapPattern(gapSummary);

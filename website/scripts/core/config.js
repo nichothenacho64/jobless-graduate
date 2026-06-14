@@ -38,14 +38,9 @@ export const THEME_COLOURS = {
     label: "#e5e0d7"
 };
 
-export const HOVERLABEL_BORDER_COLOURS = {
-    [THEME_COLOURS.amber700]: THEME_COLOURS.amber500,
-    [THEME_COLOURS.amber500]: THEME_COLOURS.amber300,
-    [THEME_COLOURS.amber300]: THEME_COLOURS.amber700,
-    [THEME_COLOURS.blue700]: THEME_COLOURS.blue500,
-    [THEME_COLOURS.blue500]: THEME_COLOURS.blue300,
-    [THEME_COLOURS.blue300]: THEME_COLOURS.blue700,
-    [THEME_COLOURS.background]: THEME_COLOURS.amber500
+export const HOVER_LABEL_RENDERING = {
+    borderRadius: 5,
+    defaultShadowColour: THEME_COLOURS.grey500
 };
 
 // global Plotly settings
@@ -64,7 +59,7 @@ export const GLOBAL_CONFIG = {
 export const GLOBAL_TRACES = {
     hoverlabel: {
         align: "left",
-        font: { size: 12 }
+        font: { size: 11 }
     },
     marker: { line: { width: 1.5 } }
 };
@@ -128,7 +123,7 @@ export const DIAGONAL_LINE = {
 export const ANNOTATION_FONT = {
     default: {
         family: FONT_FAMILY,
-        size: 12,
+        size: 11.5,
         color: THEME_COLOURS.text
     }
 };
@@ -331,7 +326,7 @@ export const ANNOTATION_LABELS = {
             studyArea: "Creative arts",
             text: "Creative arts has the<br>biggest work gain,<br>but fit barely improves",
             xanchor: "left",
-            ax: 30,
+            ax: 35,
             ay: 55
         },
         {

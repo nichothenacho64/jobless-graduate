@@ -1,4 +1,5 @@
 @import url("chevrons.css");
+@import url("hover-labels.css");
 
 :root {
     --amber-700: #a55a1f;
@@ -114,6 +115,10 @@ footer {
 .chart {
     width: 100%;
     height: 100%;
+}
+
+.js-plotly-plot .plotly .cursor-crosshair {
+    cursor: pointer !important;
 }
 
 .chart-source-label {

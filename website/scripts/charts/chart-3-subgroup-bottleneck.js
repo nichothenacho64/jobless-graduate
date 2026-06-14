@@ -20,6 +20,7 @@ import {
 export async function renderChart3(chartId) { // modified from the base layout of scatter plots found here: https://plotly.com/javascript/line-and-scatter/
     const { chartData, chartMetadata } = await loadChartData(chartId);
     const xKey = "lower_group_pct";
+
     const xLabel = getAxisLabel(chartMetadata, xKey);
 
     const data = [];
@@ -28,7 +29,7 @@ export async function renderChart3(chartId) { // modified from the base layout o
     for (let row of chartData) {
         const traceNumber = chartData.length - row["sort_order"];
 
-        const lowerGroupPercentage = row["lower_group_pct"];
+        const lowerGroupPercentage = row[xKey];
         const higherGroupPercentage = row["higher_group_pct"];
         const isHomeLanguage = row["subgroup_dimension"] === CHART_3_RENDERING.homeLanguageDimension;
 

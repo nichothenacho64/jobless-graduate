@@ -109,7 +109,7 @@ export function createAxisMarker(row, traceNumber, groupColumn, colour, valueLab
             size: MARKER_SIZE.large,
             color: colour
         },
-        hovertemplate: `${row["subgroup_dimension"]}: ${group}<br>` +
+        hovertemplate: `<b>${row["subgroup_dimension"]}: ${group}</b><br>` +
             `${valueLabel}: %{x}%` +
             `<extra></extra>`
     };
@@ -165,7 +165,7 @@ export function createChart4HoverLabels(row, traceNumber, colour, chartMetadata)
     const comparisonGroupPercentage = formatOneDecimal(row["comparison_group_pct"]);
 
     const hoverTemplate = `<b>${row["subgroup_dimension"]} (${timeWindowLabel} gap)</b><br>` +
-        `${getGapSentence(row)}<br>` +
+        `<i>${getGapSentence(row)}</i><br>` +
         `${referenceGroup}: ${referenceGroupPercentage}% ${referenceLabel}<br>` +
         `${comparisonGroup}: ${comparisonGroupPercentage}% ${comparisonLabel}<br>` +
         `<extra></extra>`;
