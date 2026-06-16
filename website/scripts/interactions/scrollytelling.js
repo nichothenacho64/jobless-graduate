@@ -23,14 +23,13 @@ export function loadTransitions() {
 
 export function resetTransitions() {
     const sections = document.querySelectorAll(".scrollable-section");
+    const transitionDelay = 600;
 
     transitionObserver.disconnect(); // pause while the jump scroll settles, then let reveals run again
 
     for (let section of sections) {
         section.classList.remove("visible");
     }
-
-    const transitionDelay = 600;
 
     setTimeout(() => {
         for (let section of sections) {

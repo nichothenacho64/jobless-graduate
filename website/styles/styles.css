@@ -10,6 +10,7 @@
     --amber-300-opaque: #E7C48B33;
     --blue-300: #AFC6D8;
     --blue-300-opaque: #AFC6D833;
+    --grey-700: #696969;
     --grey-500: #A0A0A0;
 
     --light-text-colour: #1F2328;
@@ -69,8 +70,7 @@ aside {
     font-size: 0.85rem;
 }
 
-header > nav,
-footer {
+header > nav, footer {
     background-color: var(--navigation-colour) !important;
     border-color: var(--label-colour);
 }
@@ -79,6 +79,15 @@ header > nav {
     border-bottom: 1px solid var(--label-colour);
     height: var(--header-height);
     transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+footer > a {
+    text-decoration: none;
+    color: var(--grey-500);
+}
+
+footer > a:hover, footer > a:focus {
+    color: var(--grey-700);
 }
 
 .dark-navbar {
@@ -323,6 +332,19 @@ footer {
     --bs-btn-active-color: var(--background-colour);
     --bs-btn-active-bg: var(--amber-700);
     --bs-btn-active-border-color: var(--amber-700);
+    font-size: inherit;
+}
+
+#shareButton {
+    --bs-btn-color: var(--background-colour);
+    --bs-btn-bg: var(--blue-500);
+    --bs-btn-border-color: var(--blue-500);
+    --bs-btn-hover-color: var(--background-colour);
+    --bs-btn-hover-bg: var(--blue-700);
+    --bs-btn-hover-border-color: var(--blue-700);
+    --bs-btn-active-color: var(--background-colour);
+    --bs-btn-active-bg: var(--blue-700);
+    --bs-btn-active-border-color: var(--blue-700);
     font-size: inherit;
 }
 
