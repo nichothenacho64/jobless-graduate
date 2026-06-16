@@ -26,16 +26,16 @@ export const CHART_TITLES = {
 export const FONT_FAMILY = '"Source Sans 3", sans-serif';
 
 export const THEME_COLOURS = {
-    amber700: "#A55A1f",
+    amber700: "#A55A1F",
     blue700: "#2F5D7E",
     amber500: "#D08A3C",
     blue500: "#5E88A8",
     amber300: "#E7C48B",
     blue300: "#AFC6D8",
-    grey500: "#a0a0a0",
+    grey500: "#A0A0A0",
     text: "#1F2328",
     background: "#FFFDF9",
-    label: "#e5e0d7"
+    label: "#E5E0D7"
 };
 
 export const HOVER_LABEL_RENDERING = {
@@ -148,7 +148,7 @@ export const CHART_RANGES = {
 
 // chart 1a
 export const CHART_1A_DIMENSIONS = {
-    rightMargin: 270
+    rightMargin: 170
 };
 
 

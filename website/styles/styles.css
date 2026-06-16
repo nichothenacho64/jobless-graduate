@@ -2,32 +2,54 @@
 @import url("hover-labels.css");
 
 :root {
-    --amber-700: #a55a1f;
-    --blue-700: #2f5d7e;
+    --amber-700: #A55A1F;
+    --blue-700: #2F5D7E;
     --amber-500: #D08A3C;
     --blue-500: #5E88A8;
     --amber-300: #E7C48B;
     --amber-300-opaque: #E7C48B33;
     --blue-300: #AFC6D8;
     --blue-300-opaque: #AFC6D833;
-    --grey-500: #a0a0a0;
-    --text-colour: #1f2328;
-    --background-colour: #FFFDF9;
-    --background-colour-opaque: #fffdf95e;
-    --navigation-colour: #faf8f4;
-    --label-colour: #e5e0d7;
-    --label-colour-opaque: #e5e0d733;
+    --grey-500: #A0A0A0;
+
+    --light-text-colour: #1F2328;
+    --light-background-colour: #FFFDF9;
+    --light-background-colour-opaque: #FFFDF95E;
+
+    --dark-text-colour: #FFFDF9;
+    --dark-background-colour: #1F2328;
+    --dark-background-colour-opaque: #1F23285E;
+
+    --text-colour: var(--light-text-colour);
+    --background-colour: var(--light-background-colour);
+    --background-colour-opaque: var(--light-background-colour-opaque);
+
+    --opening-text-colour: var(--dark-text-colour);
+    --opening-background-colour: var(--dark-background-colour);
+    --opening-background-colour-opaque: var(--dark-background-colour-opaque);
+
+    --navigation-colour: #FAF8F4;
+    --navigation-opening-colour: #313438;
+    --navigation-opening-border-colour: #4C4F52;
+
+    --label-colour: #E5E0D7;
+    --label-colour-opaque: #E5E0D733;
+
+    --bs-body-color: var(--text-colour);
+
     --inline-spacing: 7.5em;
     --header-height: 4.25rem;
     --footer-height: 3.5rem;
-    --bs-body-color: var(--text-colour);
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     line-height: 1.75;
     scroll-snap-type: y mandatory;
@@ -47,7 +69,8 @@ aside {
     font-size: 0.85rem;
 }
 
-header > nav, footer {
+header > nav,
+footer {
     background-color: var(--navigation-colour) !important;
     border-color: var(--label-colour);
 }
@@ -55,6 +78,28 @@ header > nav, footer {
 header > nav {
     border-bottom: 1px solid var(--label-colour);
     height: var(--header-height);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.dark-navbar {
+    background-color: var(--navigation-opening-colour) !important;
+    border-color: var(--navigation-opening-border-colour);
+}
+
+.dark-navbar #branding,
+.dark-navbar .nav-link {
+    color: var(--opening-text-colour);
+}
+
+.dark-navbar #branding:hover,
+.dark-navbar #branding:focus,
+.dark-navbar .nav-link:hover,
+.dark-navbar .nav-link:focus {
+    color: var(--amber-300);
+}
+
+.dark-navbar .navbar-toggler {
+    border-color: var(--navigation-opening-border-colour);
 }
 
 footer {
@@ -77,7 +122,8 @@ footer {
     text-decoration: none;
 }
 
-.nav-link:hover, .nav-link:focus {
+.nav-link:hover,
+.nav-link:focus {
     color: var(--amber-700);
     cursor: pointer;
 }
@@ -105,11 +151,13 @@ footer {
     border: 1px solid var(--amber-500);
 }
 
-.explanatory-modal a, .explanatory-modal a:visited {
+.explanatory-modal a,
+.explanatory-modal a:visited {
     color: var(--blue-300);
 }
 
-.explanatory-modal a:hover, .explanatory-modal a:focus {
+.explanatory-modal a:hover,
+.explanatory-modal a:focus {
     color: var(--blue-500);
 }
 
@@ -163,7 +211,8 @@ footer {
     padding: 6vh 0;
 }
 
-.scrollable-step, #openingSection {
+.scrollable-step,
+#openingSection {
     min-height: 100vh;
     scroll-snap-align: start;
     scroll-snap-stop: always;
@@ -190,7 +239,8 @@ footer {
     height: 80%;
 }
 
-#branding:hover, #branding:focus {
+#branding:hover,
+#branding:focus {
     color: var(--amber-700);
 }
 
@@ -216,6 +266,12 @@ footer {
         margin-left: 0 !important;
         padding: 0.5rem var(--inline-spacing);
     }
+
+    .dark-navbar #siteNavbar,
+    .dark-navbar #siteNavbar > .navbar-nav {
+        background-color: var(--navigation-opening-colour);
+        border-color: var(--navigation-opening-border-colour);
+    }
 }
 
 
@@ -226,8 +282,8 @@ footer {
     margin: 0;
     padding: 0 var(--inline-spacing) 0 var(--inline-spacing);
     min-height: 100vh;
-    color: var(--background-colour);
-    background: var(--text-colour);
+    color: var(--opening-text-colour);
+    background: var(--opening-background-colour);
 }
 
 #chart7Container {

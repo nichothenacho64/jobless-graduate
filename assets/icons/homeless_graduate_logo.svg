@@ -15,13 +15,13 @@
       }
 
       .cls-3 {
-        fill: #a55a1f;
+        fill: #A55A1F;
       }
     </style>
     <linearGradient id="linear-gradient" x1="105.57" y1="0" x2="105.57" y2="155.93" gradientUnits="userSpaceOnUse">
-      <stop offset=".1" stop-color="#1f2328"/>
-      <stop offset=".5" stop-color="#a55a1f"/>
-      <stop offset=".9" stop-color="#2f5d7e"/>
+      <stop offset=".1" stop-color="#1F2328"/>
+      <stop offset=".5" stop-color="#A55A1F"/>
+      <stop offset=".9" stop-color="#2F5D7E"/>
     </linearGradient>
     <linearGradient id="linear-gradient-2" x1="30.47" x2="30.47" y2="155.9" xlink:href="#linear-gradient"/>
   </defs>

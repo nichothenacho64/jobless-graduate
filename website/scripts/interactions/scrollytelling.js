@@ -10,7 +10,7 @@ function revealSections(observedSections) {
     }
 }
 
-function loadTransitions() {
+export function loadTransitions() {
     const observerOptions = { threshold: 0.15 }; // low threshold = reveal starts before the section is fully on the screen
 
     transitionObserver = new IntersectionObserver(revealSections, observerOptions);
@@ -21,7 +21,7 @@ function loadTransitions() {
     }
 }
 
-function resetTransitions() {
+export function resetTransitions() {
     const sections = document.querySelectorAll(".scrollable-section");
 
     transitionObserver.disconnect(); // pause while the jump scroll settles, then let reveals run again
@@ -38,7 +38,3 @@ function resetTransitions() {
         }
     }, transitionDelay);
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-    loadTransitions();
-});
