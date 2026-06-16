@@ -9,7 +9,7 @@ export function loadShareButton() {
         clearTimeout(resetTimeout);
 
         try {
-            await navigator.clipboard.writeText(window.location.href);
+            await navigator.clipboard.writeText("https://nichothenacho64.github.io/jobless-graduate/");
             shareButtonLabel.textContent = "Link copied!";
         } catch {
             shareButtonLabel.textContent = "Could not copy link";
