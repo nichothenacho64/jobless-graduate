@@ -105,6 +105,14 @@ footer {
     border: 1px solid var(--amber-500);
 }
 
+.explanatory-modal a, .explanatory-modal a:visited {
+    color: var(--blue-300);
+}
+
+.explanatory-modal a:hover, .explanatory-modal a:focus {
+    color: var(--blue-500);
+}
+
 .chart-container {
     display: flex;
     flex-direction: column;

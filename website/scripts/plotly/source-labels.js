@@ -1,5 +1,5 @@
 import { SOURCE_LABEL_TEXT } from "../core/config.js";
-import { joinItemsWithAnd, objectHasValues, getRoundedNonNegativeValue } from "../core/utils.js";
+import { objectHasValues, getRoundedNonNegativeValue } from "../core/utils.js";
 import { getChartElementId } from "./rendering.js";
 
 function resolveSourceLabel(source, sourceKey, sourceLabels) {
@@ -72,6 +72,26 @@ function applySourceLabelInsets(sourceLabel, chart) {
     sourceLabel.style.setProperty("--right-inset", `${right}px`);
 }
 
+function renderSourceLabelContents(sourceLabel, sourceLabels) {
+    if (sourceLabels.length === 1) {
+        sourceLabel.textContent = `${SOURCE_LABEL_TEXT.singular}: ${sourceLabels[0]}`;
+        return;
+    }
+
+    const sourceHeading = document.createElement("div");
+    sourceHeading.textContent = `${SOURCE_LABEL_TEXT.plural}:`;
+
+    const sourceList = document.createElement("ul");
+
+    for (let label of sourceLabels) {
+        const sourceItem = document.createElement("li");
+        sourceItem.textContent = label;
+        sourceList.appendChild(sourceItem);
+    }
+
+    sourceLabel.replaceChildren(sourceHeading, sourceList);
+}
+
 export function renderChartSourceLabel(chartId, chartMetadata, chart) {
     const chartElementId = getChartElementId(chartId);
     const chartElement = document.getElementById(chartElementId);
@@ -91,14 +111,6 @@ export function renderChartSourceLabel(chartId, chartMetadata, chart) {
         chartElement.insertAdjacentElement("afterend", sourceLabel);
     }
 
-    let sourceLabelText;
-
-    if (sourceLabels.length === 1) {
-        sourceLabelText = SOURCE_LABEL_TEXT.singular;
-    } else {
-        sourceLabelText = SOURCE_LABEL_TEXT.plural;
-    }
-
-    sourceLabel.textContent = `${sourceLabelText}: ${joinItemsWithAnd(sourceLabels)}`;
+    renderSourceLabelContents(sourceLabel, sourceLabels);
     applySourceLabelInsets(sourceLabel, chart);
 }

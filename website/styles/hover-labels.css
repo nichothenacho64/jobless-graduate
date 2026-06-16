@@ -3,7 +3,7 @@
 }
 
 .hoverlayer .hovertext path {
-    --shadow-colour-muted: color-mix(in srgb, var(--shadow-colour, var(--grey-500)) 75%, transparent);
+    --shadow-colour-muted: color-mix(in srgb, var(--shadow-colour, var(--grey-500)) 85%, transparent);
     fill: var(--background-colour) !important;
     stroke: var(--background-colour) !important;
     filter: drop-shadow(0 4px 8px var(--shadow-colour-muted));

@@ -1,4 +1,4 @@
-# Jobless graduate: the Australian graduate bottleneck
+# Jobless Graduate: the Australian graduate bottleneck
 
 This article explores where inequality appears in the transition from university into relevant, full-time work in Australia. Instead of arguing that degrees don't work, this project highlights that the transition from studying to stable graduate employment is uneven, as some groups and people from certain disciplines recover quickly, while others face more persistent gaps.
 
