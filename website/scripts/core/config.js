@@ -23,7 +23,7 @@ export const CHART_TITLES = {
 };
 
 // export const FONT_FAMILY = "sans-serif"; // ! only for photo saving
-export const FONT_FAMILY = '"Source Sans 3", sans-serif';
+export const FONT_FAMILY = '"Source Sans 3", Lato, sans-serif';
 
 export const THEME_COLOURS = {
     amber700: "#A55A1F",
