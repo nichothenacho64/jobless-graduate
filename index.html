@@ -272,9 +272,9 @@
             </section>
             <section id="compareGroups" class="scrollable-section">
                 <div class="scrollable-step">
-                    <h2>Explore a subgroup comparison</h2>
+                    <h2>Explore a group or field comparison</h2>
                     <p>
-                        <strong>Select a subgroup</strong> below to explore how
+                        <strong>Select a group or field</strong> below to explore how
                         the gap between short-term and medium-term employment
                         changes depending on the comparison. Note that these are
                         <strong>group-level patterns</strong> drawn from
@@ -283,23 +283,39 @@
                     </p>
                     <div id="chart7Container" class="chart-container">
                         <div id="chart7Panel">
-                            <div id="chart7Control" class="d-flex align-items-center gap-2 pb-2"> <!-- shorthand Bootstrap styling for flex display -->
-                                <span id="chart7SelectorLabel" class="mb-0 form-label"></span>
-                                <div class="dropdown"> <!-- for Bootstrap positioning context for the dropdown toggle and menu -->
-                                    <button
-                                        id="chart7DropdownButton"
-                                        class="btn dropdown-toggle"
-                                        type="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-labelledby="chart7SelectorLabel chart7DropdownButton"
-                                        aria-expanded="false"
-                                    ></button> <!-- Bootstrap attributes are for updating the menu when it opens and closes -->
-                                    <ul id="chart7DropdownMenu" class="dropdown-menu"></ul> 
+                            <div id="chart7Control" class="d-flex align-items-center flex-wrap gap-2 justify-content-between pb-2"> <!-- shorthand Bootstrap styling for flex display -->
+                                <div class="d-flex align-items-center flex-wrap gap-2">
+                                    <span id="chart7SelectorLabel" class="mb-0 form-label"></span>
+                                    <div id="chart7FamilyDropdown" class="dropdown"> 
+                                        <button
+                                            id="chart7FamilyDropdownButton"
+                                            class="btn dropdown-toggle"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-labelledby="chart7SelectorLabel chart7FamilyDropdownButton"
+                                            aria-expanded="false"
+                                        ></button>
+                                        <ul id="chart7FamilyDropdownMenu" class="dropdown-menu"></ul> 
+                                    </div>
+                                    <div class="dropdown"> <!-- for Bootstrap positioning context for the dropdown toggle and menu -->
+                                        <button
+                                            id="chart7DropdownButton"
+                                            class="btn dropdown-toggle"
+                                            type="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-labelledby="chart7SelectorLabel chart7DropdownButton"
+                                            aria-expanded="false"
+                                        ></button> <!-- Bootstrap attributes are for updating the menu when it opens and closes -->
+                                        <ul id="chart7DropdownMenu" class="dropdown-menu"></ul> 
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center flex-wrap gap-2">
+                                    <button id="chart7ModeButton" class="btn blue-button" type="button"></button>
                                 </div>
                             </div>
                             <div class="align-items-start row g-3">
                                 <div class="col-12 col-lg-7"> <!-- full width by default (Bootstrap), col-lg-7 makes it span 7 of 12 grid columns on large screens and up -->
-                                    <div id="chart7SubgroupComparator" class="chart"></div>
+                                    <div id="chart7GroupFieldComparator" class="chart"></div>
                                 </div>
                                 <div class="col-12 col-lg-5"> 
                                     <aside id="chart7ExplanationCard" class="card"></aside> <!-- the card class applies Bootstrap's bordered content panel styling -->
@@ -327,7 +343,7 @@
                         the harder it becomes to treat it as something that individuals
                         should just push through.
                     </p>
-                    <button id="shareButton" class="btn">
+                    <button id="shareButton" class="btn blue-button">
                         <svg class="me-1 bi bi-copy" width="16" height="16" fill="currentColor">
                             <use href="assets/icons/copy.svg#copyIcon"></use>
                         </svg>

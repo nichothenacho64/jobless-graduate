@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import pandas as pd
 
-from src.transform.chart_helpers import select_chart_table_schema
+from src.transform.chart_helpers import (
+    build_qilt_comparison_row,
+    select_chart_table_schema,
+)
 from src.transform.constants import (
     CHART_4_CONSTANTS,
     GOS_8_SOURCE_KEY,
@@ -110,7 +113,7 @@ def _build_gap_shape_rows(group_table: pd.DataFrame) -> PreparedRows:
         subgroup_dimension=subgroup_dimension,
     )
     return [
-        _build_fixed_gap_row(
+        build_qilt_comparison_row(
             reference_row,
             comparison_row,
             subgroup_dimension=subgroup_dimension,
@@ -119,7 +122,7 @@ def _build_gap_shape_rows(group_table: pd.DataFrame) -> PreparedRows:
             time_window_order=0,
             source_key=GOS_8_SOURCE_KEY,
         ),
-        _build_fixed_gap_row(
+        build_qilt_comparison_row(
             reference_row,
             comparison_row,
             subgroup_dimension=subgroup_dimension,
@@ -129,32 +132,6 @@ def _build_gap_shape_rows(group_table: pd.DataFrame) -> PreparedRows:
             source_key=GOS_L_160_SOURCE_KEY,
         ),
     ]
-
-
-def _build_fixed_gap_row(
-    reference_row: pd.Series,
-    comparison_row: pd.Series,
-    *,
-    subgroup_dimension: str,
-    value_column: str,
-    time_window: str,
-    time_window_order: int,
-    source_key: str,
-) -> dict[str, object]:
-    reference_value = reference_row[value_column]
-    comparison_value = comparison_row[value_column]
-
-    return {
-        "subgroup_dimension": subgroup_dimension,
-        "time_window": time_window,
-        "time_window_order": time_window_order,
-        "reference_group": format_qilt_subgroup_label(reference_row["row_label"]),
-        "reference_group_pct": reference_value,
-        "comparison_group": format_qilt_subgroup_label(comparison_row["row_label"]),
-        "comparison_group_pct": comparison_value,
-        "signed_gap_pp": round(float(comparison_value - reference_value), 1),
-        "source_key": source_key,
-    }
 
 
 def _raise_for_missing_fixed_pair_values(

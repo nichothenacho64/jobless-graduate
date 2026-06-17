@@ -292,9 +292,9 @@
       }
     }
   },
-  "chart_7_subgroup_comparator": {
-    "chart_id": "chart_7_subgroup_comparator",
-    "data_file": "chart_7_subgroup_comparator.csv",
+  "chart_7_group_field_comparator": {
+    "chart_id": "chart_7_group_field_comparator",
+    "data_file": "chart_7_group_field_comparator.csv",
     "sources": {
       "gos_8": {
         "source_system": "QILT",
@@ -311,12 +311,30 @@
         "sheet_name": "STMT_UG_ALL_1Y_SG",
         "sheet_number": 160,
         "sheet_title": "Short-term and medium-term domestic employment outcomes (FTE, OE, LF, SAL), 2024, among undergraduates from all provider types by demographic group"
+      },
+      "gos_2": {
+        "source_system": "QILT",
+        "dataset": "GOS",
+        "source_file": "2024_GOS_National_Report_Tables.xlsx",
+        "sheet_name": "EMP_UG_ALL_2Y_AREA",
+        "sheet_number": 2,
+        "sheet_title": "Employment outcomes (FTE, OE, LF), 2023-2024 among undergraduates from all provider types by study area"
+      },
+      "gos_l_6": {
+        "source_system": "QILT",
+        "dataset": "GOS-L",
+        "source_file": "2024_GOS-L_National_Report_Tables.xlsx",
+        "sheet_name": "STMT_UG_ALL_1Y_AREA",
+        "sheet_number": 6,
+        "sheet_title": "Short-term and medium-term domestic employment outcomes (FTE, OE, LF, SAL), 2024, among undergraduates from all provider types by study area"
       }
     },
     "labels": {
       "sources": {
         "gos_8": "GOS #8",
-        "gos_l_160": "GOS-L #160"
+        "gos_l_160": "GOS-L #160",
+        "gos_2": "GOS #2",
+        "gos_l_6": "GOS-L #6"
       },
       "time_windows": {
         "short_term": "4–6 months",

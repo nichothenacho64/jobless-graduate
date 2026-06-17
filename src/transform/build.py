@@ -18,7 +18,7 @@ from src.transform.chart_3_subgroup_bottleneck import build_chart_3_table
 from src.transform.chart_4_gap_shapes import build_chart_4_table
 from src.transform.chart_5_field_conversion import build_chart_5_table
 from src.transform.chart_6_work_fit import build_chart_6_table
-from src.transform.chart_7_subgroup_comparator import build_chart_7_table
+from src.transform.chart_7_group_field_comparator import build_chart_7_table
 from src.transform.constants import (
     CHART_1A_ID,
     CHART_1B_ID,
@@ -29,6 +29,7 @@ from src.transform.constants import (
     CHART_6_ID,
     CHART_7_ID,
     CHART_TABLE_IDS_BY_NUMBER,
+    GOS_2_SOURCE_KEY,
     GOS_5_SOURCE_KEY,
     GOS_8_SOURCE_KEY,
     GOS_21_SOURCE_KEY,
@@ -63,6 +64,7 @@ def prepare_sheets(
 def prepare_all_sources() -> dict[str, PreparedSheetType]:
     qilt_sheet_specs = {
         GOS_21_SOURCE_KEY: initialise_gos_sheet(21),
+        GOS_2_SOURCE_KEY: initialise_gos_sheet(2),
         GOS_5_SOURCE_KEY: initialise_gos_sheet(5),
         GOS_8_SOURCE_KEY: initialise_gos_sheet(8),
         GOS_L_1_SOURCE_KEY: initialise_gos_l_sheet(1),
@@ -85,6 +87,7 @@ def build_chart_tables(
     prepared_sources: Mapping[str, PreparedSheetType],
 ) -> dict[str, pd.DataFrame]:
     gos_21 = _get_sheet_source(prepared_sources, GOS_21_SOURCE_KEY, QILTPreparedSheet)
+    gos_2 = _get_sheet_source(prepared_sources, GOS_2_SOURCE_KEY, QILTPreparedSheet)
     gos_8 = _get_sheet_source(prepared_sources, GOS_8_SOURCE_KEY, QILTPreparedSheet)
     gos_5 = _get_sheet_source(prepared_sources, GOS_5_SOURCE_KEY, QILTPreparedSheet)
 
@@ -107,7 +110,7 @@ def build_chart_tables(
     chart_4_table = build_chart_4_table(gos_8, gos_l_160)
     chart_5_table = build_chart_5_table(gos_l_6)
     chart_6_table = build_chart_6_table(gos_l_6, gos_l_26)
-    chart_7_table = build_chart_7_table(gos_8, gos_l_160)
+    chart_7_table = build_chart_7_table(gos_8, gos_l_160, gos_2, gos_l_6)
 
     return {
         CHART_1A_ID: chart_1a_table,

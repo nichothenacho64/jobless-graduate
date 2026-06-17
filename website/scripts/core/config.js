@@ -9,7 +9,7 @@ export const CHART_3_ID = "chart_3_subgroup_bottleneck";
 export const CHART_4_ID = "chart_4_gap_shapes";
 export const CHART_5_ID = "chart_5_field_conversion";
 export const CHART_6_ID = "chart_6_work_fit";
-export const CHART_7_ID = "chart_7_subgroup_comparator";
+export const CHART_7_ID = "chart_7_group_field_comparator";
 export const CHART_METADATA_ID = "chart_metadata";
 
 export const CHART_TITLES = {
@@ -142,7 +142,10 @@ export const CHART_RANGES = {
     chart4: { x: [-3, 19], y: null },
     chart5: { x: [45, 100], y: [45, 100] },
     chart6: { x: [0, 38.2], y: [-8, 17] }, // x upper bound medianEmploymentGain * 2
-    chart7: { x: null, y: [-5, 17.4] }
+    chart7: {
+        demographics: [-5, 17.4],
+        disciplines: [-4, 27]
+    }
 };
 
 
@@ -207,24 +210,40 @@ export const CHART_6_RENDERING = {
 };
 
 
-// chart 7
-export const CHART_7_RENDERING = {
-    elementIds: {
-        dropdownButton: "chart7DropdownButton",
-        dropdownMenu: "chart7DropdownMenu",
-        selectorLabel: "chart7SelectorLabel",
-        explanationCard: "chart7ExplanationCard"
-    },
-    dimensions: {
-        height: 360,
-        leftMargin: 70,
-        rightMargin: 20,
-        topMargin: 60,
-        bottomMargin: 50
-    }
-};
-
 export const CHART_7_VALUES = {
+    fieldAverageGroup: "All undergraduate fields",
+    equalGapThreshold: 0.1,
+    disciplineFamilies: {
+        "Health & education": [
+            "Dentistry",
+            "Health services and support",
+            "Medicine",
+            "Nursing",
+            "Pharmacy",
+            "Rehabilitation",
+            "Teacher education",
+            "Veterinary science"
+        ],
+        "STEM, built & environmental": [
+            "Agriculture and environmental studies",
+            "Architecture and built environment",
+            "Computing and information systems",
+            "Engineering",
+            "Science and mathematics"
+        ],
+        "Business, law & society": [
+            "Business and management",
+            "Humanities, culture and social sciences",
+            "Law and paralegal studies",
+            "Psychology",
+            "Social work"
+        ],
+        "Creative, communication & services": [
+            "Communications",
+            "Creative arts",
+            "Tourism, hospitality, personal services, sport and recreation"
+        ]
+    },
     gapPatternThresholds: {
         nearZero: 1,
         smallThroughout: 2,
@@ -253,23 +272,6 @@ export const CHART_7_VALUES = {
             colour: THEME_COLOURS.grey500,
             sentence: "This comparison is small throughout."
         }
-    },
-    signDirections: {
-        comparisonMinusReference: "comparison_group_pct - reference_group_pct",
-        referenceMinusComparison: "reference_group_pct - comparison_group_pct"
-    }
-};
-
-export const CHART_7_TEXT = {
-    cardLabels: {
-        selector: "Choose a subgroup comparison:",
-        referenceGroup: "Reference group",
-        comparisonGroup: "Comparison group",
-        gapChange: "Gap change"
-    },
-    signCaptions: {
-        comparisonMinusReference: "Positive values mean the comparison group has a higher full-time employment rate than the reference group. Negative values mean the gap reverses.",
-        referenceMinusComparison: "Positive values mean the reference group has a higher full-time employment rate than the comparison group. Negative values mean the gap reverses."
     }
 };
 

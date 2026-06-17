@@ -5,6 +5,7 @@ from collections.abc import Mapping, Sequence
 import pandas as pd
 
 from src.transform.constants import DISCIPLINE_FAMILY_CONSTANTS
+from src.transform.qilt import format_qilt_subgroup_label
 
 
 def select_chart_table_schema(
@@ -29,6 +30,32 @@ def select_chart_table_schema(
         raise ValueError("Chart table schema mismatch; " + "; ".join(message_parts))
 
     return table.loc[:, expected_columns].reset_index(drop=True)
+
+
+def build_qilt_comparison_row(
+    reference_row: pd.Series,
+    comparison_row: pd.Series,
+    *,
+    subgroup_dimension: str,
+    value_column: str,
+    time_window: str,
+    time_window_order: int,
+    source_key: str,
+) -> dict[str, object]:
+    reference_value = reference_row[value_column]
+    comparison_value = comparison_row[value_column]
+
+    return {
+        "subgroup_dimension": subgroup_dimension,
+        "time_window": time_window,
+        "time_window_order": time_window_order,
+        "reference_group": format_qilt_subgroup_label(reference_row["row_label"]),
+        "reference_group_pct": reference_value,
+        "comparison_group": format_qilt_subgroup_label(comparison_row["row_label"]),
+        "comparison_group_pct": comparison_value,
+        "signed_gap_pp": round(float(comparison_value - reference_value), 1),
+        "source_key": source_key,
+    }
 
 
 def add_discipline_family_colour_fields(

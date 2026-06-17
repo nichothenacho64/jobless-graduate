@@ -310,7 +310,7 @@ footer {
     background-color: var(--label-colour-opaque);
 }
 
-#chart7SubgroupComparator {
+#chart7GroupFieldComparator {
     width: 100%;
 }
 
@@ -320,9 +320,24 @@ footer {
     border-color: var(--grey-500);
 }
 
+@media (max-width: 991.98px) {
+    #compareGroups {
+        margin-inline: 1rem;
+    }
+
+    #chart7Container {
+        --chart-7-panel-width: 100%;
+    }
+
+    #chart7Panel {
+        padding: 1rem;
+    }
+}
+
 /* bootstrap overrides */
 
-#chart7DropdownButton {
+#chart7DropdownButton,
+#chart7FamilyDropdownButton {
     --bs-btn-color: var(--background-colour);
     --bs-btn-bg: var(--amber-500);
     --bs-btn-border-color: var(--amber-500);
@@ -335,7 +350,7 @@ footer {
     font-size: inherit;
 }
 
-#shareButton {
+.blue-button {
     --bs-btn-color: var(--background-colour);
     --bs-btn-bg: var(--blue-500);
     --bs-btn-border-color: var(--blue-500);
@@ -348,7 +363,8 @@ footer {
     font-size: inherit;
 }
 
-#chart7DropdownMenu {
+#chart7DropdownMenu,
+#chart7FamilyDropdownMenu {
     --bs-dropdown-bg: var(--background-colour);
     --bs-dropdown-link-color: var(--text-colour);
     --bs-dropdown-link-hover-bg: var(--amber-300);

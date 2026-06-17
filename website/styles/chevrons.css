@@ -54,11 +54,13 @@
     transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-#chart7DropdownButton::after { /* for the spinning chevron */
+#chart7DropdownButton::after,
+#chart7FamilyDropdownButton::after { /* for the spinning chevron */
     transform: rotate(0deg);
     transition: transform 0.15s ease-in-out;
 }
 
-#chart7DropdownButton[aria-expanded="true"]::after { /* using Bootstrap attributes to reference the state */
+#chart7DropdownButton[aria-expanded="true"]::after,
+#chart7FamilyDropdownButton[aria-expanded="true"]::after { /* using Bootstrap attributes to reference the state */
     transform: rotate(180deg);
 }

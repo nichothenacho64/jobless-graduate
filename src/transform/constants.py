@@ -66,7 +66,7 @@ CHART_3_ID = "chart_3_subgroup_bottleneck"
 CHART_4_ID = "chart_4_gap_shapes"
 CHART_5_ID = "chart_5_field_conversion"
 CHART_6_ID = "chart_6_work_fit"
-CHART_7_ID = "chart_7_subgroup_comparator"
+CHART_7_ID = "chart_7_group_field_comparator"
 
 CHART_TABLE_IDS_BY_NUMBER = {
     1.1: CHART_1A_ID,
@@ -207,11 +207,13 @@ CHART_7_CONSTANTS = {
         "signed_gap_pp",
         "source_key",
         "sort_order",
+        "comparison_kind",
     ],
 }
 
 
 # Source keys
+GOS_2_SOURCE_KEY = "gos_2"
 GOS_5_SOURCE_KEY = "gos_5"
 GOS_8_SOURCE_KEY = "gos_8"
 GOS_21_SOURCE_KEY = "gos_21"
