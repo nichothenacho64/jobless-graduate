@@ -225,6 +225,17 @@ footer {
     scroll-snap-stop: always;
 }
 
+#openingSection {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin: 0;
+    padding: 0 var(--inline-spacing) 0 var(--inline-spacing);
+    min-height: 100vh;
+    color: var(--opening-text-colour);
+    background: var(--opening-background-colour);
+}
+
 #closingSection > .scrollable-step {
     min-height: calc(100vh - var(--header-height) - var(--footer-height));
 }
@@ -289,15 +300,4 @@ footer {
     html {
         font-size: 75%;
     }
-}
-
-#openingSection {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    margin: 0;
-    padding: 0 var(--inline-spacing) 0 var(--inline-spacing);
-    min-height: 100vh;
-    color: var(--opening-text-colour);
-    background: var(--opening-background-colour);
 }

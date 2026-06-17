@@ -1,6 +1,6 @@
 import { CHART_7_VALUES } from "../core/config.js";
 import { loadChartData } from "../core/data.js";
-import { renderChart7ComparisonState } from "../group-field-comparator/render.js";
+import { renderChart7ComparisonState } from "../group-field-comparator/rendering.js";
 
 export async function renderChart7(chartId) {
     const { chartData, chartMetadata } = await loadChartData(chartId);

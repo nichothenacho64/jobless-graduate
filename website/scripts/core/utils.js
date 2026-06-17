@@ -79,6 +79,20 @@ export function objectHasValues(object, keys) {
     return true;
 }
 
+export function joinArrayWithCommas(items) {
+    let joinedItems = "";
+
+    for (let i = 0; i < items.length; i++) {
+        if (i > 0) {
+            joinedItems += ", ";
+        }
+
+        joinedItems += items[i];
+    }
+
+    return joinedItems;
+}
+
 export function joinItemsWithAnd(items) { /* joins items with commas and & before the last item */
     let joinedItems = "";
 

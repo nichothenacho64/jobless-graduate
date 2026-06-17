@@ -1,4 +1,4 @@
-import { CHART_7_VALUES } from "../core/config.js";
+import { CHART_7_GAPS, CHART_7_VALUES } from "../core/config.js";
 import { formatOneDecimal } from "../core/utils.js";
 
 export function getChart7TimeWindowLabel(row, chartMetadata) {
@@ -18,7 +18,7 @@ export function getChart7GroupLabel(group, comparisonKind) {
         comparisonKind === "discipline" &&
         group === CHART_7_VALUES.fieldAverageGroup
     ) {
-        return "All fields";
+        return CHART_7_VALUES.fieldAverageShortLabel;
     }
 
     return group;
@@ -34,38 +34,40 @@ export function getChart7SelectorLabel(row, comparisonKind) {
 
 export function getChart7ComparisonLabel(row, comparisonKind) {
     if (comparisonKind === "discipline") {
-        return `${getChart7FieldName(row)} compared to all fields`;
+        return `${getChart7FieldName(row)} compared with all fields`;
     }
 
     return row["reference_group"] + " vs " + row["comparison_group"];
 }
 
-function getChart7DisciplineGapSentence(row, gap) {
-    const fieldName = getChart7FieldName(row);
-    const gapSize = Math.abs(gap);
-
-    if (gapSize <= CHART_7_VALUES.equalGapThreshold) {
-        return `${fieldName} matched the overall FTE rate`;
-    }
-
-    let fieldGap = -gap;
+export function getChart7FieldGap(row) {
+    const gap = Number(row["signed_gap_pp"]);
 
     if (row["reference_group"] === CHART_7_VALUES.fieldAverageGroup) {
-        fieldGap = gap;
+        return gap;
     }
 
-    const formattedGap = formatOneDecimal(gapSize);
-    let direction = fieldGap > 0 ? "above" : "below";
-
-    return `${fieldName} was ${formattedGap} pp ${direction} the overall FTE rate`;
+    return -gap;
 }
 
-function getChart7DemographicGapSentence(row, gap, comparisonKind) {
-    const gapSize = Math.abs(gap);
-    const referenceGroup = getChart7GroupLabel(row["reference_group"], comparisonKind);
-    const comparisonGroup = getChart7GroupLabel(row["comparison_group"], comparisonKind);
+function getChart7GapSentenceGroups(row, comparisonKind) {
+    if (comparisonKind === "discipline") {
+        return {
+            referenceGroup: getChart7GroupLabel(CHART_7_VALUES.fieldAverageGroup, comparisonKind),
+            comparisonGroup: getChart7FieldName(row)
+        };
+    } else {
+        return {
+            referenceGroup: getChart7GroupLabel(row["reference_group"], comparisonKind),
+            comparisonGroup: getChart7GroupLabel(row["comparison_group"], comparisonKind)
+        };
+    }
+}
 
-    if (gapSize <= CHART_7_VALUES.equalGapThreshold) {
+function getChart7GapSentenceText(referenceGroup, comparisonGroup, gap) {
+    const gapSize = Math.abs(gap);
+
+    if (gapSize <= CHART_7_GAPS.thresholds.equal) {
         return `${referenceGroup} and ${comparisonGroup} are about equal`;
     }
 
@@ -78,15 +80,63 @@ function getChart7DemographicGapSentence(row, gap, comparisonKind) {
         lowerGroup = referenceGroup;
     }
 
+    if (higherGroup === CHART_7_VALUES.fieldAverageShortLabel) {
+        return `${higherGroup} are ${formattedGap} pp higher than ${lowerGroup}`;
+    }
+
     return `${higherGroup} is ${formattedGap} pp higher than ${lowerGroup}`;
 }
 
 export function getChart7GapSentence(row, comparisonKind) {
-    const gap = Number(row["signed_gap_pp"]);
+    let gap = Number(row["signed_gap_pp"]);
 
     if (comparisonKind === "discipline") {
-        return getChart7DisciplineGapSentence(row, gap);
-    } else {
-        return getChart7DemographicGapSentence(row, gap, comparisonKind);
+        gap = getChart7FieldGap(row);
     }
+
+    const gapGroups = getChart7GapSentenceGroups(row, comparisonKind);
+    return getChart7GapSentenceText(
+        gapGroups.referenceGroup,
+        gapGroups.comparisonGroup,
+        gap
+    );
+}
+
+export function getChart7DisciplineSummarySentence(gapSummary) {
+    const fieldName = gapSummary.selectorLabel;
+    const shortTermGap = gapSummary.shortTermGap;
+    const mediumTermGap = gapSummary.mediumTermGap;
+    const shortTermGapSize = Math.abs(shortTermGap);
+    const mediumTermGapSize = Math.abs(mediumTermGap);
+    const smallThroughoutGap = CHART_7_GAPS.thresholds.smallThroughout;
+    const sentences = CHART_7_GAPS.discipline.sentences;
+
+    if (
+        shortTermGapSize <= smallThroughoutGap &&
+        mediumTermGapSize <= smallThroughoutGap
+    ) {
+        return sentences.smallThroughout;
+    } else if (shortTermGap < 0 && mediumTermGap > smallThroughoutGap) {
+        return sentences.belowThenAhead;
+    } else if (shortTermGap < 0 && mediumTermGap >= -smallThroughoutGap) {
+        return sentences.belowThenClose;
+    } else if (shortTermGap > 0 && mediumTermGap < -smallThroughoutGap) {
+        return sentences.aboveThenBelow;
+    } else if (shortTermGap > 0 && mediumTermGap <= smallThroughoutGap) {
+        return sentences.aboveThenClose;
+    } else if (shortTermGap > 0 && mediumTermGap > 0) {
+        if (mediumTermGapSize < shortTermGapSize) {
+            return `${fieldName}'s ${sentences.leadNarrows}`;
+        } else {
+            return `${fieldName} ${sentences.leadPersists}`;
+        }
+    } else if (shortTermGap < 0 && mediumTermGap < 0) {
+        if (mediumTermGapSize < shortTermGapSize) {
+            return sentences.belowNarrows;
+        } else {
+            return sentences.belowPersists;
+        }
+    }
+
+    return sentences.differenceRemains;
 }

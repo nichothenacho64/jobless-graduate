@@ -142,6 +142,7 @@ export async function renderChart(chartId, data, layout, chartMetadata) {
     const layoutAnnotations = renderedLayout.annotations;
 
     const largeMediaQuery = window.matchMedia(VIEWPORT_MEDIA_QUERIES.large); // whether or not larger-screen annotations should appear
+    const mediumMediaQuery = window.matchMedia(VIEWPORT_MEDIA_QUERIES.mediumAndBelow); // whether or not smaller-screen source labels should appear
 
     if (layoutAnnotations) {
         renderedLayout.annotations = getViewportAnnotations(layoutAnnotations, largeMediaQuery);
@@ -154,14 +155,17 @@ export async function renderChart(chartId, data, layout, chartMetadata) {
 
     if (chart.__sourceHandler) { 
         chart.removeListener("plotly_afterplot", chart.__sourceHandler);
+        chart.__sourceMediaQuery?.removeEventListener("change", chart.__sourceHandler);
     }
 
     const sourceHandler = () => { // reposition the source label after Plotly finishes drawing or redrawing the chart
-        renderChartSourceLabel(chartId, chartMetadata, chart);
+        renderChartSourceLabel(chartId, chartMetadata, chart, mediumMediaQuery);
     };
 
     chart.__sourceHandler = sourceHandler;
+    chart.__sourceMediaQuery = mediumMediaQuery;
     chart.on("plotly_afterplot", sourceHandler);
+    mediumMediaQuery.addEventListener("change", sourceHandler);
     sourceHandler(); // render the source label immediately after the first plot
 
     return chart;

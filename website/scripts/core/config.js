@@ -65,6 +65,7 @@ export const GLOBAL_TRACES = {
 };
 
 export const VIEWPORT_MEDIA_QUERIES = {
+    mediumAndBelow: "(max-width: 991.98px)",
     large: "(min-width: 992px)"
 };
 
@@ -144,7 +145,7 @@ export const CHART_RANGES = {
     chart6: { x: [0, 38.2], y: [-8, 17] }, // x upper bound medianEmploymentGain * 2
     chart7: {
         demographics: [-5, 17.4],
-        disciplines: [-4, 27]
+        disciplines: [-27, 22]
     }
 };
 
@@ -211,7 +212,7 @@ export const CHART_6_RENDERING = {
 
 export const CHART_7_VALUES = {
     fieldAverageGroup: "All undergraduate fields",
-    equalGapThreshold: 0.1,
+    fieldAverageShortLabel: "All fields",
     disciplineFamilies: {
         "Health & education": [
             "Dentistry",
@@ -243,33 +244,75 @@ export const CHART_7_VALUES = {
             "Tourism, hospitality, personal services, sport and recreation"
         ]
     },
-    gapPatternThresholds: {
+    disciplineYAxisLabel: "Difference from all fields (pp)"
+};
+
+export const CHART_7_GAPS = {
+    thresholds: {
+        equal: 0.1,
         nearZero: 1,
         smallThroughout: 2,
         meaningful: 3,
         substantialShrinkRatio: 0.5
     },
-    gapPatterns: {
-        persists: {
-            label: "Persists",
-            colour: THEME_COLOURS.amber700,
-            sentence: "This gap persists into the medium term."
+    demographic: {
+        patterns: {
+            persists: {
+                label: "Difference remains",
+                colour: THEME_COLOURS.amber700,
+                sentence: "This gap persists into the medium term."
+            },
+            mostlyCloses: {
+                label: "Moves closer",
+                colour: THEME_COLOURS.blue500,
+                sentence: "This gap mostly closes by the medium term."
+            },
+            reverses: {
+                label: "Changes direction",
+                colour: THEME_COLOURS.blue700,
+                dash: "dash",
+                sentence: "This gap reverses by the medium term."
+            },
+            smallThroughout: {
+                label: "Close to equal",
+                colour: THEME_COLOURS.grey500,
+                sentence: "This comparison is small throughout."
+            }
+        }
+    },
+    discipline: {
+        patterns: {
+            persists: {
+                label: "Difference remains"
+            },
+            mostlyCloses: {
+                label: "Moves closer"
+            },
+            reverses: {
+                label: "Changes direction",
+                dash: "dash"
+            },
+            smallThroughout: {
+                label: "Close to equal"
+            }
         },
-        mostlyCloses: {
-            label: "Mostly closes",
-            colour: THEME_COLOURS.blue500,
-            sentence: "This gap mostly closes by the medium term."
+        colours: {
+            aboveAverage: THEME_COLOURS.blue700,
+            belowAverage: THEME_COLOURS.amber700,
+            closeToAverage: THEME_COLOURS.grey500,
+            catchesUp: THEME_COLOURS.blue700
         },
-        reverses: {
-            label: "Reverses",
-            colour: THEME_COLOURS.blue700,
-            dash: "dash",
-            sentence: "This gap reverses by the medium term."
-        },
-        smallThroughout: {
-            label: "Small throughout",
-            colour: THEME_COLOURS.grey500,
-            sentence: "This comparison is small throughout."
+        sentences: {
+            smallThroughout: "This field stays close to the overall rate in both periods.",
+            belowThenAhead: "The field starts below the overall rate, then moves ahead.",
+            belowThenClose: "The field starts below the overall rate, then mostly catches up.",
+            aboveThenBelow: "The field starts above the overall rate, then falls below it.",
+            aboveThenClose: "The field starts above the overall rate, then returns close to it.",
+            leadNarrows: "lead narrows, but it stays above the overall rate.",
+            leadPersists: "stays above the overall rate in both periods.",
+            belowNarrows: "The field moves closer to the overall rate, but still remains below it.",
+            belowPersists: "The field stays below the overall rate in both periods.",
+            differenceRemains: "This difference remains into the medium term."
         }
     }
 };

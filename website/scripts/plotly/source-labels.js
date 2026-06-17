@@ -1,5 +1,5 @@
 import { CHART_7_ID, SOURCE_LABEL_TEXT } from "../core/config.js";
-import { objectHasValues, getRoundedNonNegativeValue } from "../core/utils.js";
+import { objectHasValues, getRoundedNonNegativeValue, joinArrayWithCommas } from "../core/utils.js";
 import { getChartElementId } from "./rendering.js";
 
 function resolveSourceLabel(source, sourceKey, sourceLabels) {
@@ -34,13 +34,13 @@ function resolveSourceLabel(source, sourceKey, sourceLabels) {
 
 function getSourceLabels(chartMetadata) {
     const sources = chartMetadata?.sources;
-    const fallbackSourceLabels = chartMetadata?.labels?.sources ?? {};
+    const sourceLabelFallbacks = chartMetadata?.labels?.sources ?? {};
     const sourceLabels = [];
 
     if (!sources) return sourceLabels;
 
     for (let sourceKey in sources) {
-        const sourceLabel = resolveSourceLabel(sources[sourceKey], sourceKey, fallbackSourceLabels);
+        const sourceLabel = resolveSourceLabel(sources[sourceKey], sourceKey, sourceLabelFallbacks);
 
         if (!sourceLabel) continue;
 
@@ -67,9 +67,17 @@ function applySourceLabelInsets(sourceLabel, chart) {
     sourceLabel.style.setProperty("--right-inset", `${rightInset}px`);
 }
 
-function renderSourceLabelContents(sourceLabel, sourceLabels) {
-    if (sourceLabels.length === 1) {
-        sourceLabel.textContent = `${SOURCE_LABEL_TEXT.singular}: ${sourceLabels[0]}`;
+function renderSourceLabelContents(sourceLabel, sourceLabels, mediaQuery) {
+    if (sourceLabels.length === 1 || mediaQuery?.matches) {
+        let sourceLabelText;
+
+        if (sourceLabels.length === 1) {
+            sourceLabelText = SOURCE_LABEL_TEXT.singular;
+        } else {
+            sourceLabelText = SOURCE_LABEL_TEXT.plural;
+        }
+
+        sourceLabel.textContent = `${sourceLabelText}: ${joinArrayWithCommas(sourceLabels)}`;
         return;
     }
 
@@ -97,10 +105,11 @@ function applyChart7SourceLabelLayout(chartId, sourceLabel) {
     sourceLabelParent.appendChild(sourceLabel);
 }
 
-export function renderChartSourceLabel(chartId, chartMetadata, chart) {
+export function renderChartSourceLabel(chartId, chartMetadata, chart, mediaQuery) {
     const chartElementId = getChartElementId(chartId);
     const chartElement = document.getElementById(chartElementId);
     const sourceLabelId = chartElementId + "Sources";
+
     let sourceLabel = document.getElementById(sourceLabelId);
     const sourceLabels = getSourceLabels(chartMetadata);
 
@@ -116,7 +125,7 @@ export function renderChartSourceLabel(chartId, chartMetadata, chart) {
         chartElement.insertAdjacentElement("afterend", sourceLabel);
     }
 
-    renderSourceLabelContents(sourceLabel, sourceLabels);
+    renderSourceLabelContents(sourceLabel, sourceLabels, mediaQuery);
     applySourceLabelInsets(sourceLabel, chart);
     applyChart7SourceLabelLayout(chartId, sourceLabel);
 }

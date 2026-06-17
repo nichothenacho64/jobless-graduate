@@ -1,4 +1,5 @@
 import {
+    CHART_7_GAPS,
     CHART_RANGES,
     CHART_7_VALUES,
     DUMBBELL_LINE,
@@ -11,6 +12,8 @@ import { createReferenceLine, renderChart } from "../plotly/rendering.js";
 import { createChart7DropdownItems, updateChart7DropdownSelection } from "./dropdowns.js";
 import {
     getChart7ComparisonLabel,
+    getChart7DisciplineSummarySentence,
+    getChart7FieldGap,
     getChart7GapSentence,
     getChart7GroupLabel,
     getChart7SelectorLabel,
@@ -21,35 +24,44 @@ import {
     getChart7DisciplineSelectors
 } from "./selectors.js";
 
-function createChart7Trace(selectedRows, chartMetadata, gapSummary, gapPattern, comparisonKind) {
+function createChart7Trace(selectedRows, chartMetadata, comparisonKind) {
     const xValues = [];
     const yValues = [];
     const customData = [];
     const referenceLabel = getAxisLabel(chartMetadata, "reference_group_pct");
     const comparisonLabel = getAxisLabel(chartMetadata, "comparison_group_pct");
-    const comparisonReverses = gapSummary.shortTermGap * gapSummary.mediumTermGap < 0;
+    const gapTypeLabel = comparisonKind === "discipline" ? "difference" : "gap";
+    const gapSummary = getChart7GapSummary(selectedRows, comparisonKind);
+    const gapPattern = getChart7GapPattern(gapSummary, comparisonKind);
 
     const line = {
         color: gapPattern.colour,
         width: DUMBBELL_LINE.default.width
     };
 
-    if (comparisonReverses) {
-        line.dash = CHART_7_VALUES.gapPatterns.reverses.dash;
+    if (gapPattern.dash) {
+        line.dash = gapPattern.dash;
     }
 
     for (let row of selectedRows) {
         const timeWindowLabel = getChart7TimeWindowLabel(row, chartMetadata);
+        const valueRows = getChart7ValueRows(row, comparisonKind);
+        let gap = row["signed_gap_pp"];
+
+        if (comparisonKind === "discipline") {
+            gap = getChart7FieldGap(row);
+        }
+
         xValues.push(timeWindowLabel);
-        yValues.push(row["signed_gap_pp"]);
+        yValues.push(gap);
         customData.push([
             getChart7SelectorLabel(row, comparisonKind),
             row["time_window"].replace("_", "-"),
             getChart7GapSentence(row, comparisonKind),
-            getChart7GroupLabel(row["reference_group"], comparisonKind),
-            row["reference_group_pct"],
-            getChart7GroupLabel(row["comparison_group"], comparisonKind),
-            row["comparison_group_pct"]
+            valueRows[0].label,
+            valueRows[0].value,
+            valueRows[1].label,
+            valueRows[1].value
         ]);
     }
 
@@ -66,7 +78,7 @@ function createChart7Trace(selectedRows, chartMetadata, gapSummary, gapPattern, 
             size: MARKER_SIZE.large,
             color: gapPattern.colour,
         },
-        hovertemplate: `<b>%{customdata[0]} (%{customdata[1]} gap)</b><br>` +
+        hovertemplate: `<b>%{customdata[0]} (%{customdata[1]} ${gapTypeLabel})</b><br>` +
             `<i>%{customdata[2]}</i><br>` +
             `%{customdata[3]}: %{customdata[4]:.1f}% ${referenceLabel}<br>` +
             `%{customdata[5]}: %{customdata[6]:.1f}% ${comparisonLabel}` +
@@ -74,9 +86,16 @@ function createChart7Trace(selectedRows, chartMetadata, gapSummary, gapPattern, 
     };
 }
 
-function createChart7Layout(selectedRows, chartMetadata, yAxisRange) {
+function createChart7Layout(selectedRows, chartMetadata, comparisonKind) {
     const xValues = [];
     const yAxisLine = createReferenceLine("y", 0, THEME_COLOURS.text, 2, "above");
+    let yAxisLabel = getAxisLabel(chartMetadata, "signed_gap_pp", true);
+    let yAxisRange = CHART_RANGES.chart7.demographics;
+
+    if (comparisonKind === "discipline") {
+        yAxisLabel = CHART_7_VALUES.disciplineYAxisLabel;
+        yAxisRange = CHART_RANGES.chart7.disciplines;
+    }
 
     for (let row of selectedRows) {
         const timeWindowLabel = getChart7TimeWindowLabel(row, chartMetadata);
@@ -93,7 +112,7 @@ function createChart7Layout(selectedRows, chartMetadata, yAxisRange) {
             fixedrange: true
         },
         yaxis: {
-            title: { text: getAxisLabel(chartMetadata, "signed_gap_pp", true) },
+            title: { text: yAxisLabel },
             range: yAxisRange,
             zeroline: false,
             fixedrange: true
@@ -106,6 +125,35 @@ function createChart7Layout(selectedRows, chartMetadata, yAxisRange) {
             b: 50
         }
     };
+}
+
+function getChart7ValueRows(row, comparisonKind) {
+    let firstLabel;
+    let firstValue;
+    let secondLabel;
+    let secondValue;
+
+    if (comparisonKind === "discipline") {
+        firstLabel = getChart7SelectorLabel(row, comparisonKind);
+        secondLabel = getChart7GroupLabel(CHART_7_VALUES.fieldAverageGroup, comparisonKind);
+        firstValue = row["reference_group_pct"];
+        secondValue = row["comparison_group_pct"];
+
+        if (row["reference_group"] === CHART_7_VALUES.fieldAverageGroup) {
+            firstValue = row["comparison_group_pct"];
+            secondValue = row["reference_group_pct"];
+        }
+    } else {
+        firstLabel = getChart7GroupLabel(row["reference_group"], comparisonKind);
+        firstValue = row["reference_group_pct"];
+        secondLabel = getChart7GroupLabel(row["comparison_group"], comparisonKind);
+        secondValue = row["comparison_group_pct"];
+    }
+
+    return [
+        { label: firstLabel, value: firstValue },
+        { label: secondLabel, value: secondValue }
+    ];
 }
 
 function appendChart7CardValue(cardList, label, value) {
@@ -131,27 +179,27 @@ function appendChart7PeriodSummary(cardBody, leadText, row, comparisonKind) {
     const values = document.createElement("dl");
     values.className = "mb-3";
 
-    if (comparisonKind === "discipline") {
-        sentence.textContent = `${leadText}, ${getChart7GapSentence(row, comparisonKind)}.`;
-    } else {
-        sentence.textContent = `${leadText}, ${getChart7GapSentence(row, comparisonKind)} in full-time employment.`;
+    const gapSentence = getChart7GapSentence(row, comparisonKind);
+    sentence.textContent = `${leadText}, ${gapSentence} in full-time employment.`;
+
+    const valueRows = getChart7ValueRows(row, comparisonKind);
+
+    for (let valueRow of valueRows) {
+        const percentage = formatOneDecimal(valueRow.value);
+        appendChart7CardValue(values, valueRow.label, `${percentage}%`);
     }
-
-    const referenceGroupPercentage = formatOneDecimal(row["reference_group_pct"]);
-    const comparisonGroupPercentage = formatOneDecimal(row["comparison_group_pct"]);
-
-    const referenceGroupLabel = getChart7GroupLabel(row["reference_group"], comparisonKind);
-    const comparisonGroupLabel = getChart7GroupLabel(row["comparison_group"], comparisonKind);
-
-    appendChart7CardValue(values, referenceGroupLabel, `${referenceGroupPercentage}%`);
-    appendChart7CardValue(values, comparisonGroupLabel, `${comparisonGroupPercentage}%`);
 
     cardBody.append(sentence, values);
 }
 
 function getChart7GapSummary(selectedRows, comparisonKind) {
-    const shortTermGap = selectedRows[0]["signed_gap_pp"];
-    const mediumTermGap = selectedRows[1]["signed_gap_pp"];
+    let shortTermGap = selectedRows[0]["signed_gap_pp"];
+    let mediumTermGap = selectedRows[1]["signed_gap_pp"];
+
+    if (comparisonKind === "discipline") {
+        shortTermGap = getChart7FieldGap(selectedRows[0]);
+        mediumTermGap = getChart7FieldGap(selectedRows[1]);
+    }
 
     return {
         selectorLabel: getChart7SelectorLabel(selectedRows[0], comparisonKind),
@@ -161,33 +209,80 @@ function getChart7GapSummary(selectedRows, comparisonKind) {
     };
 }
 
-function getChart7GapPattern(gapSummary) {
+function getChart7GapPatternKey(gapSummary) {
+    const thresholds = CHART_7_GAPS.thresholds;
     const shortTermGapSize = Math.abs(gapSummary.shortTermGap);
     const mediumTermGapSize = Math.abs(gapSummary.mediumTermGap);
-
-    const nearZeroGap = CHART_7_VALUES.gapPatternThresholds.nearZero;
-    const smallThroughoutGap = CHART_7_VALUES.gapPatternThresholds.smallThroughout;
-    const meaningfulGap = CHART_7_VALUES.gapPatternThresholds.meaningful;
-
-    const substantialShrinkRatio = CHART_7_VALUES.gapPatternThresholds.substantialShrinkRatio;
+    const smallThroughout =
+        shortTermGapSize <= thresholds.smallThroughout &&
+        mediumTermGapSize <= thresholds.smallThroughout;
     const signChanged = gapSummary.shortTermGap * gapSummary.mediumTermGap < 0;
-    const substantiallyShrunk = mediumTermGapSize <= shortTermGapSize * substantialShrinkRatio;
+    const substantiallyShrunk = mediumTermGapSize <= shortTermGapSize * thresholds.substantialShrinkRatio;
 
-    if (shortTermGapSize <= smallThroughoutGap && mediumTermGapSize <= smallThroughoutGap) {
-        return CHART_7_VALUES.gapPatterns.smallThroughout;
+    if (smallThroughout) {
+        return "smallThroughout";
     } else if (signChanged) {
-        return CHART_7_VALUES.gapPatterns.reverses;
-    } else if (mediumTermGapSize <= nearZeroGap) {
-        return CHART_7_VALUES.gapPatterns.mostlyCloses;
-    } else if (mediumTermGapSize >= meaningfulGap && !substantiallyShrunk) {
-        return CHART_7_VALUES.gapPatterns.persists;
+        return "reverses";
+    } else if (mediumTermGapSize <= thresholds.nearZero) {
+        return "mostlyCloses";
+    } else if (mediumTermGapSize >= thresholds.meaningful && !substantiallyShrunk) {
+        return "persists";
     }
 
-    return CHART_7_VALUES.gapPatterns.mostlyCloses;
+    return "mostlyCloses";
 }
 
-function updateChart7ExplanationCard(explanationCard, selectedRows, gapSummary, gapPattern, comparisonKind) {
+function getChart7DisciplineGapColour(gapSummary) {
+    const thresholds = CHART_7_GAPS.thresholds;
+    const colours = CHART_7_GAPS.discipline.colours;
+    const shortTermGap = gapSummary.shortTermGap;
+    const mediumTermGap = gapSummary.mediumTermGap;
+    const shortTermGapSize = Math.abs(shortTermGap);
+    const mediumTermGapSize = Math.abs(mediumTermGap);
+
+    if (
+        shortTermGapSize <= thresholds.smallThroughout &&
+        mediumTermGapSize <= thresholds.smallThroughout
+    ) {
+        return colours.closeToAverage;
+    } else if (mediumTermGap > thresholds.smallThroughout) {
+        return colours.aboveAverage;
+    } else if (mediumTermGap < -thresholds.smallThroughout) {
+        return colours.belowAverage;
+    } else if (shortTermGap < -thresholds.smallThroughout) {
+        return colours.catchesUp;
+    }
+
+    return colours.closeToAverage;
+}
+
+function getChart7GapPattern(gapSummary, comparisonKind) {
+    const gapPatternKey = getChart7GapPatternKey(gapSummary);
+    const gapPattern = CHART_7_GAPS[comparisonKind].patterns[gapPatternKey];
+    let colour = gapPattern.colour;
+    let sentence = gapPattern.sentence;
+
+    if (comparisonKind === "discipline") {
+        sentence = getChart7DisciplineSummarySentence(gapSummary);
+        colour = getChart7DisciplineGapColour(gapSummary);
+    }
+
+    return {
+        label: gapPattern.label,
+        colour,
+        dash: gapPattern.dash,
+        sentence
+    };
+}
+
+function updateChart7ExplanationCard(
+    explanationCard,
+    selectedRows,
+    comparisonKind
+) {
     explanationCard.replaceChildren();
+    const gapSummary = getChart7GapSummary(selectedRows, comparisonKind);
+    const gapPattern = getChart7GapPattern(gapSummary, comparisonKind);
 
     const cardBody = document.createElement("div");
     cardBody.className = "card-body";
@@ -206,20 +301,30 @@ function updateChart7ExplanationCard(explanationCard, selectedRows, gapSummary, 
     sentence.textContent = gapPattern.sentence;
 
     cardBody.appendChild(title);
-    appendChart7PeriodSummary(
-        cardBody,
-        "4-6 months after graduation",
-        selectedRows[0],
-        comparisonKind
-    );
-    appendChart7PeriodSummary(
-        cardBody,
-        "3-4 years after graduation",
-        selectedRows[1],
-        comparisonKind
-    );
+
+    appendChart7PeriodSummary(cardBody, "4-6 months after graduation", selectedRows[0], comparisonKind);
+    appendChart7PeriodSummary(cardBody, "3-4 years after graduation", selectedRows[1], comparisonKind);
+
     cardBody.appendChild(sentence);
     explanationCard.appendChild(cardBody);
+}
+
+function renderChart7SelectedComparison(
+    chartId,
+    chartData,
+    chartMetadata,
+    selectorId,
+    explanationCard
+) {
+    const comparisonKind = chartData[0]["comparison_kind"];
+    const selectedRows = getTrace(chartData, "selector_id", selectorId);
+    sortByKeyAscending(selectedRows, "time_window_order");
+
+    const trace = createChart7Trace(selectedRows, chartMetadata, comparisonKind);
+    const layout = createChart7Layout(selectedRows, chartMetadata, comparisonKind);
+
+    updateChart7ExplanationCard(explanationCard, selectedRows, comparisonKind);
+    renderChart(chartId, [trace], layout, chartMetadata);
 }
 
 export function renderChart7ComparisonState(
@@ -231,6 +336,7 @@ export function renderChart7ComparisonState(
 ) {
     const comparisonKind = chartState.comparisonKind;
     const comparisonRows = getTrace(chartData, "comparison_kind", comparisonKind);
+
     const dropdownButton = document.getElementById("chart7DropdownButton");
     const dropdownMenu = document.getElementById("chart7DropdownMenu");
     const explanationCard = document.getElementById("chart7ExplanationCard");
@@ -280,26 +386,4 @@ export function renderChart7ComparisonState(
         chartState.selectorIdByKind[comparisonKind],
         explanationCard
     );
-}
-
-export function renderChart7SelectedComparison(
-    chartId,
-    chartData,
-    chartMetadata,
-    selectorId,
-    explanationCard
-) {
-    const comparisonKind = chartData[0]["comparison_kind"];
-    const selectedRows = getTrace(chartData, "selector_id", selectorId);
-    sortByKeyAscending(selectedRows, "time_window_order");
-
-    const gapSummary = getChart7GapSummary(selectedRows, comparisonKind);
-    const gapPattern = getChart7GapPattern(gapSummary);
-    const yAxisRange = comparisonKind === "discipline" ? CHART_RANGES.chart7.disciplines : CHART_RANGES.chart7.demographics;
-
-    const trace = createChart7Trace(selectedRows, chartMetadata, gapSummary, gapPattern, comparisonKind);
-    const layout = createChart7Layout(selectedRows, chartMetadata, yAxisRange);
-
-    updateChart7ExplanationCard(explanationCard, selectedRows, gapSummary, gapPattern, comparisonKind);
-    renderChart(chartId, [trace], layout, chartMetadata);
 }
