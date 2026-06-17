@@ -1,5 +1,6 @@
-@import url("chevrons.css");
-@import url("hover-labels.css");
+@import url("icons.css");
+@import url("buttons.css");
+@import url("group-field-comparator.css");
 
 :root {
     --amber-700: #A55A1F;
@@ -131,8 +132,7 @@ footer {
     text-decoration: none;
 }
 
-.nav-link:hover,
-.nav-link:focus {
+.nav-link:hover, .nav-link:focus {
     color: var(--amber-700);
     cursor: pointer;
 }
@@ -160,13 +160,11 @@ footer {
     border: 1px solid var(--amber-500);
 }
 
-.explanatory-modal a,
-.explanatory-modal a:visited {
+.explanatory-modal a, .explanatory-modal a:visited {
     color: var(--blue-300);
 }
 
-.explanatory-modal a:hover,
-.explanatory-modal a:focus {
+.explanatory-modal a:hover, .explanatory-modal a:focus {
     color: var(--blue-500);
 }
 
@@ -261,6 +259,10 @@ footer {
 }
 
 @media (max-width: 991.98px) {
+    :root {
+        --inline-spacing: 6em;
+    }
+
     #siteNavbar {
         background-color: var(--background-colour);
         left: 0;
@@ -283,6 +285,11 @@ footer {
     }
 }
 
+@media (max-width: 768.98px) {
+    html {
+        font-size: 75%;
+    }
+}
 
 #openingSection {
     display: flex;
@@ -293,82 +300,4 @@ footer {
     min-height: 100vh;
     color: var(--opening-text-colour);
     background: var(--opening-background-colour);
-}
-
-#chart7Container {
-    --chart-7-panel-width: 80%;
-}
-
-#chart7Container h1 {
-    width: var(--chart-7-panel-width);
-}
-
-#chart7Panel {
-    padding: 1.5em;
-    border-radius: 25px;
-    width: var(--chart-7-panel-width);
-    background-color: var(--label-colour-opaque);
-}
-
-#chart7GroupFieldComparator {
-    width: 100%;
-}
-
-#chart7ExplanationCard {
-    color: var(--text-colour);
-    background-color: var(--background-colour-opaque);
-    border-color: var(--grey-500);
-}
-
-@media (max-width: 991.98px) {
-    #compareGroups {
-        margin-inline: 1rem;
-    }
-
-    #chart7Container {
-        --chart-7-panel-width: 100%;
-    }
-
-    #chart7Panel {
-        padding: 1rem;
-    }
-}
-
-/* bootstrap overrides */
-
-#chart7DropdownButton,
-#chart7FamilyDropdownButton {
-    --bs-btn-color: var(--background-colour);
-    --bs-btn-bg: var(--amber-500);
-    --bs-btn-border-color: var(--amber-500);
-    --bs-btn-hover-color: var(--background-colour);
-    --bs-btn-hover-bg: var(--amber-700);
-    --bs-btn-hover-border-color: var(--amber-700);
-    --bs-btn-active-color: var(--background-colour);
-    --bs-btn-active-bg: var(--amber-700);
-    --bs-btn-active-border-color: var(--amber-700);
-    font-size: inherit;
-}
-
-.blue-button {
-    --bs-btn-color: var(--background-colour);
-    --bs-btn-bg: var(--blue-500);
-    --bs-btn-border-color: var(--blue-500);
-    --bs-btn-hover-color: var(--background-colour);
-    --bs-btn-hover-bg: var(--blue-700);
-    --bs-btn-hover-border-color: var(--blue-700);
-    --bs-btn-active-color: var(--background-colour);
-    --bs-btn-active-bg: var(--blue-700);
-    --bs-btn-active-border-color: var(--blue-700);
-    font-size: inherit;
-}
-
-#chart7DropdownMenu,
-#chart7FamilyDropdownMenu {
-    --bs-dropdown-bg: var(--background-colour);
-    --bs-dropdown-link-color: var(--text-colour);
-    --bs-dropdown-link-hover-bg: var(--amber-300);
-    --bs-dropdown-link-active-color: var(--background-colour);
-    --bs-dropdown-link-active-bg: var(--amber-500);
-    font-size: inherit;
 }

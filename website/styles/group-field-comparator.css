@@ -1,0 +1,44 @@
+.chart-7-source-label {
+    --right-inset: 2em !important;
+    --left-inset: 2em !important;
+}
+
+#chart7Container {
+    --chart-7-panel-width: 85%;
+}
+
+#chart7Container h1 {
+    width: var(--chart-7-panel-width);
+}
+
+#chart7Panel {
+    padding: 1.5em;
+    border-radius: 25px;
+    width: var(--chart-7-panel-width);
+    background-color: var(--label-colour-opaque);
+}
+
+#chart7GroupFieldComparator {
+    width: 100%;
+}
+
+#chart7ExplanationCard {
+    color: var(--text-colour);
+    background-color: var(--background-colour-opaque);
+    border-color: var(--grey-500);
+}
+
+#chart7ExplanationCard h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+@media (max-width: 991.98px) {
+    #chart7Container {
+        --chart-7-panel-width: 100%;
+    }
+
+    #chart7Panel {
+        padding: 1rem;
+    }
+}

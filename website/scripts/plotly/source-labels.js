@@ -1,4 +1,4 @@
-import { SOURCE_LABEL_TEXT } from "../core/config.js";
+import { CHART_7_ID, SOURCE_LABEL_TEXT } from "../core/config.js";
 import { objectHasValues, getRoundedNonNegativeValue } from "../core/utils.js";
 import { getChartElementId } from "./rendering.js";
 
@@ -52,24 +52,19 @@ function getSourceLabels(chartMetadata) {
     return sourceLabels;
 }
 
-function getSourceLabelInsets(chart) {
+function applySourceLabelInsets(sourceLabel, chart) {
     const chartSize = chart?._fullLayout?._size;
 
-    if (!chartSize) {
-        return { left: 0, right: 0 };
+    let leftInset = 0;
+    let rightInset = 0;
+
+    if (chartSize) {
+        leftInset = getRoundedNonNegativeValue(chartSize.l);
+        rightInset = getRoundedNonNegativeValue(chartSize.r);
     }
 
-    return {
-        left: getRoundedNonNegativeValue(chartSize.l),
-        right: getRoundedNonNegativeValue(chartSize.r)
-    };
-}
-
-function applySourceLabelInsets(sourceLabel, chart) {
-    const { left, right } = getSourceLabelInsets(chart);
-
-    sourceLabel.style.setProperty("--left-inset", `${left}px`); /* responsively setting the insets */
-    sourceLabel.style.setProperty("--right-inset", `${right}px`);
+    sourceLabel.style.setProperty("--left-inset", `${leftInset}px`);
+    sourceLabel.style.setProperty("--right-inset", `${rightInset}px`);
 }
 
 function renderSourceLabelContents(sourceLabel, sourceLabels) {
@@ -90,6 +85,16 @@ function renderSourceLabelContents(sourceLabel, sourceLabels) {
     }
 
     sourceLabel.replaceChildren(sourceHeading, sourceList);
+}
+
+function applyChart7SourceLabelLayout(chartId, sourceLabel) {
+    const isChart7 = chartId === CHART_7_ID;
+    sourceLabel.classList.toggle("chart-7-source-label", isChart7);
+    if (!isChart7) return;
+
+    const sourceLabelParent = document.getElementById("chart7Panel");
+
+    sourceLabelParent.appendChild(sourceLabel);
 }
 
 export function renderChartSourceLabel(chartId, chartMetadata, chart) {
@@ -113,4 +118,5 @@ export function renderChartSourceLabel(chartId, chartMetadata, chart) {
 
     renderSourceLabelContents(sourceLabel, sourceLabels);
     applySourceLabelInsets(sourceLabel, chart);
+    applyChart7SourceLabelLayout(chartId, sourceLabel);
 }

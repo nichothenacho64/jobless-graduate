@@ -209,7 +209,6 @@ export const CHART_6_RENDERING = {
     rightQuadrantPanelOpacity: 0.05
 };
 
-
 export const CHART_7_VALUES = {
     fieldAverageGroup: "All undergraduate fields",
     equalGapThreshold: 0.1,

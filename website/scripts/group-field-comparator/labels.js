@@ -34,7 +34,7 @@ export function getChart7SelectorLabel(row, comparisonKind) {
 
 export function getChart7ComparisonLabel(row, comparisonKind) {
     if (comparisonKind === "discipline") {
-        return `${getChart7FieldName(row)} compared with all fields`;
+        return `${getChart7FieldName(row)} compared to all fields`;
     }
 
     return row["reference_group"] + " vs " + row["comparison_group"];
@@ -45,7 +45,7 @@ function getChart7DisciplineGapSentence(row, gap) {
     const gapSize = Math.abs(gap);
 
     if (gapSize <= CHART_7_VALUES.equalGapThreshold) {
-        return `${fieldName} matched the overall undergraduate full-time employment rate`;
+        return `${fieldName} matched the overall FTE rate`;
     }
 
     let fieldGap = -gap;
@@ -57,7 +57,7 @@ function getChart7DisciplineGapSentence(row, gap) {
     const formattedGap = formatOneDecimal(gapSize);
     let direction = fieldGap > 0 ? "above" : "below";
 
-    return `${fieldName} was ${formattedGap} pp ${direction} the overall undergraduate full-time employment rate`;
+    return `${fieldName} was ${formattedGap} pp ${direction} the overall FTE rate`;
 }
 
 function getChart7DemographicGapSentence(row, gap, comparisonKind) {

@@ -15,7 +15,7 @@
     </head>
     <body>
         <header>
-            <nav class="fixed-top navbar navbar-expand-lg navbar-light"> <!-- applies Bootstrap navbar layout and styling defaults as a base, then they are overriden in CSS -->
+            <nav class="fixed-top navbar navbar-expand-lg navbar-light dark-navbar"> <!-- applies Bootstrap navbar layout and styling defaults as a base, then they are overriden in CSS -->
                 <div id="navbarContainer" class="container-fluid"> <!-- container-fluid creates a full-width responsive container inside the navbar -->
                     <a id="branding" href="#openingSection">
                         <img id="icon" src="assets/icons/homeless_graduate_logo.svg">
@@ -276,17 +276,17 @@
                     <p>
                         <strong>Select a group or field</strong> below to explore how
                         the gap between short-term and medium-term employment
-                        changes depending on the comparison. Note that these are
+                        changes for graduates depending on the comparison. Note that these are
                         <strong>group-level patterns</strong> drawn from
                         national survey data,
                         <span class="text-amber">not predictions about any individual graduate's trajectory</span>.
                     </p>
                     <div id="chart7Container" class="chart-container">
                         <div id="chart7Panel">
-                            <div id="chart7Control" class="d-flex align-items-center flex-wrap gap-2 justify-content-between pb-2"> <!-- shorthand Bootstrap styling for flex display -->
-                                <div class="d-flex align-items-center flex-wrap gap-2">
+                            <div id="chart7Control" class="d-flex flex-wrap align-items-center justify-content-between gap-2 pb-2"> <!-- shorthand Bootstrap styling for flex display -->
+                                <div class="d-flex flex-wrap align-items-center gap-2">
                                     <span id="chart7SelectorLabel" class="mb-0 form-label"></span>
-                                    <div id="chart7FamilyDropdown" class="dropdown"> 
+                                    <div id="chart7FamilyDropdown" class="amber-dropdown dropdown">
                                         <button
                                             id="chart7FamilyDropdownButton"
                                             class="btn dropdown-toggle"
@@ -297,7 +297,7 @@
                                         ></button>
                                         <ul id="chart7FamilyDropdownMenu" class="dropdown-menu"></ul> 
                                     </div>
-                                    <div class="dropdown"> <!-- for Bootstrap positioning context for the dropdown toggle and menu -->
+                                    <div class="amber-dropdown dropdown"> <!-- for Bootstrap positioning context for the dropdown toggle and menu -->
                                         <button
                                             id="chart7DropdownButton"
                                             class="btn dropdown-toggle"
@@ -309,7 +309,7 @@
                                         <ul id="chart7DropdownMenu" class="dropdown-menu"></ul> 
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-center flex-wrap gap-2">
+                                <div class="d-flex flex-wrap align-items-center gap-2">
                                     <button id="chart7ModeButton" class="btn blue-button" type="button"></button>
                                 </div>
                             </div>

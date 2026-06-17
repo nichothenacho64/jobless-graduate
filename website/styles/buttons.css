@@ -1,0 +1,67 @@
+.navbar-toggler {
+    display: grid;
+    flex: 0 0 auto;
+    width: 3.5rem;
+    height: 2.75rem;
+    padding: 0;
+    place-items: center;
+}
+
+.navbar-toggler:focus {
+    border-color: var(--amber-300);
+    box-shadow: 0 0 0 0.25rem var(--amber-300-opaque);
+}
+
+.amber-button, .amber-dropdown > .dropdown-toggle {
+    --bs-btn-color: var(--background-colour);
+    --bs-btn-bg: var(--amber-500);
+    --bs-btn-border-color: var(--amber-500);
+    --bs-btn-hover-color: var(--background-colour);
+    --bs-btn-hover-bg: var(--amber-700);
+    --bs-btn-hover-border-color: var(--amber-700);
+    --bs-btn-active-color: var(--background-colour);
+    --bs-btn-active-bg: var(--amber-700);
+    --bs-btn-active-border-color: var(--amber-700);
+    font-size: inherit;
+}
+
+.blue-button, .blue-dropdown > .dropdown-toggle {
+    --bs-btn-color: var(--background-colour);
+    --bs-btn-bg: var(--blue-500);
+    --bs-btn-border-color: var(--blue-500);
+    --bs-btn-hover-color: var(--background-colour);
+    --bs-btn-hover-bg: var(--blue-700);
+    --bs-btn-hover-border-color: var(--blue-700);
+    --bs-btn-active-color: var(--background-colour);
+    --bs-btn-active-bg: var(--blue-700);
+    --bs-btn-active-border-color: var(--blue-700);
+    font-size: inherit;
+}
+
+.amber-dropdown > .dropdown-menu, .blue-dropdown > .dropdown-menu {
+    --bs-dropdown-bg: var(--background-colour);
+    --bs-dropdown-link-color: var(--text-colour);
+    --bs-dropdown-link-active-color: var(--background-colour);
+    font-size: inherit;
+}
+
+.amber-dropdown > .dropdown-menu {
+    --bs-dropdown-link-hover-bg: var(--amber-300);
+    --bs-dropdown-link-active-bg: var(--amber-500);
+}
+
+.blue-dropdown > .dropdown-menu {
+    --bs-dropdown-link-hover-bg: var(--blue-300);
+    --bs-dropdown-link-active-bg: var(--blue-500);
+}
+
+.amber-dropdown > .dropdown-toggle::after,
+.blue-dropdown > .dropdown-toggle::after { /* for the spinning chevron */
+    transform: rotate(0deg);
+    transition: transform 0.15s ease-in-out;
+}
+
+.amber-dropdown > .dropdown-toggle[aria-expanded="true"]::after,
+.blue-dropdown > .dropdown-toggle[aria-expanded="true"]::after { /* using Bootstrap attributes to reference the state */
+    transform: rotate(180deg);
+}
