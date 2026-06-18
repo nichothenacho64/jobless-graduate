@@ -19,6 +19,10 @@ import {
     CHART_7_ID,
 } from "./core/config.js";
 
+if (document.fonts) {
+    await document.fonts.load('1rem "Source Sans 3"');
+}
+
 await renderChart1a(CHART_1A_ID);
 await renderChart1b(CHART_1B_ID);
 await renderChart2(CHART_2_ID);
